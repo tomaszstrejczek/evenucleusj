@@ -32,6 +32,9 @@ public class DatabaseHelper
 
     // the DAO object we use to access the SimpleData table
     private Dao<Version, Integer> versionDao = null;
+    private Dao<KeyInfo, Integer> keyInfoDao = null;
+
+
     public DatabaseHelper(String fullPath) {
         _fullPath = fullPath;
     }
@@ -55,17 +58,25 @@ public class DatabaseHelper
 
     private void CreateInitial() throws java.sql.SQLException {
         TableUtils.createTable(_connectionSource, Version.class);
+        TableUtils.createTable(_connectionSource, KeyInfo.class);
     }
 
     /**
      * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
      * value.
      */
-    public Dao<Version, Integer> getDao() throws java.sql.SQLException {
+    public Dao<Version, Integer> getVersionDao() throws java.sql.SQLException {
         if (versionDao == null) {
             versionDao = DaoManager.createDao(_connectionSource, Version.class);
         }
         return versionDao;
+    }
+
+    public Dao<KeyInfo, Integer> getKeyInfoDao() throws java.sql.SQLException {
+        if (keyInfoDao == null) {
+            keyInfoDao = DaoManager.createDao(_connectionSource, KeyInfo.class);
+        }
+        return keyInfoDao;
     }
 
     /**

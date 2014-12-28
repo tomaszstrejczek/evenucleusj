@@ -12,14 +12,14 @@ import junit.framework.Assert;
  */
 public class LocalDBT extends TestBase{
     public void test_InsertRecord() throws SQLException {
-        List<Version> result =_localdb.getDao().queryForAll();
+        List<Version> result =_localdb.getVersionDao().queryForAll();
         for(Version v :result)
             Assert.assertTrue(!"testver".equals(v.Name));
 
         Version data = new Version() {{Name="testver";}};
-        _localdb.getDao().createOrUpdate(data);
+        _localdb.getVersionDao().createOrUpdate(data);
 
-        result =_localdb.getDao().queryForAll();
+        result =_localdb.getVersionDao().queryForAll();
         boolean found = false;
         for(Version v :result)
             if (v.Name.equals("testver"))
