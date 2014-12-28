@@ -33,6 +33,7 @@ public class DatabaseHelper
     // the DAO object we use to access the SimpleData table
     private Dao<Version, Integer> versionDao = null;
     private Dao<KeyInfo, Integer> keyInfoDao = null;
+    private Dao<Pilot, Integer> pilotDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -40,7 +41,7 @@ public class DatabaseHelper
     }
 
     public void Initialize() throws java.sql.SQLException {
-        Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", new String[]{_fullPath}));
+        Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", _fullPath));
 
         _database = SQLiteDatabase.openDatabase(_fullPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
         _connectionSource = new AndroidConnectionSource(_database);
@@ -59,6 +60,11 @@ public class DatabaseHelper
     private void CreateInitial() throws java.sql.SQLException {
         TableUtils.createTable(_connectionSource, Version.class);
         TableUtils.createTable(_connectionSource, KeyInfo.class);
+        TableUtils.createTable(_connectionSource, Pilot.class);
+        TableUtils.createTable(_connectionSource, Corporation.class);
+        TableUtils.createTable(_connectionSource, Skill.class);
+        TableUtils.createTable(_connectionSource, PendingNotification.class);
+        TableUtils.createTable(_connectionSource, Job.class);
     }
 
     /**
@@ -77,6 +83,13 @@ public class DatabaseHelper
             keyInfoDao = DaoManager.createDao(_connectionSource, KeyInfo.class);
         }
         return keyInfoDao;
+    }
+
+    public Dao<Pilot, Integer> getPilotDao() throws java.sql.SQLException {
+        if (pilotDao == null) {
+            pilotDao = DaoManager.createDao(_connectionSource, Pilot.class);
+        }
+        return pilotDao;
     }
 
     /**
