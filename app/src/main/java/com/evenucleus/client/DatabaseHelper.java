@@ -38,6 +38,7 @@ public class DatabaseHelper
     private Dao<PendingNotification, Integer> pendingNotificationDao = null;
     private Dao<Corporation, Integer> corporationDao = null;
     private Dao<Job, Integer> jobDao = null;
+    private Dao<Category, Integer> categoryDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -69,6 +70,7 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, Skill.class);
         TableUtils.createTable(_connectionSource, PendingNotification.class);
         TableUtils.createTable(_connectionSource, Job.class);
+        TableUtils.createTable(_connectionSource, Category.class);
     }
 
     /**
@@ -122,6 +124,13 @@ public class DatabaseHelper
             jobDao = DaoManager.createDao(_connectionSource, Job.class);
         }
         return jobDao;
+    }
+
+    public Dao<Category, Integer> getCategoryDao() throws java.sql.SQLException {
+        if (categoryDao == null) {
+            categoryDao = DaoManager.createDao(_connectionSource, Category.class);
+        }
+        return categoryDao;
     }
 
     /**
