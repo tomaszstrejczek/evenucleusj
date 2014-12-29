@@ -34,6 +34,8 @@ public class DatabaseHelper
     private Dao<Version, Integer> versionDao = null;
     private Dao<KeyInfo, Integer> keyInfoDao = null;
     private Dao<Pilot, Integer> pilotDao = null;
+    private Dao<Skill, Integer> skillDao = null;
+    private Dao<PendingNotification, Integer> pendingNotificationDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -90,6 +92,20 @@ public class DatabaseHelper
             pilotDao = DaoManager.createDao(_connectionSource, Pilot.class);
         }
         return pilotDao;
+    }
+
+    public Dao<Skill, Integer> getSkillDao() throws java.sql.SQLException {
+        if (skillDao == null) {
+            skillDao = DaoManager.createDao(_connectionSource, Skill.class);
+        }
+        return skillDao;
+    }
+
+    public Dao<PendingNotification, Integer> getPendingNotificationDao() throws java.sql.SQLException {
+        if (pendingNotificationDao == null) {
+            pendingNotificationDao = DaoManager.createDao(_connectionSource, PendingNotification.class);
+        }
+        return pendingNotificationDao;
     }
 
     /**

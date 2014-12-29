@@ -37,9 +37,9 @@ public class Pilot {
     @DatabaseField
     public int FreeResearchJobsNofificationCount;
 
-    @DatabaseField(canBeNull = false, foreign = true)
+    @DatabaseField(canBeNull = true, foreign = true)
     public KeyInfo KeyInfo;
 
-    @ForeignCollectionField
+    @ForeignCollectionField(columnName = "Skills")
     public ForeignCollection<Skill> Skills;
 }

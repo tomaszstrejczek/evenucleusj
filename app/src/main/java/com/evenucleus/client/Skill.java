@@ -9,7 +9,7 @@ public class Skill {
     @DatabaseField(generatedId = true)
     public int SkillId;
 
-    @DatabaseField(foreign = true, canBeNull = false)
+    @DatabaseField(foreign = true, canBeNull = false, columnName = "PilotId")
     public Pilot Pilot;
 
     @DatabaseField

@@ -14,7 +14,7 @@ public class PilotRepo implements IPilotRepo {
     DatabaseHelper _localdb;
     public PilotRepo(DatabaseHelper localdb)
     {
-
+        _localdb = localdb;
     }
 
 
