@@ -60,12 +60,12 @@ public class PilotRepo implements IPilotRepo {
     @Override
     public void SetFreeManufacturingJobsNofificationCount(int pilotid, int value) {
         Log.d(PilotRepo.class.getName(), String.format("SetFreeManufacturingJobsNofificationCount %d %d", pilotid, value));
-        _localdb._database.rawQuery("update pilot set FreeManufacturingJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
+        _localdb._database.execSQL("update pilot set FreeManufacturingJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
     }
 
     @Override
     public void SetFreeResearchJobsNofificationCount(int pilotid, int value) {
         Log.d(PilotRepo.class.getName(), String.format("SetFreeResearchJobsNofificationCount %d %d", pilotid, value));
-        _localdb._database.rawQuery("update pilot set FreeResearchJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
+        _localdb._database.execSQL("update pilot set FreeResearchJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
     }
 }
