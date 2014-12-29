@@ -53,7 +53,7 @@ public class SkillRepo implements ISkillRepo {
                 boolean leveledUp = false;
                 for(Skill x: pd.Skills)
                     if (x.SkillName.length() == r.SkillName.length()
-                            && x.SkillName.substring(0, x.SkillName.length()-1) == r.SkillName.substring(0, r.SkillName.length()-1))
+                            && x.SkillName.substring(0, x.SkillName.length()-1).equals(r.SkillName.substring(0, r.SkillName.length()-1)))
                     {
                         leveledUp = true;
                         break;
