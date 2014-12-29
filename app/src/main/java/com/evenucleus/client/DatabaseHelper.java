@@ -37,6 +37,7 @@ public class DatabaseHelper
     private Dao<Skill, Integer> skillDao = null;
     private Dao<PendingNotification, Integer> pendingNotificationDao = null;
     private Dao<Corporation, Integer> corporationDao = null;
+    private Dao<Job, Integer> jobDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -114,6 +115,13 @@ public class DatabaseHelper
             corporationDao = DaoManager.createDao(_connectionSource, Corporation.class);
         }
         return corporationDao;
+    }
+
+    public Dao<Job, Integer> getJobDao() throws java.sql.SQLException {
+        if (jobDao == null) {
+            jobDao = DaoManager.createDao(_connectionSource, Job.class);
+        }
+        return jobDao;
     }
 
     /**
