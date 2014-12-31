@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/INDEX.LIST'
+    }
 }
 
 dependencies {
@@ -25,4 +30,5 @@ dependencies {
     compile 'org.slf4j:slf4j-android:1.7.9'
     compile 'com.j256.ormlite:ormlite-android:4.48'
     compile 'com.google.code.gson:gson:2.3.1'
+    compile 'org.easymock:easymock:3.3'
 }

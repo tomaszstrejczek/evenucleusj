@@ -41,6 +41,7 @@ public class DatabaseHelper
     private Dao<Category, Integer> categoryDao = null;
     private Dao<CacheEntry, String> cacheEntryDao = null;
     private Dao<TypeNameEntry, Integer> typeNameEntryDao = null;
+    private Dao<JournalEntry, Integer> journalEntryDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -75,6 +76,7 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, Category.class);
         TableUtils.createTable(_connectionSource, CacheEntry.class);
         TableUtils.createTable(_connectionSource, TypeNameEntry.class);
+        TableUtils.createTable(_connectionSource, JournalEntry.class);
     }
 
     /**
@@ -149,6 +151,13 @@ public class DatabaseHelper
             typeNameEntryDao = DaoManager.createDao(_connectionSource, TypeNameEntry.class);
         }
         return typeNameEntryDao;
+    }
+
+    public Dao<JournalEntry, Integer> getJournalEntryDao() throws java.sql.SQLException {
+        if (journalEntryDao== null) {
+            journalEntryDao = DaoManager.createDao(_connectionSource, JournalEntry.class);
+        }
+        return journalEntryDao;
     }
 
     /**

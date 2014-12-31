@@ -14,6 +14,9 @@ public class Pilot {
     public int PilotId;
 
     @DatabaseField
+    public long CharacterId;
+
+    @DatabaseField
     public String Name;
     @DatabaseField
     public String Url;
