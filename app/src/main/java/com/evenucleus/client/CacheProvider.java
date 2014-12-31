@@ -2,6 +2,7 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.beimin.eveapi.exception.ApiException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -25,7 +26,7 @@ public class CacheProvider implements ICacheProvider {
     }
 
     @Override
-    public <T> T Get(String key, ICacheValueProvider valueProvider, Class<T> clazz) throws SQLException, JSONException {
+    public <T> T Get(String key, ICacheValueProvider valueProvider, Class<T> clazz) throws SQLException, JSONException, ApiException {
         Log.d(CacheProvider.class.getName(), String.format("Get %s", key));
 
         if (valueProvider == null)

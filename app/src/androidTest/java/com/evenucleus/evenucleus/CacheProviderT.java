@@ -1,5 +1,6 @@
 package com.evenucleus.evenucleus;
 
+import com.beimin.eveapi.exception.ApiException;
 import com.evenucleus.client.CacheProvider;
 import com.evenucleus.client.ICacheValueProvider;
 
@@ -19,7 +20,7 @@ import static java.util.Map.Entry;
  * Created by tomeks on 2014-12-31.
  */
 public class CacheProviderT extends TestBase{
-    public void test_AddKey() throws SQLException, JSONException {
+    public void test_AddKey() throws SQLException, JSONException, ApiException {
         CacheProvider cache = new CacheProvider(_localdb);
 
         ICacheValueProvider provider = new ICacheValueProvider() {
@@ -46,7 +47,7 @@ public class CacheProviderT extends TestBase{
         Assert.assertEquals("ala ma kota", result);
     }
 
-    public void test_AddKeyExpired() throws SQLException, JSONException, InterruptedException {
+    public void test_AddKeyExpired() throws SQLException, JSONException, InterruptedException, ApiException {
         CacheProvider cache = new CacheProvider(_localdb);
 
         ICacheValueProvider provider = new ICacheValueProvider() {
