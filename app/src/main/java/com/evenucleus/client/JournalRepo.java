@@ -32,9 +32,13 @@ public class JournalRepo implements IJournalRepo {
     public void ReplicateFromEve() throws SQLException, ParseException, ApiException {
         Log.d(JournalRepo.class.getName(), "ReplicateFromEve");
 
-        List<Pilot> pilots = _pilotRepo.GetAll();
-        for(Pilot p:pilots)
-            replicateForPilot(p);
+        // For testing we allow null _pilotRepo
+        if (_pilotRepo != null)
+        {
+            List<Pilot> pilots = _pilotRepo.GetAll();
+            for(Pilot p:pilots)
+                replicateForPilot(p);
+        }
 
         // For testing we allow null _corporationRepo
         if (_corporationRepo == null)
@@ -61,8 +65,19 @@ public class JournalRepo implements IJournalRepo {
             _localdb.getJournalEntryDao().createOrUpdate(x);
     }
 
-    private void replicateForCorporation(Corporation c) {
+    private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
         Log.d(JournalRepo.class.getName(), String.format("Replicating for corporation %s", c.Name));
 
+        QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
+        qb.where().eq("CorporationId", c.CorporationId);
+        GenericRawResults<String[]> results = _localdb.getJournalEntryDao().queryRaw(qb.prepareStatementString());
+        String[] rs = results.getFirstResult();
+        long lastStoredID = 0;
+        if (rs != null && rs[0]!=null)
+            lastStoredID = Long.parseLong(rs[0]);
+
+        List<JournalEntry> list = _eveApiCaller.getJournalEntriesCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode, c.CorporationId, lastStoredID);
+        for(JournalEntry x:list)
+            _localdb.getJournalEntryDao().createOrUpdate(x);
     }
 }
