@@ -6,6 +6,8 @@ import com.beimin.eveapi.core.ApiPath;
 import com.beimin.eveapi.exception.ApiException;
 import com.beimin.eveapi.utils.StringUtils;
 
+import java.util.List;
+
 public class TypeNameParser extends AbstractListParser<TypeNameHandler, TypeNameResponse, EveTypeName> {
 
 	public TypeNameParser() {
@@ -19,4 +21,8 @@ public class TypeNameParser extends AbstractListParser<TypeNameHandler, TypeName
 	public TypeNameResponse getResponse(int... arguments) throws ApiException {
 		return super.getResponse("ids", StringUtils.join(",", arguments));
 	}
+
+    public TypeNameResponse getResponse(List<Integer> arguments) throws ApiException {
+        return super.getResponse("ids", StringUtils.join(",", arguments));
+    }
 }

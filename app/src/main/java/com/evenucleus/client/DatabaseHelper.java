@@ -40,6 +40,7 @@ public class DatabaseHelper
     private Dao<Job, Integer> jobDao = null;
     private Dao<Category, Integer> categoryDao = null;
     private Dao<CacheEntry, String> cacheEntryDao = null;
+    private Dao<TypeNameEntry, Integer> typeNameEntryDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -73,6 +74,7 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, Job.class);
         TableUtils.createTable(_connectionSource, Category.class);
         TableUtils.createTable(_connectionSource, CacheEntry.class);
+        TableUtils.createTable(_connectionSource, TypeNameEntry.class);
     }
 
     /**
@@ -140,6 +142,13 @@ public class DatabaseHelper
             cacheEntryDao = DaoManager.createDao(_connectionSource, CacheEntry.class);
         }
         return cacheEntryDao;
+    }
+
+    public Dao<TypeNameEntry, Integer> getTypeNameEntryDao() throws java.sql.SQLException {
+        if (typeNameEntryDao == null) {
+            typeNameEntryDao = DaoManager.createDao(_connectionSource, TypeNameEntry.class);
+        }
+        return typeNameEntryDao;
     }
 
     /**
