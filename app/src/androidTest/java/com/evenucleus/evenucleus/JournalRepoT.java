@@ -10,12 +10,17 @@ import com.evenucleus.client.JournalRepo;
 import com.evenucleus.client.KeyInfo;
 import com.evenucleus.client.Pilot;
 
+import junit.framework.Assert;
+
 import org.easymock.EasyMock;
 import org.easymock.IMockBuilder;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tomeks on 2014-12-31.
@@ -54,7 +59,7 @@ public class JournalRepoT extends TestBase {
 
         // second call for the second pilot
         EasyMock.expect(eveApi.getJournalEntries(1, "vcode", 4, 3, 200)).andReturn(Arrays.<JournalEntry>asList(
-                new JournalEntry(){{refID=201; amount = 400;PilotId=3;}}
+                new JournalEntry(){{refID=201; amount = 401;PilotId=3;}}
         ));
 
         EasyMock.replay(pilotRepo, eveApi);
@@ -64,6 +69,22 @@ public class JournalRepoT extends TestBase {
         journalRepo.ReplicateFromEve();
 
         EasyMock.verify(pilotRepo, eveApi);
+
+        List<JournalEntry> entries = journalRepo.GetAll();
+        Assert.assertEquals(4, entries.size());
+
+        Map<Long, JournalEntry> mp = new HashMap<Long, JournalEntry>();
+        for(JournalEntry j:entries) mp.put(j.refID, j);
+
+        Assert.assertEquals(200.0, mp.get(100l).amount);
+        Assert.assertEquals(400.0, mp.get(200l).amount);
+        Assert.assertEquals(300.0, mp.get(101l).amount);
+        Assert.assertEquals(401.0, mp.get(201l).amount);
+
+        Assert.assertEquals(1, mp.get(100l).PilotId);
+        Assert.assertEquals(3, mp.get(200l).PilotId);
+        Assert.assertEquals(1, mp.get(101l).PilotId);
+        Assert.assertEquals(3, mp.get(201l).PilotId);
     }
 
     public void test_Corporations() throws SQLException, ApiException, ParseException {
@@ -99,7 +120,7 @@ public class JournalRepoT extends TestBase {
 
         // second call for the second pilot
         EasyMock.expect(eveApi.getJournalEntriesCorpo(1, "vcode", 3, 200)).andReturn(Arrays.<JournalEntry>asList(
-                new JournalEntry(){{refID=201; amount = 400;CorporationId=3;}}
+                new JournalEntry(){{refID=201; amount = 401;CorporationId=3;}}
         ));
 
         EasyMock.replay(corpoRepo, eveApi);
@@ -109,6 +130,23 @@ public class JournalRepoT extends TestBase {
         journalRepo.ReplicateFromEve();
 
         EasyMock.verify(corpoRepo, eveApi);
+
+        List<JournalEntry> entries = journalRepo.GetAll();
+        Assert.assertEquals(4, entries.size());
+
+        Map<Long, JournalEntry> mp = new HashMap<Long, JournalEntry>();
+        for(JournalEntry j:entries) mp.put(j.refID, j);
+
+        Assert.assertEquals(200.0, mp.get(100l).amount);
+        Assert.assertEquals(400.0, mp.get(200l).amount);
+        Assert.assertEquals(300.0, mp.get(101l).amount);
+        Assert.assertEquals(401.0, mp.get(201l).amount);
+
+        Assert.assertEquals(1, mp.get(100l).CorporationId);
+        Assert.assertEquals(3, mp.get(200l).CorporationId);
+        Assert.assertEquals(1, mp.get(101l).CorporationId);
+        Assert.assertEquals(3, mp.get(201l).CorporationId);
+
     }
 
 }

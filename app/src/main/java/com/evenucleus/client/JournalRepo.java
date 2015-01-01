@@ -49,6 +49,11 @@ public class JournalRepo implements IJournalRepo {
             replicateForCorporation(c);
     }
 
+    @Override
+    public List<JournalEntry> GetAll() throws SQLException {
+        return _localdb.getJournalEntryDao().queryForAll();
+    }
+
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         Log.d(JournalRepo.class.getName(), String.format("Replicating for pilot %s", p.Name));
 

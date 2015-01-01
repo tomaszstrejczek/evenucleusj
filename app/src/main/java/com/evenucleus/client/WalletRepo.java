@@ -46,6 +46,11 @@ public class WalletRepo implements IWalletRepo {
             replicateForCorporation(c);
     }
 
+    @Override
+    public List<WalletTransaction> GetAll() throws SQLException {
+        return _localdb.getWalletTransactionDao().queryForAll();
+    }
+
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         Log.d(WalletRepo.class.getName(), String.format("Replicating for pilot %s", p.Name));
 

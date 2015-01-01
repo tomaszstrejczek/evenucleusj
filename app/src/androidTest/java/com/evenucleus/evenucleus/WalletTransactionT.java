@@ -12,11 +12,16 @@ import com.evenucleus.client.Pilot;
 import com.evenucleus.client.WalletRepo;
 import com.evenucleus.client.WalletTransaction;
 
+import junit.framework.Assert;
+
 import org.easymock.EasyMock;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tomeks on 2015-01-01.
@@ -79,7 +84,7 @@ public class WalletTransactionT extends TestBase {
         EasyMock.expect(eveApi.getWalletTransactions(1, "vcode", 4, 3, 200)).andReturn(Arrays.<WalletTransaction>asList(
                 new WalletTransaction() {{
                     transactionID = 201;
-                    price = 400;
+                    price = 401;
                     PilotId = 3;
                 }}
         ));
@@ -91,6 +96,23 @@ public class WalletTransactionT extends TestBase {
         repo.ReplicateFromEve();
 
         EasyMock.verify(pilotRepo, eveApi);
+
+        List<WalletTransaction> entries = repo.GetAll();
+        Assert.assertEquals(4, entries.size());
+
+        Map<Long, WalletTransaction> mp = new HashMap<Long, WalletTransaction>();
+        for(WalletTransaction j:entries) mp.put(j.transactionID, j);
+
+        Assert.assertEquals(200.0, mp.get(100l).price);
+        Assert.assertEquals(400.0, mp.get(200l).price);
+        Assert.assertEquals(300.0, mp.get(101l).price);
+        Assert.assertEquals(401.0, mp.get(201l).price);
+
+        Assert.assertEquals(1, mp.get(100l).PilotId);
+        Assert.assertEquals(3, mp.get(200l).PilotId);
+        Assert.assertEquals(1, mp.get(101l).PilotId);
+        Assert.assertEquals(3, mp.get(201l).PilotId);
+
     }
 
     public void test_Corporations() throws SQLException, ApiException, ParseException {
@@ -130,7 +152,7 @@ public class WalletTransactionT extends TestBase {
 
         // second call for the second pilot
         EasyMock.expect(eveApi.getWalletTransactionsCorpo(1, "vcode", 3, 200)).andReturn(Arrays.<WalletTransaction>asList(
-                new WalletTransaction(){{transactionID=201; price = 400;CorporationId=3;}}
+                new WalletTransaction(){{transactionID=201; price = 401;CorporationId=3;}}
         ));
 
         EasyMock.replay(corpoRepo, eveApi);
@@ -140,6 +162,22 @@ public class WalletTransactionT extends TestBase {
         repo.ReplicateFromEve();
 
         EasyMock.verify(corpoRepo, eveApi);
+
+        List<WalletTransaction> entries = repo.GetAll();
+        Assert.assertEquals(4, entries.size());
+
+        Map<Long, WalletTransaction> mp = new HashMap<Long, WalletTransaction>();
+        for(WalletTransaction j:entries) mp.put(j.transactionID, j);
+
+        Assert.assertEquals(200.0, mp.get(100l).price);
+        Assert.assertEquals(400.0, mp.get(200l).price);
+        Assert.assertEquals(300.0, mp.get(101l).price);
+        Assert.assertEquals(401.0, mp.get(201l).price);
+
+        Assert.assertEquals(1, mp.get(100l).CorporationId);
+        Assert.assertEquals(3, mp.get(200l).CorporationId);
+        Assert.assertEquals(1, mp.get(101l).CorporationId);
+        Assert.assertEquals(3, mp.get(201l).CorporationId);
     }
 
 }
