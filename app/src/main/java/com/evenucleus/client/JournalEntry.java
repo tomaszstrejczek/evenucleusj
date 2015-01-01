@@ -31,7 +31,7 @@ public class JournalEntry {
     }
 
     @DatabaseField(generatedId = true)
-    public int JornalEntryId;
+    public int JournalEntryId;
 
     @DatabaseField
     public int PilotId;

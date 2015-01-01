@@ -6,6 +6,8 @@ import com.beimin.eveapi.core.ApiAuthorization;
 import com.beimin.eveapi.exception.ApiException;
 import com.beimin.eveapi.shared.wallet.journal.ApiJournalEntry;
 import com.beimin.eveapi.shared.wallet.journal.WalletJournalResponse;
+import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
+import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,6 +90,77 @@ public class EveApiCaller implements IEveApiCaller {
         {
             JournalEntry entry = new JournalEntry(x);
             entry.CorporationId= corporationid;
+            result.add(entry);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<WalletTransaction> getWalletTransactions(int keyid, String vcode, long characterId, int pilotid, long lastStoredId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        auth.setCharacterID(characterId);
+
+        List<ApiWalletTransaction> result1 = new ArrayList<ApiWalletTransaction>();
+        long fromId = 0;
+        for(;;)
+        {
+            WalletTransactionsResponse response = com.beimin.eveapi.character.wallet.transactions.WalletTransactionsParser.getInstance().getTransactionsResponse(auth, fromId);
+            Set<ApiWalletTransaction> entries = response.getAll();
+            if (entries.size()==0)
+                break;
+
+            for(ApiWalletTransaction x:entries)
+            {
+                if (x.getTransactionID() > lastStoredId)
+                    result1.add(x);
+
+                if (fromId==0 || x.getTransactionID() < fromId)
+                    fromId = x.getTransactionID();
+            }
+
+        }
+
+        List<WalletTransaction> result = new ArrayList<WalletTransaction>();
+        for(ApiWalletTransaction x:result1)
+        {
+            WalletTransaction entry = new WalletTransaction(x);
+            entry.PilotId = pilotid;
+            result.add(entry);
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<WalletTransaction> getWalletTransactionsCorpo(int keyid, String vcode, int corporationid, long lastStoredId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+
+        List<ApiWalletTransaction> result1 = new ArrayList<ApiWalletTransaction>();
+        long fromId = 0;
+        for(;;)
+        {
+            WalletTransactionsResponse response = com.beimin.eveapi.corporation.wallet.transactions.WalletTransactionsParser.getInstance().getResponse(auth, 1000, fromId, 1000);
+            Set<ApiWalletTransaction> entries = response.getAll();
+            if (entries.size()==0)
+                break;
+
+            for(ApiWalletTransaction x:entries)
+            {
+                if (x.getTransactionID() > lastStoredId)
+                    result1.add(x);
+
+                if (fromId==0 || x.getTransactionID() < fromId)
+                    fromId = x.getTransactionID();
+            }
+
+        }
+
+        List<WalletTransaction> result = new ArrayList<WalletTransaction>();
+        for(ApiWalletTransaction x:result1)
+        {
+            WalletTransaction entry = new WalletTransaction(x);
+            entry.CorporationId =corporationid;
             result.add(entry);
         }
 

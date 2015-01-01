@@ -42,6 +42,7 @@ public class DatabaseHelper
     private Dao<CacheEntry, String> cacheEntryDao = null;
     private Dao<TypeNameEntry, Integer> typeNameEntryDao = null;
     private Dao<JournalEntry, Integer> journalEntryDao = null;
+    private Dao<WalletTransaction, Integer> walletTransactionDao = null;
 
 
     public DatabaseHelper(String fullPath) {
@@ -77,6 +78,7 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, CacheEntry.class);
         TableUtils.createTable(_connectionSource, TypeNameEntry.class);
         TableUtils.createTable(_connectionSource, JournalEntry.class);
+        TableUtils.createTable(_connectionSource, WalletTransaction.class);
     }
 
     /**
@@ -158,6 +160,13 @@ public class DatabaseHelper
             journalEntryDao = DaoManager.createDao(_connectionSource, JournalEntry.class);
         }
         return journalEntryDao;
+    }
+
+    public Dao<WalletTransaction, Integer> getWalletTransactionDao() throws java.sql.SQLException {
+        if (walletTransactionDao== null) {
+            walletTransactionDao = DaoManager.createDao(_connectionSource, WalletTransaction.class);
+        }
+        return walletTransactionDao;
     }
 
     /**
