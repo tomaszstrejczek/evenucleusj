@@ -55,6 +55,7 @@ public class EveApiCaller implements IEveApiCaller {
         {
             JournalEntry entry = new JournalEntry(x);
             entry.PilotId = pilotid;
+            entry.RefTypeName = x.getRefType().getName();
             result.add(entry);
         }
 
@@ -90,6 +91,7 @@ public class EveApiCaller implements IEveApiCaller {
         {
             JournalEntry entry = new JournalEntry(x);
             entry.CorporationId= corporationid;
+            entry.RefTypeName = x.getRefType()==null? "<unknown>": x.getRefType().getName();
             result.add(entry);
         }
 

@@ -28,6 +28,7 @@ public class WalletTransactionsHandler extends
 		item.setStationName(getString(attrs, "stationName"));
 		item.setTransactionType(getString(attrs, "transactionType"));
 		item.setTransactionFor(getString(attrs, "transactionFor"));
+        item.setJournalTransactionID(getLong(attrs, "journalTransactionID"));
 		return item;
 	}
 }

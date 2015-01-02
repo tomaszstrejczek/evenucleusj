@@ -27,6 +27,7 @@ public class WalletTransaction {
         stationName = entry.getStationName();
         transactionType = entry.getTransactionType();
         transactionFor = entry.getTransactionFor();
+        journalTransactionID = entry.getJournalTransactionID();
     }
 
     @DatabaseField(generatedId = true)
@@ -67,4 +68,6 @@ public class WalletTransaction {
     public String transactionType;
     @DatabaseField
     public String transactionFor;
+    @DatabaseField
+    public long journalTransactionID;
 }

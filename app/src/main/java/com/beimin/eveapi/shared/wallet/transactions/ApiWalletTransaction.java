@@ -17,6 +17,7 @@ public class ApiWalletTransaction implements Comparable<ApiWalletTransaction> {
 	private String stationName;
 	private String transactionType;
 	private String transactionFor;
+    private long journalTransactionID;
 
 	public Date getTransactionDateTime() {
 		return transactionDateTime;
@@ -122,13 +123,16 @@ public class ApiWalletTransaction implements Comparable<ApiWalletTransaction> {
 		this.transactionType = transactionType;
 	}
 
-	public String getTransactionFor() {
-		return transactionFor;
-	}
+    public String getTransactionFor() {
+        return transactionFor;
+    }
 
-	public void setTransactionFor(String transactionFor) {
-		this.transactionFor = transactionFor;
-	}
+    public void setTransactionFor(String transactionFor) { this.transactionFor = transactionFor; }
+
+	public long getJournalTransactionID() {return journalTransactionID;}
+
+	public void setJournalTransactionID(long journalTransactionID) { this.journalTransactionID = journalTransactionID; }
+
 
 	public int compareTo(ApiWalletTransaction o) {
 		return Math.round(this.getTransactionID() - o.getTransactionID());

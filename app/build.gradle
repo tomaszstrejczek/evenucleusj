@@ -22,6 +22,12 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/INDEX.LIST'
     }
+
+    sourceSets {
+        androidTest {
+            resources.srcDirs = ['src/androidTest/resources']
+        }
+    }
 }
 
 dependencies {

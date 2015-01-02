@@ -38,7 +38,7 @@ public class JournalEntry {
     @DatabaseField
     public int CorporationId;
     @DatabaseField
-    public int CategoryId;
+    public String CategoryName;
 
     @DatabaseField
     public Date date;
