@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.evenucleus.viewmodel.PilotsViewModel;
 
-import org.robobinding.binder.Binders;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -17,9 +16,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        PilotsViewModel model = new PilotsViewModel();
-        View rootView = Binders.inflateAndBindWithoutPreInitializingViews(this, R.layout.activity_main, model);
-        setContentView(rootView);
+        setContentView(R.layout.activity_main);
     }
 
 
