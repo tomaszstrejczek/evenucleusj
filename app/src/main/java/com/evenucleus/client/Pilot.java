@@ -18,8 +18,10 @@ public class Pilot {
 
     @DatabaseField
     public String Name;
-    @DatabaseField
-    public String Url;
+
+    public String getUrl() {
+        return String.format("https://image.eveonline.com/Character/%d_64.jpg", CharacterId);
+    }
 
     @DatabaseField
     public String CurrentTrainingNameAndLevel;
