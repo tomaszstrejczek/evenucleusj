@@ -1,5 +1,6 @@
 package com.evenucleus.evenucleus;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
@@ -10,19 +11,40 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.beimin.eveapi.exception.ApiException;
 import com.evenucleus.client.Configuration;
+import com.evenucleus.client.EveApiCaller;
+import com.evenucleus.client.IEveApiCaller;
+import com.evenucleus.client.IKeyInfoRepo;
+import com.evenucleus.client.IPilotRepo;
+import com.evenucleus.client.KeyInfoRepo;
+import com.evenucleus.client.Pilot;
+import com.evenucleus.client.PilotRepo;
+import com.evenucleus.client.UserException;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.List;
+
 
 @EActivity(R.layout.activity_add_key)
 public class AddKey extends ActionBarActivity {
+
+    @Bean(EveApiCaller.class)
+    IEveApiCaller eveApiCaller;
+
+    @Bean(PilotRepo.class)
+    IPilotRepo pilotRepo;
+
+    @Bean(KeyInfoRepo.class)
+    IKeyInfoRepo keyInfoRepo;
 
     @ViewById
     EditText KeyEdit;
@@ -37,7 +59,7 @@ public class AddKey extends ActionBarActivity {
     void OnEditChange() {
         boolean validData = false;
         try {
-            validData = KeyEdit.getText().length()>0 && VCodeEdit.getText().length()>0 && Long.parseLong(KeyEdit.getText().toString())>0;
+            validData = KeyEdit.getText().length()>0 && VCodeEdit.getText().length()>0 && Integer.parseInt(KeyEdit.getText().toString())>0;
         }
         catch (Exception e) {}
         OkButton.setEnabled(validData);
@@ -56,12 +78,37 @@ public class AddKey extends ActionBarActivity {
     @Background
     void addKeyApi(ProgressDialog dlg) {
         try {
-            Thread.sleep(3000,0);
+            int keyid = Integer.parseInt(KeyEdit.getText().toString());
+            String vcode = VCodeEdit.getText().toString();
+            boolean result = eveApiCaller.CheckKey(keyid, vcode);
+            if (result) {
+                keyInfoRepo.AddKey(keyid, vcode);
+                pilotRepo.SimpleUpdateFromKey(keyid, vcode);
+            }
+
+            List<Pilot> ps = pilotRepo.GetAll();
+
+            hideProgress(dlg);
+            if (!result)
+                displayError("Invalid key");
+
+            // all done - may return to parent activity
+            OnCancelButton();
         }
         catch (Exception e) {
+            hideProgress(dlg);
+            displayError(e.getMessage());
         }
-        hideProgress(dlg);
     }
+
+    @UiThread
+    void displayError(String message) {
+        new AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage(message)
+                .show();
+    }
+
 
     @UiThread
     void hideProgress(ProgressDialog dlg) {

@@ -50,6 +50,14 @@ public class PilotItemView extends LinearLayout {
            .load(pilot.getUrl());
 
         pilotName.setText(pilot.Name);
+
+        // Not all data may be retrieved
+        if (pilot.CurrentTrainingNameAndLevel == null) {
+            skillInTraining.setText("");
+            currentTrainingDuration.setText("");
+            queueLength.setText("");
+            return;
+        }
         skillInTraining.setText(pilot.CurrentTrainingNameAndLevel);
 
         // currentTrainingDuration

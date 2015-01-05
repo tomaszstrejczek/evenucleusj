@@ -25,7 +25,8 @@ import java.util.jar.Attributes;
 public class JobRepoT extends TestBase {
     public void test_JobsNotification() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        PilotRepo pilotsRepo = new PilotRepo(_localdb);
+        PilotRepo pilotsRepo = new PilotRepo();
+        pilotsRepo._localdb = _localdb;
         JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
 
         // stage 1
@@ -101,7 +102,8 @@ public class JobRepoT extends TestBase {
 
     public void test_ResearchNotification() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        PilotRepo pilotsRepo = new PilotRepo(_localdb);
+        PilotRepo pilotsRepo = new PilotRepo();
+        pilotsRepo._localdb = _localdb;
         JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
 
         // stage 1

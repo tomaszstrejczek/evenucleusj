@@ -25,7 +25,8 @@ public class SkillRepoT extends TestBase {
     public void test_SkillsNotificationAdded() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
         SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
-        PilotRepo pilotRepo = new PilotRepo(_localdb);
+        PilotRepo pilotRepo = new PilotRepo();
+        pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
@@ -123,7 +124,8 @@ public class SkillRepoT extends TestBase {
     public void test_SkillsNotificationRemoved() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
         SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
-        PilotRepo pilotRepo = new PilotRepo(_localdb);
+        PilotRepo pilotRepo = new PilotRepo();
+        pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
@@ -212,7 +214,8 @@ public class SkillRepoT extends TestBase {
     public void test_SkillsNotificationAddedRemoved() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
         SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
-        PilotRepo pilotRepo = new PilotRepo(_localdb);
+        PilotRepo pilotRepo = new PilotRepo();
+        pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
@@ -278,7 +281,8 @@ public class SkillRepoT extends TestBase {
     public void test_SkillsNotificationLevelUp() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
         SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
-        PilotRepo pilotRepo = new PilotRepo(_localdb);
+        PilotRepo pilotRepo = new PilotRepo();
+        pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();

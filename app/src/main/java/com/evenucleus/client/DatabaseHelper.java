@@ -16,12 +16,15 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import org.androidannotations.annotations.EBean;
+
 import java.io.File;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
  * the DAOs used by the other classes.
  */
+@EBean
 public class DatabaseHelper
 {
     // any time you make changes to your database objects, you may have to increase the database version
@@ -44,15 +47,15 @@ public class DatabaseHelper
     private Dao<JournalEntry, Integer> journalEntryDao = null;
     private Dao<WalletTransaction, Integer> walletTransactionDao = null;
 
+    public void Initialize(String fullPath) throws java.sql.SQLException {
+        Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", fullPath));
 
-    public DatabaseHelper(String fullPath) {
         _fullPath = fullPath;
-    }
+        File f = new File(_fullPath);
+        File f2 = new File(f.getParent());
+        f2.mkdirs();
 
-    public void Initialize() throws java.sql.SQLException {
-        Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", _fullPath));
-
-        _database = SQLiteDatabase.openDatabase(_fullPath, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+        _database = SQLiteDatabase.openOrCreateDatabase(_fullPath, null);
         _connectionSource = new AndroidConnectionSource(_database);
         boolean initialized = DoesTableExists(_database, "Version");
         if (!initialized)

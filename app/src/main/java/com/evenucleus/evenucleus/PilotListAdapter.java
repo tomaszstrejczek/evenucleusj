@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 
 import com.evenucleus.client.IPilotRepo;
 import com.evenucleus.client.Pilot;
+import com.evenucleus.client.PilotRepo;
 import com.evenucleus.mocks.PilotRepoMock;
 
 import org.androidannotations.annotations.AfterInject;
@@ -25,7 +26,7 @@ public class PilotListAdapter extends BaseAdapter{
 
     List<Pilot> _pilotList;
 
-    @Bean(PilotRepoMock.class)
+    @Bean(PilotRepo.class)
     IPilotRepo _pilotRepo;
 
     @RootContext

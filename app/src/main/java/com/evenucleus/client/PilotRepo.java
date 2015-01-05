@@ -2,21 +2,48 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.beimin.eveapi.EveApi;
+import com.beimin.eveapi.account.characters.EveCharacter;
+import com.beimin.eveapi.exception.ApiException;
+import com.evenucleus.evenucleus.MyDatabaseHelper;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tomeks on 2014-12-28.
  */
+@EBean
 public class PilotRepo implements IPilotRepo {
 
-    DatabaseHelper _localdb;
-    public PilotRepo(DatabaseHelper localdb)
-    {
-        _localdb = localdb;
-    }
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
 
+    @Bean(EveApiCaller.class)
+    public IEveApiCaller _eveApiCaller;
+
+    @Override
+    public void SimpleUpdateFromKey(int keyid, String vcode) throws ApiException, SQLException {
+        List<Pilot> storedPilots = _localdb.getPilotDao().queryForAll();
+        List<String> names = new ArrayList<String>();
+        for(Pilot p:storedPilots) names.add(p.Name);
+
+        Set<EveCharacter> characters = _eveApiCaller.getCharacters(keyid, vcode);
+        for(EveCharacter c:characters) {
+            if (!names.contains(c.getName()))
+            {
+                Pilot p = new Pilot();
+                p.Name = c.getName();
+                p.CharacterId = c.getCharacterID();
+                _localdb.getPilotDao().createOrUpdate(p);
+            }
+        }
+    }
 
     @Override
     public void Update(UserData data) throws SQLException {

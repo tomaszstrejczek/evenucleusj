@@ -24,7 +24,7 @@ public class TestBase extends AndroidTestCase  {
 
         File databasePath = File.createTempFile("evenucleus", "db", getContext().getFilesDir());
 
-        _localdb = new DatabaseHelper(databasePath.getPath());
-        _localdb.Initialize();
+        _localdb = new DatabaseHelper();
+        _localdb.Initialize(databasePath.getPath());
     }
 }

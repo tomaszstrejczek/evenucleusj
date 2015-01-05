@@ -1,6 +1,7 @@
 package com.evenucleus.client;
 
 import com.beimin.eveapi.EveApi;
+import com.beimin.eveapi.account.apikeyinfo.ApiKeyInfoResponse;
 import com.beimin.eveapi.account.characters.EveCharacter;
 import com.beimin.eveapi.core.ApiAuthorization;
 import com.beimin.eveapi.exception.ApiException;
@@ -8,6 +9,8 @@ import com.beimin.eveapi.shared.wallet.journal.ApiJournalEntry;
 import com.beimin.eveapi.shared.wallet.journal.WalletJournalResponse;
 import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
 import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
+
+import org.androidannotations.annotations.EBean;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +20,19 @@ import java.util.Set;
 /**
  * Created by tomeks on 2014-12-28.
  */
+@EBean
 public class EveApiCaller implements IEveApiCaller {
+    @Override
+    public boolean CheckKey(int keyid, String vcode) throws ApiException, UserException {
+        EveApi api = new EveApi();
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        api.setAuth(auth);
+        ApiKeyInfoResponse response = api.getAPIKeyInfo();
+        if (response.hasError())
+            throw new UserException(response.getError().toString());
+        return response.isCharacterKey() || response.isCorporationKey() || response.isAccountKey();
+    }
+
     public Set<EveCharacter> getCharacters(int keyid, String vcode) throws ApiException {
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);

@@ -15,7 +15,9 @@ import java.util.List;
  */
 public class KeyRepoT extends TestBase {
     public void test_AddKey() throws SQLException, UserException {
-        KeyInfoRepo repo = new KeyInfoRepo(_localdb, new StringProvider(getContext()));
+        KeyInfoRepo repo = new KeyInfoRepo();
+        repo._localdb = _localdb;
+        repo._stringProvider = new StringProvider(getContext());
 
         repo.AddKey(1, "ala");
         List<KeyInfo> result = repo.GetKeys();

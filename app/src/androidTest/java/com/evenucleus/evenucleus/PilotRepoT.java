@@ -24,7 +24,8 @@ public class PilotRepoT extends TestBase {
 
     public void test_UpdatePilots1() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        PilotRepo repo = new PilotRepo(_localdb);
+        PilotRepo repo = new PilotRepo();
+        repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
@@ -156,7 +157,8 @@ public class PilotRepoT extends TestBase {
 
     public void test_UpdatePilotsAndCorporations() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        PilotRepo pilotRepo = new PilotRepo(_localdb);
+        PilotRepo pilotRepo = new PilotRepo();
+        pilotRepo._localdb = _localdb;
         CorporationRepo corpoRepo = new CorporationRepo(_localdb);
 
         // stage 1
@@ -203,7 +205,8 @@ public class PilotRepoT extends TestBase {
 
     public void test_SetMethods() throws SQLException {
         PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        PilotRepo repo = new PilotRepo(_localdb);
+        PilotRepo repo = new PilotRepo();
+        repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();

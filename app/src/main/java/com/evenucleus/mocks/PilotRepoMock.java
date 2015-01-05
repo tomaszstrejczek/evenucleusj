@@ -1,5 +1,6 @@
 package com.evenucleus.mocks;
 
+import com.beimin.eveapi.exception.ApiException;
 import com.evenucleus.client.IPilotRepo;
 import com.evenucleus.client.Pilot;
 import com.evenucleus.client.UserData;
@@ -16,6 +17,10 @@ import java.util.List;
  */
 @EBean
 public class PilotRepoMock implements IPilotRepo {
+    @Override
+    public void SimpleUpdateFromKey(int keyid, String vcode) throws ApiException, SQLException {
+    }
+
     @Override
     public void Update(UserData data) throws SQLException {
     }
