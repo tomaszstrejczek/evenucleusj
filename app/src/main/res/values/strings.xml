@@ -6,5 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="ErrorKeyAlreadyDefined">Key already defined</string>
     <string name="ErrorCategoryAlreadyDefined">Category already defined</string>
+    <string name="title_activity_add_key">AddKey</string>
+    <string name="menu_add_key">Add key</string>
 
 </resources>
