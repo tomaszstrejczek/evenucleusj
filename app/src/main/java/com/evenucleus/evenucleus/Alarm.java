@@ -1,12 +1,15 @@
 package com.evenucleus.evenucleus;
 
 import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.evenucleus.client.CorporationRepo;
@@ -18,6 +21,7 @@ import com.evenucleus.client.ISkillRepo;
 import com.evenucleus.client.Job;
 import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.KeyInfoRepo;
+import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.PilotService;
@@ -32,8 +36,10 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import android.util.Log;
@@ -110,6 +116,8 @@ public class Alarm extends BroadcastReceiver {
                 skillRepo.Update(userData);
                 corpoRepo.Update(userData);
 
+                postNotifications(pendingNotificationRepo);
+
                 return new DateTime(result.cachedUntil);
             }
             catch (Exception e)
@@ -117,6 +125,29 @@ public class Alarm extends BroadcastReceiver {
                 Log.e(Alarm.class.getName(), String.format("Exception %s: %s", e.toString(), e.getStackTrace().toString()));
                 _ex = e;
                 return new DateTime().plusMinutes(5);
+            }
+        }
+
+        private void postNotifications(PendingNotificationRepo repo) throws SQLException {
+            NotificationManager mNotificationManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
+
+            List<PendingNotification> notifications = repo.GetAll();
+            Log.d(MyTask.class.getName(), String.format("Got %d notification to send", notifications.size()));
+            String ns = Context.NOTIFICATION_SERVICE;
+
+            for(PendingNotification n:notifications) {
+                PendingIntent pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(), 0);
+
+                Log.d(MyTask.class.getName(), String.format("Posting notification %d: %s", n.PendingNotificationId, n.Message2));
+
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(_context)
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle(n.Message)
+                        .setContentText(n.Message2)
+                        .setContentIntent(pendingIntent);
+
+                mNotificationManager.notify(n.PendingNotificationId, builder.build());
+                repo.Remove(n.PendingNotificationId);
             }
         }
 

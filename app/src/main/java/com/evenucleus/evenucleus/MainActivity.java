@@ -7,6 +7,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.evenucleus.client.IPendingNotificationRepo;
+import com.evenucleus.client.PendingNotificationRepo;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
@@ -30,6 +33,9 @@ public class MainActivity extends ActionBarActivity {
     @Bean
     PilotListAdapter adapter;
 
+    @Bean(PendingNotificationRepo.class)
+    IPendingNotificationRepo pendingNotificationRepo;
+
     @AfterViews
     void afterUpdate() {
         Log.d(MainActivity.class.getName(), "afterupdate");
@@ -37,6 +43,12 @@ public class MainActivity extends ActionBarActivity {
 
         DateTime when = new DateTime().plusSeconds(10);
         new Alarm().SetAlarm(this.getApplicationContext(), when);
+
+        try {
+            pendingNotificationRepo.IssueNew("Debug", "Alarm started");
+        }
+        catch (Exception e) {
+        }
     }
 
     @Receiver(actions = Alarm.RefreshIntent)
