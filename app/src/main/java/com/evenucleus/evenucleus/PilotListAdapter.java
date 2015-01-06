@@ -33,7 +33,7 @@ public class PilotListAdapter extends BaseAdapter{
     Context context;
 
     @AfterInject
-    void initAdapter() {
+    public void initAdapter() {
         try {
             _pilotList = _pilotRepo.GetAll();
         }

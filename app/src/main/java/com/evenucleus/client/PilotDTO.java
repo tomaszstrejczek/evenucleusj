@@ -17,8 +17,6 @@ public class PilotDTO {
     public boolean TrainingActive;
     public int MaxManufacturingJobs;
     public int MaxResearchJobs;
-    public int FreeManufacturingJobsNofificationCount;
-    public int FreeResearchJobsNofificationCount;
     public KeyInfo KeyInfo;
     public List<String> Skills;
 

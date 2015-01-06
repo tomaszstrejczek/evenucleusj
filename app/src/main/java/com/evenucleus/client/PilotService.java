@@ -99,6 +99,7 @@ public class PilotService implements IPilotService {
                 Map<Integer, String> types = _typeNameDict.GetById(typeIds);
                 PilotDTO p = new PilotDTO();
                 p.Name = c.getName();
+                p.CharacterId = sheet.getCharacterID();
                 p.CurrentTrainingEnd = skillInTraining.getTrainingEndTime();
                 if (skillInTraining.isSkillInTraining())
                     p.CurrentTrainingNameAndLevel = String.format("%s %d", types.get(skillInTraining.getTrainingTypeID()), skillInTraining.getTrainingToLevel());

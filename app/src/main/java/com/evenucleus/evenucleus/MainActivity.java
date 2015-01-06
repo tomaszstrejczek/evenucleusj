@@ -15,6 +15,9 @@ import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.joda.time.DateTime;
+
+import java.util.Date;
 
 
 @EActivity(R.layout.activity_main)
@@ -27,25 +30,25 @@ public class MainActivity extends ActionBarActivity {
     @Bean
     PilotListAdapter adapter;
 
-    Alarm _alarm;
-
     @AfterViews
     void afterUpdate() {
         Log.d(MainActivity.class.getName(), "afterupdate");
         pilotList.setAdapter(adapter);
 
-        _alarm = new Alarm();
-        _alarm.SetAlarm(this.getApplicationContext());
+        DateTime when = new DateTime().plusSeconds(10);
+        new Alarm().SetAlarm(this.getApplicationContext(), when);
     }
 
     @Receiver(actions = Alarm.RefreshIntent)
     void OnRefresh(Context context) {
         // Put here YOUR code.
-        Toast.makeText(context, "Alarm !!!!!!!!!!", Toast.LENGTH_LONG).show(); // For example
+        Toast.makeText(context, "Refresh", Toast.LENGTH_LONG).show(); // For example
+        RefreshList();
     }
 
     @UiThread
     void RefreshList() {
+        adapter.initAdapter();
         adapter.notifyDataSetChanged();
     }
 

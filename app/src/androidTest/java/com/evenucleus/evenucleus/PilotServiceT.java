@@ -73,7 +73,11 @@ public class PilotServiceT extends TestBase {
         List<Pilot> pilots = pilotRepo.GetAll();
         Assert.assertEquals(5, pilots.size());
         Pilot micio= null;
-        for(Pilot p:pilots) if (p.Name.equals("MicioGatto")) {micio = p; break;}
+        for(Pilot p:pilots)
+        {
+            if (p.Name.equals("MicioGatto")) {micio = p; break;}
+            Assert.assertTrue(p.CharacterId != 0);
+        }
         Assert.assertNotNull(micio);
         Assert.assertTrue(micio.TrainingActive);
         Assert.assertTrue(micio.Skills.size() > 0);

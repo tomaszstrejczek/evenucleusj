@@ -85,11 +85,7 @@ public class SkillRepo implements ISkillRepo {
             for(Skill a:toadd)
             {
                 Log.d(SkillRepo.class.getName(), String.format("adding skill %s for %s", a.SkillName, p.Name));
-                Skill skill = new Skill();
-                skill.Pilot = p;
-                skill.SkillName = a.SkillName;
-
-                _localdb.getSkillDao().createOrUpdate(skill);
+                _localdb.getSkillDao().createOrUpdate(a);
                 if (!suspendNotification)
                 {
                     _pendingNotificationRepo.IssueNew(p.Name, String.format("%s trained", a.SkillName));

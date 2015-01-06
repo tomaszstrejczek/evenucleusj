@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Pilot {
 
-    public void setFromPilotDTO(Dao<Pilot, Integer> pilotDao, PilotDTO dto) throws SQLException {
+    public void setFromPilotDTO(PilotDTO dto) throws SQLException {
         CharacterId = dto.CharacterId;
         Name = dto.Name;
         CurrentTrainingNameAndLevel = dto.CurrentTrainingNameAndLevel;
@@ -22,26 +22,18 @@ public class Pilot {
         TrainingActive = dto.TrainingActive;
         MaxManufacturingJobs = dto.MaxManufacturingJobs;
         MaxResearchJobs = dto.MaxResearchJobs;
-        FreeManufacturingJobsNofificationCount = dto.FreeManufacturingJobsNofificationCount;
-        FreeResearchJobsNofificationCount = dto.FreeResearchJobsNofificationCount;
         KeyInfo = dto.KeyInfo;
-        pilotDao.assignEmptyForeignCollection(this, "Skills");
-        for(String s:dto.Skills) {
-            Skill sk = new Skill();
-            sk.SkillName = s;
-            sk.Pilot = this;
-            Skills.add(sk);
-        }
+        // Skills are handled by SkillRepo
     }
 
 
     @DatabaseField(generatedId = true)
     public int PilotId;
 
-    @DatabaseField
+    @DatabaseField(unique = true)
     public long CharacterId;
 
-    @DatabaseField
+    @DatabaseField(unique = true)
     public String Name;
 
     public String getUrl() {

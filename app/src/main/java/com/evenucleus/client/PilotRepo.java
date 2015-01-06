@@ -65,18 +65,25 @@ public class PilotRepo implements IPilotRepo {
             _localdb.getPilotDao().deleteById(s.PilotId);
         }
 
-        // add new pilots
+        // add & update new pilots
         List<Pilot> toadd = new ArrayList<Pilot>();
-        List<String> storedPilotNames = new ArrayList<String>();
-        for(Pilot s:storedPilots)
-            storedPilotNames.add(s.Name);
         for(PilotDTO s:data.Pilots)
-            if (!storedPilotNames.contains(s.Name))
-            {
-                Pilot p = new Pilot();
-                p.setFromPilotDTO(_localdb.getPilotDao(), s);
-                toadd.add(p);
-            }
+        {
+            Pilot p = null;
+            // Update id if this is an update
+            for(Pilot ps:storedPilots)
+                if (ps.Name.equals(s.Name))
+                {
+                    p = ps;
+                    break;
+                }
+            // Add if nothing to update
+            if (p == null) p = new Pilot();
+            p.setFromPilotDTO(s);
+
+            toadd.add(p);
+        }
+
         for(Pilot s:toadd) {
             _localdb.getPilotDao().createOrUpdate(s);
             for(PilotDTO dto: data.Pilots) if (dto.Name.equals(s.Name)) dto.PilotId = s.PilotId;

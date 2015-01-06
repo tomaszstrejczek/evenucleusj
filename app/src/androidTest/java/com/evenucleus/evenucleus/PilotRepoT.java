@@ -34,6 +34,7 @@ public class PilotRepoT extends TestBase {
         PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.Skills = new ArrayList<String>();
+        p.CharacterId = 1;
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -50,9 +51,11 @@ public class PilotRepoT extends TestBase {
         UserData userData2 = new UserData();
         PilotDTO p2 = new PilotDTO();
         p2.Name= "Pilot2";
+        p2.CharacterId = 2;
         p2.Skills = new ArrayList<String>();
         PilotDTO p3 = new PilotDTO();
         p3.Name= "Pilot3";
+        p3.CharacterId = 3;
         p3.Skills = new ArrayList<String>();
         userData2.Pilots = Arrays.asList(p2, p3);
         userData2.Corporations = new ArrayList<Corporation>();
@@ -171,6 +174,7 @@ public class PilotRepoT extends TestBase {
         UserData userData = new UserData();
         PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
+        p.CharacterId = 1;
         p.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p);
         Corporation c = new Corporation();
@@ -220,9 +224,11 @@ public class PilotRepoT extends TestBase {
         PilotDTO p2 = new PilotDTO();
         p2.Name= "Pilot1";
         p2.Skills = new ArrayList<String>();
+        p2.CharacterId = 2;
         PilotDTO p3 = new PilotDTO();
         p3.Name= "Pilot2";
         p3.Skills = new ArrayList<String>();
+        p3.CharacterId = 3;
         userData.Pilots = Arrays.asList(p2, p3);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
