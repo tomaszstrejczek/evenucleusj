@@ -50,7 +50,7 @@ public class PilotRepo implements IPilotRepo {
         Log.d(PilotRepo.class.getName(), "Update");
 
         List<String> validPilotNames = new ArrayList<String>();
-        for(Pilot s:data.Pilots)
+        for(PilotDTO s:data.Pilots)
             validPilotNames.add(s.Name);
 
         // delete inactive pilots
@@ -70,11 +70,17 @@ public class PilotRepo implements IPilotRepo {
         List<String> storedPilotNames = new ArrayList<String>();
         for(Pilot s:storedPilots)
             storedPilotNames.add(s.Name);
-        for(Pilot s:data.Pilots)
+        for(PilotDTO s:data.Pilots)
             if (!storedPilotNames.contains(s.Name))
-                toadd.add(s);
-        for(Pilot s:toadd)
+            {
+                Pilot p = new Pilot();
+                p.setFromPilotDTO(_localdb.getPilotDao(), s);
+                toadd.add(p);
+            }
+        for(Pilot s:toadd) {
             _localdb.getPilotDao().createOrUpdate(s);
+            for(PilotDTO dto: data.Pilots) if (dto.Name.equals(s.Name)) dto.PilotId = s.PilotId;
+        }
     }
 
     @Override

@@ -2,6 +2,9 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,11 +12,11 @@ import java.util.List;
 /**
  * Created by tomeks on 2014-12-29.
  */
+@EBean
 public class CorporationRepo implements ICorporationRepo {
-    DatabaseHelper _localdb;
-    public CorporationRepo(DatabaseHelper localdb) {
-        _localdb = localdb;
-    }
+    @Bean
+    public DatabaseHelper _localdb;
+
     @Override
     public void Update(UserData data) throws SQLException {
         Log.d(CorporationRepo.class.getName(), "Update");

@@ -15,7 +15,8 @@ import java.util.Map;
  */
 public class TypeNameDictT extends TestBase {
     public void test_SimpleCall() throws SQLException, ApiException {
-        TypeNameDict typeNameDict = new TypeNameDict(_localdb);
+        TypeNameDict typeNameDict = new TypeNameDict();
+        typeNameDict._localdb = _localdb;
 
         Map<Integer, String> r = typeNameDict.GetById(Arrays.asList(12345));
         Assert.assertEquals("200mm Railgun I Blueprint", r.get(12345));

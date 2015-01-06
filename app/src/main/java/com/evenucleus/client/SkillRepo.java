@@ -2,7 +2,11 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.evenucleus.evenucleus.MyDatabaseHelper;
 import com.j256.ormlite.dao.ForeignCollection;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,15 +15,13 @@ import java.util.List;
 /**
  * Created by tomeks on 2014-12-29.
  */
+@EBean
 public class SkillRepo implements ISkillRepo {
 
-    DatabaseHelper _localdb;
-    IPendingNotificationRepo _pendingNotificationRepo;
-    public SkillRepo(DatabaseHelper localdb, IPendingNotificationRepo pendingNotificationRepo)
-    {
-        _localdb = localdb;
-        _pendingNotificationRepo = pendingNotificationRepo;
-    }
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
+    @Bean(PendingNotificationRepo.class)
+    public IPendingNotificationRepo _pendingNotificationRepo;
 
     @Override
     public void Update(UserData data) throws SQLException {
@@ -28,8 +30,8 @@ public class SkillRepo implements ISkillRepo {
         List<Pilot> pilots = _localdb.getPilotDao().queryForAll();
         for(Pilot p:pilots)
         {
-            Pilot pd = null;
-            for(Pilot p2: data.Pilots)
+            PilotDTO pd = null;
+            for(PilotDTO p2: data.Pilots)
                 if (p2.Name.equals(p.Name))
                 {
                     pd = p2;
@@ -41,7 +43,7 @@ public class SkillRepo implements ISkillRepo {
             // remove skills
             List<Skill> toremove = new ArrayList<Skill>();
             List<String> trainedSkills = new ArrayList<String>();
-            for(Skill s: pd.Skills) trainedSkills.add(s.SkillName);
+            for(String s: pd.Skills) trainedSkills.add(s);
             for(Skill s: storedSkills)
                 if (!trainedSkills.contains(s.SkillName))
                     toremove.add(s);
@@ -51,9 +53,9 @@ public class SkillRepo implements ISkillRepo {
             for(Skill r:toremove)
             {
                 boolean leveledUp = false;
-                for(Skill x: pd.Skills)
-                    if (x.SkillName.length() == r.SkillName.length()
-                            && x.SkillName.substring(0, x.SkillName.length()-1).equals(r.SkillName.substring(0, r.SkillName.length()-1)))
+                for(String x: pd.Skills)
+                    if (x.length() == r.SkillName.length()
+                            && x.substring(0, x.length()-1).equals(r.SkillName.substring(0, r.SkillName.length()-1)))
                     {
                         leveledUp = true;
                         break;
@@ -71,9 +73,14 @@ public class SkillRepo implements ISkillRepo {
             List<String> storedSkillNames = new ArrayList<String>();
             for(Skill x: storedSkills) storedSkillNames.add(x.SkillName);
 
-            for(Skill x: pd.Skills)
-                if (!storedSkillNames.contains(x.SkillName))
-                    toadd.add(x);
+            for(String x: pd.Skills)
+                if (!storedSkillNames.contains(x))
+                {
+                    Skill sk = new Skill();
+                    sk.SkillName = x;
+                    sk.Pilot = p;
+                    toadd.add(sk);
+                }
 
             for(Skill a:toadd)
             {

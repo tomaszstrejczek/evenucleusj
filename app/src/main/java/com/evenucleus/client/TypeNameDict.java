@@ -6,6 +6,10 @@ import com.beimin.eveapi.eve.typename.EveTypeName;
 import com.beimin.eveapi.eve.typename.TypeNameParser;
 import com.beimin.eveapi.eve.typename.TypeNameResponse;
 import com.beimin.eveapi.exception.ApiException;
+import com.evenucleus.evenucleus.MyDatabaseHelper;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,12 +22,11 @@ import java.util.Map;
 /**
  * Created by tomeks on 2014-12-31.
  */
+@EBean
 public class TypeNameDict implements ITypeNameDict {
 
-    DatabaseHelper _localdb;
-    public TypeNameDict(DatabaseHelper localdb) {
-        _localdb = localdb;
-    }
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
 
     @Override
     public Map<Integer, String> GetById(List<Integer> ids) throws SQLException, ApiException {

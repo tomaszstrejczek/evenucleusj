@@ -3,6 +3,12 @@ package com.evenucleus.client;
 import com.beimin.eveapi.EveApi;
 import com.beimin.eveapi.account.apikeyinfo.ApiKeyInfoResponse;
 import com.beimin.eveapi.account.characters.EveCharacter;
+import com.beimin.eveapi.character.sheet.CharacterSheetParser;
+import com.beimin.eveapi.character.sheet.CharacterSheetResponse;
+import com.beimin.eveapi.character.skill.intraining.SkillInTrainingParser;
+import com.beimin.eveapi.character.skill.intraining.SkillInTrainingResponse;
+import com.beimin.eveapi.character.skill.queue.SkillQueueParser;
+import com.beimin.eveapi.character.skill.queue.SkillQueueResponse;
 import com.beimin.eveapi.core.ApiAuthorization;
 import com.beimin.eveapi.exception.ApiException;
 import com.beimin.eveapi.shared.wallet.journal.ApiJournalEntry;
@@ -31,6 +37,28 @@ public class EveApiCaller implements IEveApiCaller {
         if (response.hasError())
             throw new UserException(response.getError().toString());
         return response.isCharacterKey() || response.isCorporationKey() || response.isAccountKey();
+    }
+
+    @Override
+    public boolean IsCorporationKey(int keyid, String vcode) throws ApiException, UserException {
+        EveApi api = new EveApi();
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        api.setAuth(auth);
+        ApiKeyInfoResponse response = api.getAPIKeyInfo();
+        if (response.hasError())
+            throw new UserException(response.getError().toString());
+        return response.isCorporationKey();
+    }
+
+    @Override
+    public String GetCorporationName(int keyid, String vcode) throws ApiException, UserException {
+        EveApi api = new EveApi();
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        api.setAuth(auth);
+        ApiKeyInfoResponse response = api.getAPIKeyInfo();
+        if (response.hasError())
+            throw new UserException(response.getError().toString());
+        return response.getEveCharacters().iterator().next().getCorporationName();
     }
 
     public Set<EveCharacter> getCharacters(int keyid, String vcode) throws ApiException {
@@ -182,6 +210,27 @@ public class EveApiCaller implements IEveApiCaller {
         }
 
         return result;
+    }
+
+    @Override
+    public CharacterSheetResponse GetCharacterSheet(int keyid, String vcode, long characterId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        auth.setCharacterID(characterId);
+        return CharacterSheetParser.getInstance().getResponse(auth);
+    }
+
+    @Override
+    public SkillInTrainingResponse GetSkillInTraining(int keyid, String vcode, long characterId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        auth.setCharacterID(characterId);
+        return SkillInTrainingParser.getInstance().getResponse(auth);
+    }
+
+    @Override
+    public SkillQueueResponse GetSkillQueue(int keyid, String vcode, long characterId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        auth.setCharacterID(characterId);
+        return SkillQueueParser.getInstance().getResponse(auth);
     }
 
 }

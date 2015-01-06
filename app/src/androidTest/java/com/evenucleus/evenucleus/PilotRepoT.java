@@ -7,6 +7,7 @@ import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.Pilot;
+import com.evenucleus.client.PilotDTO;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.UserData;
 
@@ -23,15 +24,16 @@ import junit.framework.Assert;
 public class PilotRepoT extends TestBase {
 
     public void test_UpdatePilots1() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
         PilotRepo repo = new PilotRepo();
         repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -46,12 +48,12 @@ public class PilotRepoT extends TestBase {
 
         // stage 2
         UserData userData2 = new UserData();
-        Pilot p2 = new Pilot();
+        PilotDTO p2 = new PilotDTO();
         p2.Name= "Pilot2";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p2, "Skills");
-        Pilot p3 = new Pilot();
+        p2.Skills = new ArrayList<String>();
+        PilotDTO p3 = new PilotDTO();
         p3.Name= "Pilot3";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p3, "Skills");
+        p3.Skills = new ArrayList<String>();
         userData2.Pilots = Arrays.asList(p2, p3);
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
@@ -79,11 +81,12 @@ public class PilotRepoT extends TestBase {
     }
 
     public void test_UpdateCorporations() throws SQLException {
-        CorporationRepo repo = new CorporationRepo(_localdb);
+        CorporationRepo repo = new CorporationRepo();
+        repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
-        userData.Pilots = new ArrayList<Pilot>();
+        userData.Pilots = new ArrayList<PilotDTO>();
         Corporation c = new Corporation();
         c.Name= "Corpo1";
         userData.Corporations = Arrays.asList(c);
@@ -99,7 +102,7 @@ public class PilotRepoT extends TestBase {
 
         // stage 2
         UserData userData2 = new UserData();
-        userData2.Pilots = new ArrayList<Pilot>();
+        userData2.Pilots = new ArrayList<PilotDTO>();
         Corporation c2 = new Corporation();
         c2.Name= "Corpo2";
         Corporation c3 = new Corporation();
@@ -124,11 +127,12 @@ public class PilotRepoT extends TestBase {
     }
 
     public void test_UpdateCorporations2() throws SQLException {
-        CorporationRepo repo = new CorporationRepo(_localdb);
+        CorporationRepo repo = new CorporationRepo();
+        repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
-        userData.Pilots = new ArrayList<Pilot>();
+        userData.Pilots = new ArrayList<PilotDTO>();
         Corporation c = new Corporation();
         c.Name= "Corpo1";
         userData.Corporations = Arrays.asList(c);
@@ -144,7 +148,7 @@ public class PilotRepoT extends TestBase {
 
         // stage 2
         UserData userData2 = new UserData();
-        userData2.Pilots = new ArrayList<Pilot>();
+        userData2.Pilots = new ArrayList<PilotDTO>();
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
         userData2.JobSummary = new JobSummary();
@@ -156,16 +160,18 @@ public class PilotRepoT extends TestBase {
     }
 
     public void test_UpdatePilotsAndCorporations() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
-        CorporationRepo corpoRepo = new CorporationRepo(_localdb);
+        CorporationRepo corpoRepo = new CorporationRepo();
+        corpoRepo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p);
         Corporation c = new Corporation();
         c.Name= "Corpo1";
@@ -186,7 +192,7 @@ public class PilotRepoT extends TestBase {
 
         // stage 2
         UserData userData2 = new UserData();
-        userData2.Pilots = new ArrayList<Pilot>();
+        userData2.Pilots = new ArrayList<PilotDTO>();
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
         userData2.JobSummary = new JobSummary();
@@ -204,18 +210,19 @@ public class PilotRepoT extends TestBase {
     }
 
     public void test_SetMethods() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
         PilotRepo repo = new PilotRepo();
         repo._localdb = _localdb;
 
         // stage 1
         UserData userData = new UserData();
-        Pilot p2 = new Pilot();
+        PilotDTO p2 = new PilotDTO();
         p2.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p2, "Skills");
-        Pilot p3 = new Pilot();
+        p2.Skills = new ArrayList<String>();
+        PilotDTO p3 = new PilotDTO();
         p3.Name= "Pilot2";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p3, "Skills");
+        p3.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p2, p3);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();

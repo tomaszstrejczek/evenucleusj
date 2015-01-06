@@ -3,10 +3,14 @@ package com.evenucleus.evenucleus;
 import android.test.InstrumentationTestCase;
 
 import com.beimin.eveapi.account.characters.EveCharacter;
+import com.beimin.eveapi.character.sheet.CharacterSheetResponse;
+import com.beimin.eveapi.character.skill.intraining.SkillInTrainingResponse;
+import com.beimin.eveapi.character.skill.queue.SkillQueueResponse;
 import com.beimin.eveapi.exception.ApiException;
 import com.evenucleus.client.EveApiCaller;
 import com.evenucleus.client.IEveApiCaller;
 import com.evenucleus.client.JournalEntry;
+import com.evenucleus.client.UserException;
 import com.evenucleus.client.WalletTransaction;
 
 import junit.framework.Assert;
@@ -126,4 +130,39 @@ public class EveApiT extends InstrumentationTestCase {
         Assert.assertEquals(0, entries2.size());
     }
 
+    public void test_IsCorporationKey() throws ApiException, UserException {
+        int code = 3692329;
+        String vcode = "aPQOKWEr0r9bp7yVNVgtx9O9xSPDOgTEXY9FhM93ArndOcE3ZTTV1xGnTDHDoeii";
+        IEveApiCaller api = GetEveApiCaller();
+        Assert.assertTrue(api.IsCorporationKey(code, vcode));
+
+        code = 3483492;
+        vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
+        Assert.assertFalse(api.IsCorporationKey(code, vcode));
+    }
+    public void test_corporationName() throws ApiException, UserException {
+        int code = 3692329;
+        String vcode = "aPQOKWEr0r9bp7yVNVgtx9O9xSPDOgTEXY9FhM93ArndOcE3ZTTV1xGnTDHDoeii";
+        IEveApiCaller api = GetEveApiCaller();
+        String name = api.GetCorporationName(code, vcode);
+        Assert.assertEquals("My Random Corporation", name);
+    }
+
+    public void test_characterSheet() throws ApiException {
+        int code = 3483492;
+        String vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
+        IEveApiCaller api = GetEveApiCaller();
+
+        Set<EveCharacter> characters = api.getCharacters(code, vcode);
+        Assert.assertEquals(1, characters.size());
+        EveCharacter character = characters.iterator().next();
+
+        CharacterSheetResponse response = api.GetCharacterSheet(code, vcode, character.getCharacterID());
+        Assert.assertEquals("MicioGatto", response.getName());
+
+        SkillInTrainingResponse rsp2 = api.GetSkillInTraining(code, vcode, character.getCharacterID());
+        Assert.assertTrue(rsp2.isSkillInTraining());
+        SkillQueueResponse rsp3 = api.GetSkillQueue(code, vcode, character.getCharacterID());
+        Assert.assertTrue(rsp3.getAll().size()>0);
+    }
 }

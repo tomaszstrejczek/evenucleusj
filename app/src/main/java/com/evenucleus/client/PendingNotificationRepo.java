@@ -2,6 +2,11 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.evenucleus.evenucleus.MyDatabaseHelper;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -9,12 +14,12 @@ import java.util.List;
 /**
  * Created by tomeks on 2014-12-29.
  */
+@EBean
 public class PendingNotificationRepo implements IPendingNotificationRepo{
 
-    DatabaseHelper _localdb;
-    public PendingNotificationRepo(DatabaseHelper localdb) {
-        _localdb = localdb;
-    }
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
+
     @Override
     public void IssueNew(String message, String message2) throws SQLException {
         Log.d(PendingNotificationRepo.class.getName(), String.format("Issue new %s %s", message, message2));

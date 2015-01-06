@@ -39,8 +39,8 @@ public class JobRepo implements IJobRepo {
 
         for(Pilot p:pilots)
         {
-            Pilot pd = null;
-            for(Pilot x: data.Pilots)
+            PilotDTO pd = null;
+            for(PilotDTO x: data.Pilots)
                 if (x.Name.equals(p.Name))
                 {
                     pd = x;

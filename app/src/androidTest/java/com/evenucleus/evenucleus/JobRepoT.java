@@ -7,6 +7,7 @@ import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.Pilot;
+import com.evenucleus.client.PilotDTO;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.SkillRepo;
 import com.evenucleus.client.UserData;
@@ -24,18 +25,19 @@ import java.util.jar.Attributes;
  */
 public class JobRepoT extends TestBase {
     public void test_JobsNotification() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
         PilotRepo pilotsRepo = new PilotRepo();
         pilotsRepo._localdb = _localdb;
         JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
 
         // stage 1
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 1;
         p.MaxManufacturingJobs = 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -65,11 +67,11 @@ public class JobRepoT extends TestBase {
         // stage 3
         // First job started - still no notification - but notification flag shoud be reset
         UserData userData2 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 2;
         p.MaxManufacturingJobs = 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData2.Pilots = Arrays.asList(p);
         userData2.Corporations = new ArrayList<Corporation>();
         Job j = new Job();
@@ -101,18 +103,19 @@ public class JobRepoT extends TestBase {
     }
 
     public void test_ResearchNotification() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
         PilotRepo pilotsRepo = new PilotRepo();
         pilotsRepo._localdb = _localdb;
         JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
 
         // stage 1
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 1;
         p.MaxResearchJobs= 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -142,11 +145,11 @@ public class JobRepoT extends TestBase {
         // stage 3
         // First job started - still no notification - but notification flag shoud be reset
         UserData userData2 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 2;
         p.MaxResearchJobs= 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
+        p.Skills = new ArrayList<String>();
         userData2.Pilots = Arrays.asList(p);
         userData2.Corporations = new ArrayList<Corporation>();
         Job j = new Job();

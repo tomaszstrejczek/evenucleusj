@@ -6,6 +6,7 @@ import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.Pilot;
+import com.evenucleus.client.PilotDTO;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.Skill;
 import com.evenucleus.client.SkillRepo;
@@ -23,18 +24,21 @@ import java.util.List;
  */
 public class SkillRepoT extends TestBase {
     public void test_SkillsNotificationAdded() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
+        SkillRepo skillRepo = new SkillRepo();
+        skillRepo._pendingNotificationRepo = pendingNotificationRepo;
+        skillRepo._localdb = _localdb;
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{ SkillName = "skill1"; }});
-        p.Skills.add(new Skill() {{SkillName="skill2";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skill1");
+        p.Skills.add("skill2");
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -60,12 +64,12 @@ public class SkillRepoT extends TestBase {
 
         // stage 3 - added a skill
         UserData userData2 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skill1";}});
-        p.Skills.add(new Skill() {{SkillName="skill2";}});
-        p.Skills.add(new Skill() {{SkillName="skill3";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skill1");
+        p.Skills.add("skill2");
+        p.Skills.add("skill3");
         userData2.Pilots = Arrays.asList(p);
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
@@ -86,14 +90,14 @@ public class SkillRepoT extends TestBase {
 
         // stage 4 - added two skills
         UserData userData3 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skill1";}});
-        p.Skills.add(new Skill() {{SkillName="skill2";}});
-        p.Skills.add(new Skill() {{SkillName="skill3";}});
-        p.Skills.add(new Skill() {{SkillName="skill4";}});
-        p.Skills.add(new Skill() {{SkillName="skill5";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skill1");
+        p.Skills.add("skill2");
+        p.Skills.add("skill3");
+        p.Skills.add("skill4");
+        p.Skills.add("skill5");
         userData3.Pilots = Arrays.asList(p);
         userData3.Corporations = new ArrayList<Corporation>();
         userData3.Jobs = new ArrayList<Job>();
@@ -122,20 +126,24 @@ public class SkillRepoT extends TestBase {
     }
 
     public void test_SkillsNotificationRemoved() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
+        SkillRepo skillRepo = new SkillRepo();
+        skillRepo._localdb = _localdb;
+        skillRepo._pendingNotificationRepo = pendingNotificationRepo;
+
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skilla1";}});
-        p.Skills.add(new Skill() {{SkillName="skillb2";}});
-        p.Skills.add(new Skill() {{SkillName="skillc3";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skilla1");
+        p.Skills.add("skillb2");
+        p.Skills.add("skillc3");
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -152,12 +160,12 @@ public class SkillRepoT extends TestBase {
 
         // stage 2 - removed a skill
         UserData userData2 = new UserData();
-        Pilot p2 = new Pilot();
+        PilotDTO p2 = new PilotDTO();
         p2.Name= "Pilot1";
         p2.PilotId = 2;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p2, "Skills");
-        p2.Skills.add(new Skill() {{SkillName = "skilla1";}});
-        p2.Skills.add(new Skill() {{SkillName="skillb2";}});
+        p2.Skills = new ArrayList<String>();
+        p2.Skills.add("skilla1");
+        p2.Skills.add("skillb2");
         userData2.Pilots = Arrays.asList(p2);
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
@@ -178,10 +186,10 @@ public class SkillRepoT extends TestBase {
 
         // stage 3 - removed two skills
         UserData userData3 = new UserData();
-        Pilot p3 = new Pilot();
+        PilotDTO p3 = new PilotDTO();
         p3.Name= "Pilot1";
         p3.PilotId = 3;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p3, "Skills");
+        p3.Skills = new ArrayList<String>();
         userData3.Pilots = Arrays.asList(p3);
         userData3.Corporations = new ArrayList<Corporation>();
         userData3.Jobs = new ArrayList<Job>();
@@ -212,20 +220,23 @@ public class SkillRepoT extends TestBase {
     }
 
     public void test_SkillsNotificationAddedRemoved() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
+        SkillRepo skillRepo = new SkillRepo();
+        skillRepo._localdb = _localdb;
+        skillRepo._pendingNotificationRepo = pendingNotificationRepo;
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skilla1";}});
-        p.Skills.add(new Skill() {{SkillName="skillb2";}});
-        p.Skills.add(new Skill() {{SkillName="skillc3";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skilla1");
+        p.Skills.add("skillb2");
+        p.Skills.add("skillc3");
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -242,13 +253,13 @@ public class SkillRepoT extends TestBase {
 
         // stage 2 - added and removed a skill
         UserData userData2 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 2;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skilla1";}});
-        p.Skills.add(new Skill() {{SkillName="skillb2";}});
-        p.Skills.add(new Skill() {{SkillName="skillx4";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skilla1");
+        p.Skills.add("skillb2");
+        p.Skills.add("skillx4");
         userData2.Pilots = Arrays.asList(p);
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
@@ -279,20 +290,24 @@ public class SkillRepoT extends TestBase {
     }
 
     public void test_SkillsNotificationLevelUp() throws SQLException {
-        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo(_localdb);
-        SkillRepo skillRepo = new SkillRepo(_localdb, pendingNotificationRepo);
+        PendingNotificationRepo pendingNotificationRepo = new PendingNotificationRepo();
+        pendingNotificationRepo._localdb = _localdb;
+        SkillRepo skillRepo = new SkillRepo();
+        skillRepo._localdb = _localdb;
+        skillRepo._pendingNotificationRepo = pendingNotificationRepo;
+
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
 
         // stage 1 - skills firstly seen - no notification expected
         UserData userData = new UserData();
-        Pilot p = new Pilot();
+        PilotDTO p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 1;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skill1";}});
-        p.Skills.add(new Skill() {{SkillName="skill2";}});
-        p.Skills.add(new Skill() {{SkillName="skill 3";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skill1");
+        p.Skills.add("skill2");
+        p.Skills.add("skill 3");
         userData.Pilots = Arrays.asList(p);
         userData.Corporations = new ArrayList<Corporation>();
         userData.Jobs = new ArrayList<Job>();
@@ -309,13 +324,13 @@ public class SkillRepoT extends TestBase {
 
         // stage 2 - level up
         UserData userData2 = new UserData();
-        p = new Pilot();
+        p = new PilotDTO();
         p.Name= "Pilot1";
         p.PilotId = 2;
-        _localdb.getPilotDao().assignEmptyForeignCollection(p, "Skills");
-        p.Skills.add(new Skill() {{SkillName = "skill1";}});
-        p.Skills.add(new Skill() {{SkillName="skill2";}});
-        p.Skills.add(new Skill() {{SkillName="skill 4";}});
+        p.Skills = new ArrayList<String>();
+        p.Skills.add("skill1");
+        p.Skills.add("skill2");
+        p.Skills.add("skill 4");
         userData2.Pilots = Arrays.asList(p);
         userData2.Corporations = new ArrayList<Corporation>();
         userData2.Jobs = new ArrayList<Job>();
