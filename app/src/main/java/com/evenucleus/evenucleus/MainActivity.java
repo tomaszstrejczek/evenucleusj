@@ -69,4 +69,8 @@ public class MainActivity extends ActionBarActivity {
     void add_key() {
         AddKey_.intent(this).start();
     }
+    @OptionsItem(R.id.jobs)
+    void menu_jobs() {
+        JobsActivity_.intent(this).start();
+    }
 }

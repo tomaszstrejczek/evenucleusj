@@ -10,5 +10,5 @@ import java.util.Map;
  * Created by tomeks on 2014-12-31.
  */
 public interface ITypeNameDict {
-    Map<Integer,String> GetById(List<Integer> ids) throws SQLException, ApiException;
+    Map<Integer,String> GetById(Iterable<Integer> ids) throws SQLException, ApiException;
 }

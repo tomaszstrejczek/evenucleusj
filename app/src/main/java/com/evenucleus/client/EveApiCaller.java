@@ -11,6 +11,7 @@ import com.beimin.eveapi.character.skill.queue.SkillQueueParser;
 import com.beimin.eveapi.character.skill.queue.SkillQueueResponse;
 import com.beimin.eveapi.core.ApiAuthorization;
 import com.beimin.eveapi.exception.ApiException;
+import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
 import com.beimin.eveapi.shared.wallet.journal.ApiJournalEntry;
 import com.beimin.eveapi.shared.wallet.journal.WalletJournalResponse;
 import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
@@ -231,6 +232,20 @@ public class EveApiCaller implements IEveApiCaller {
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
         return SkillQueueParser.getInstance().getResponse(auth);
+    }
+
+    @Override
+    public IndustryJobsResponse getIndustryJobs(int keyid, String vcode, long characterId) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        auth.setCharacterID(characterId);
+
+        return com.beimin.eveapi.character.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
+    }
+
+    @Override
+    public IndustryJobsResponse getIndustryJobsCorpo(int keyid, String vcode) throws ApiException {
+        ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
+        return com.beimin.eveapi.corporation.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
     }
 
 }

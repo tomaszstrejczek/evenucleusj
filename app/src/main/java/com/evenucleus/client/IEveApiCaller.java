@@ -5,6 +5,7 @@ import com.beimin.eveapi.character.sheet.CharacterSheetResponse;
 import com.beimin.eveapi.character.skill.intraining.SkillInTrainingResponse;
 import com.beimin.eveapi.character.skill.queue.SkillQueueResponse;
 import com.beimin.eveapi.exception.ApiException;
+import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -25,4 +26,6 @@ public interface IEveApiCaller {
     public CharacterSheetResponse GetCharacterSheet(int keyid, String vcode, long characterId) throws ApiException;
     public SkillInTrainingResponse GetSkillInTraining(int keyid, String vcode, long characterId) throws ApiException;
     public SkillQueueResponse GetSkillQueue(int keyid, String vcode, long characterId) throws ApiException;
+    public IndustryJobsResponse getIndustryJobs(int keyid, String vcode, long characterId) throws ApiException;
+    public IndustryJobsResponse getIndustryJobsCorpo(int keyid, String vcode) throws ApiException;
 }

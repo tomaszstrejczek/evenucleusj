@@ -7,6 +7,7 @@ import com.beimin.eveapi.character.sheet.CharacterSheetResponse;
 import com.beimin.eveapi.character.skill.intraining.SkillInTrainingResponse;
 import com.beimin.eveapi.character.skill.queue.SkillQueueResponse;
 import com.beimin.eveapi.exception.ApiException;
+import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
 import com.evenucleus.client.EveApiCaller;
 import com.evenucleus.client.IEveApiCaller;
 import com.evenucleus.client.JournalEntry;
@@ -164,5 +165,26 @@ public class EveApiT extends InstrumentationTestCase {
         Assert.assertTrue(rsp2.isSkillInTraining());
         SkillQueueResponse rsp3 = api.GetSkillQueue(code, vcode, character.getCharacterID());
         Assert.assertTrue(rsp3.getAll().size()>0);
+    }
+
+    public void test_IndustryJobsCharacter() throws ApiException {
+        int code = 3483492;
+        String vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
+        IEveApiCaller api = GetEveApiCaller();
+
+        Set<EveCharacter> characters = api.getCharacters(code, vcode);
+        Assert.assertEquals(1, characters.size());
+        EveCharacter character = characters.iterator().next();
+
+        IndustryJobsResponse rsp = api.getIndustryJobs(code, vcode, character.getCharacterID());
+        Assert.assertNotNull(rsp);
+    }
+    public void test_IndustryJobsCorpo() throws ApiException {
+        int code = 3692329;
+        String vcode = "aPQOKWEr0r9bp7yVNVgtx9O9xSPDOgTEXY9FhM93ArndOcE3ZTTV1xGnTDHDoeii";
+        IEveApiCaller api = GetEveApiCaller();
+
+        IndustryJobsResponse rsp = api.getIndustryJobsCorpo(code, vcode);
+        Assert.assertNotNull(rsp);
     }
 }

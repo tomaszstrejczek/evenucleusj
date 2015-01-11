@@ -14,6 +14,7 @@ import org.androidannotations.annotations.EBean;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,12 +30,10 @@ public class TypeNameDict implements ITypeNameDict {
     public DatabaseHelper _localdb;
 
     @Override
-    public Map<Integer, String> GetById(List<Integer> ids) throws SQLException, ApiException {
-        Log.d(TypeNameDict.class.getName(), String.format("GetById for %d ids", ids.size()));
+    public Map<Integer, String> GetById(Iterable<Integer> ids) throws SQLException, ApiException {
+        Log.d(TypeNameDict.class.getName(), "GetById");
 
         Map<Integer, String> result = new HashMap<Integer, String>();
-        if (ids.size() == 0)
-            return result;
 
         // delete old entries to create space
         purgeCacheIfNeeded();
