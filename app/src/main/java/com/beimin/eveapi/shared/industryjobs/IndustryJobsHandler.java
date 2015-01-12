@@ -14,7 +14,6 @@ public class IndustryJobsHandler extends AbstractContentListHandler<IndustryJobs
 	protected ApiIndustryJob getItem(Attributes attrs) {
 		ApiIndustryJob job = new ApiIndustryJob();
 		job.setJobID(getLong(attrs, "jobID"));
-		job.setAssemblyLineID(getLong(attrs, "assemblyLineID"));
 		job.setContainerID(getLong(attrs, "containerID"));
 		job.setInstalledItemID(getLong(attrs, "installedItemID"));
 		job.setInstalledItemLocationID(getLong(attrs, "installedItemLocationID"));
@@ -24,6 +23,7 @@ public class IndustryJobsHandler extends AbstractContentListHandler<IndustryJobs
 		job.setInstalledItemLicensedProductionRunsRemaining(getInt(attrs, "installedItemLicensedProductionRunsRemaining"));
 		job.setOutputLocationID(getLong(attrs, "outputLocationID"));
 		job.setInstallerID(getLong(attrs, "installerID"));
+        job.setInstallerName(getString(attrs, "installerName"));
 		job.setRuns(getInt(attrs, "runs"));
 		job.setLicensedProductionRuns(getInt(attrs, "licensedProductionRuns"));
 		job.setInstalledInSolarSystemID(getLong(attrs, "installedInSolarSystemID"));
@@ -32,7 +32,7 @@ public class IndustryJobsHandler extends AbstractContentListHandler<IndustryJobs
 		job.setCharMaterialMultiplier(getDouble(attrs, "charMaterialMultiplier"));
 		job.setTimeMultiplier(getDouble(attrs, "timeMultiplier"));
 		job.setCharTimeMultiplier(getDouble(attrs, "charTimeMultiplier"));
-		job.setInstalledItemTypeID(getInt(attrs, "installedItemTypeID"));
+		job.setBlueprintTypeID(getInt(attrs, "blueprintTypeID"));
 		job.setOutputTypeID(getInt(attrs, "outputTypeID"));
 		job.setContainerTypeID(getInt(attrs, "containerTypeID"));
 		job.setInstalledItemCopy(getLong(attrs, "installedItemCopy"));

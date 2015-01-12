@@ -13,7 +13,7 @@ public interface IPilotService {
     public class Result {
         public List<PilotDTO> pilots;
         public List<Corporation> corporations;
-        public Date cachedUntil;
+        public org.joda.time.DateTime cachedUntil;
     }
 
     Result Get() throws SQLException, UserException, ApiException;

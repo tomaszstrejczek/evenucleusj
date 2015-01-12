@@ -5,7 +5,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.evenucleus.client.IJobRepo;
 import com.evenucleus.client.IPilotRepo;
+import com.evenucleus.client.Job;
+import com.evenucleus.client.JobRepo;
 import com.evenucleus.client.Pilot;
 import com.evenucleus.client.PilotRepo;
 
@@ -15,17 +18,21 @@ import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by tomeks on 2015-01-11.
  */
 @EBean
 public class JobListAdapter extends BaseAdapter {
-    List<Pilot> _pilotList;
+    List<Job> _jobList;
+    List<String> _owners;
 
-    @Bean(PilotRepo.class)
-    IPilotRepo _pilotRepo;
+    @Bean(JobRepo.class)
+    IJobRepo _jobRepo;
 
     @RootContext
     Context context;
@@ -33,7 +40,10 @@ public class JobListAdapter extends BaseAdapter {
     @AfterInject
     public void initAdapter() {
         try {
-            _pilotList = _pilotRepo.GetAll();
+            _jobList = _jobRepo.GetAll();
+            Set<String> owners = new HashSet<String>();
+            for(Job j:_jobList) if (!owners.contains(j.Owner)) owners.add(j.Owner);
+            _owners = new ArrayList<>(owners);
         }
         catch (SQLException e)
         {
@@ -42,12 +52,12 @@ public class JobListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return _pilotList.size();
+        return _owners.size();
     }
 
     @Override
-    public Pilot getItem(int position) {
-        return _pilotList.get(position);
+    public String getItem(int position) {
+        return _owners.get(position);
     }
 
     @Override
@@ -57,16 +67,16 @@ public class JobListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        PilotItemView pilotItemView;
+        JobItemView jobItemView;
         if (convertView == null) {
-            pilotItemView = PilotItemView_.build(context);
+            jobItemView = JobItemView_.build(context);
         } else {
-            pilotItemView = (PilotItemView) convertView;
+            jobItemView = (JobItemView) convertView;
         }
 
-        pilotItemView.bind(getItem(position));
+        jobItemView.bind(getItem(position));
 
-        return pilotItemView;
+        return jobItemView;
     }
 
 }

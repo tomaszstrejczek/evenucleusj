@@ -52,6 +52,8 @@ public abstract class AbstractContentHandler extends DefaultHandler {
 	}
 
 	protected Date getDate(String string) {
+        if (string == null)
+            return null;
 		return DateUtils.getGMTConverter().convert(Date.class, string);
 	}
 
@@ -71,11 +73,14 @@ public abstract class AbstractContentHandler extends DefaultHandler {
 
 	protected Integer getInt(Attributes attrs, String qName) {
 		try {
-			return Integer.parseInt(getString(attrs, qName));
+            String s = getString(attrs, qName);
+            if (s == null)
+                return new Integer(0);
+			return Integer.parseInt(s);
 		} catch (NumberFormatException e) {
-			return null;
+            return new Integer(0);
 		} catch (NullPointerException e) {
-			return null;
+            return new Integer(0);
 		}
 	}
 
@@ -91,11 +96,14 @@ public abstract class AbstractContentHandler extends DefaultHandler {
 
 	protected Long getLong(Attributes attrs, String qName) {
 		try {
-			return Long.parseLong(getString(attrs, qName));
+            String s = getString(attrs, qName);
+            if (s == null)
+                return new Long(0);
+			return Long.parseLong(s);
 		} catch (NumberFormatException e) {
-			return null;
+            return new Long(0);
 		} catch (NullPointerException e) {
-			return null;
+            return new Long(0);
 		}
 	}
 
@@ -111,11 +119,14 @@ public abstract class AbstractContentHandler extends DefaultHandler {
 
 	protected Double getDouble(Attributes attrs, String qName) {
 		try {
-			return Double.parseDouble(getString(attrs, qName));
+            String s = getString(attrs, qName);
+            if (s == null)
+                return new Double(0);
+			return Double.parseDouble(s);
 		} catch (NumberFormatException e) {
-			return null;
+            return new Double(0);
 		} catch (NullPointerException e) {
-			return null;
+            return new Double(0);
 		}
 	}
 

@@ -84,7 +84,7 @@ public class JobServiceT extends TestBase {
         corpoRepo.Update(userData);
         skillRepo.Update(userData);
 
-        Assert.assertTrue(result.cachedUntil.after(new Date()));
+        Assert.assertTrue(result.cachedUntil.isAfterNow());
 
         List<Pilot> pilots = pilotRepo.GetAll();
         Assert.assertEquals(5, pilots.size());

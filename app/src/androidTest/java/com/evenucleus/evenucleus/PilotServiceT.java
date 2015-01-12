@@ -68,7 +68,7 @@ public class PilotServiceT extends TestBase {
         skillRepo.Update(userData);
         corpoRepo.Update(userData);
 
-        Assert.assertTrue(result.cachedUntil.after(new Date()));
+        Assert.assertTrue(result.cachedUntil.isAfterNow());
 
         List<Pilot> pilots = pilotRepo.GetAll();
         Assert.assertEquals(5, pilots.size());

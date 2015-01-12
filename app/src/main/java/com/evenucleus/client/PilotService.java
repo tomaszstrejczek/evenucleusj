@@ -44,7 +44,7 @@ public class PilotService implements IPilotService {
         Result r = new Result();
         r.pilots = new ArrayList<PilotDTO>();
         r.corporations = new ArrayList<Corporation>();
-        r.cachedUntil = new DateTime().withFieldAdded(DurationFieldType.hours(), 1).toDate();
+        r.cachedUntil = new DateTime().withFieldAdded(DurationFieldType.hours(), 1);
 
         List<KeyInfo> keys = _keyInfoRepo.GetKeys();
         for(KeyInfo k:keys) {
@@ -71,9 +71,9 @@ public class PilotService implements IPilotService {
                 SkillQueueResponse skillQueue = _eveApiCaller.GetSkillQueue(k.KeyId, k.VCode, c.getCharacterID());
 
                 // Calculate cache refresh date
-                if (r.cachedUntil.after(sheet.getCachedUntil())) r.cachedUntil = sheet.getCachedUntil();
-                if (r.cachedUntil.after(skillInTraining.getCachedUntil())) r.cachedUntil = skillInTraining.getCachedUntil();
-                if (r.cachedUntil.after(skillQueue.getCachedUntil())) r.cachedUntil = skillQueue.getCachedUntil();
+                if (r.cachedUntil.isAfter(new DateTime(sheet.getCachedUntil()))) r.cachedUntil = new DateTime(sheet.getCachedUntil());
+                if (r.cachedUntil.isAfter(new DateTime(skillInTraining.getCachedUntil()))) r.cachedUntil = new DateTime(skillInTraining.getCachedUntil());
+                if (r.cachedUntil.isAfter(new DateTime(skillQueue.getCachedUntil()))) r.cachedUntil = new DateTime(skillQueue.getCachedUntil());
 
                 // Calculate number of manufacturing & research slots
                 long massProductionTypeId = 3387;

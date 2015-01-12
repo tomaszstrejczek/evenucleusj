@@ -4,7 +4,6 @@ import java.util.Date;
 
 public class ApiIndustryJob {
 	private long jobID;
-	private long assemblyLineID;
 	private long containerID; // LocationID or ItemID : long
 	private long installedItemID; // ItemID : long
 	private long installedItemLocationID; // LocationID : long
@@ -14,6 +13,7 @@ public class ApiIndustryJob {
 	private int installedItemLicensedProductionRunsRemaining;
 	private long outputLocationID; // LocationID : long
 	private long installerID; // OwnerID : int
+    private String installerName; // OwnerID : int
 	private int runs;
 	private int licensedProductionRuns;
 	private long installedInSolarSystemID; // LocationID : long
@@ -22,7 +22,7 @@ public class ApiIndustryJob {
 	private double charMaterialMultiplier;
 	private double timeMultiplier;
 	private double charTimeMultiplier;
-	private int installedItemTypeID; // TypeID : int
+	private int blueprintTypeID; // TypeID : int
 	private int outputTypeID; // TypeID : int
 	private int containerTypeID; // TypeID : int
 	private long installedItemCopy;
@@ -105,14 +105,6 @@ public class ApiIndustryJob {
 		return outputLocationID;
 	}
 
-	public long getAssemblyLineID() {
-		return assemblyLineID;
-	}
-
-	public void setAssemblyLineID(long assemblyLineID) {
-		this.assemblyLineID = assemblyLineID;
-	}
-
 	public void setOutputLocationID(long outputLocationID) {
 		this.outputLocationID = outputLocationID;
 	}
@@ -124,6 +116,14 @@ public class ApiIndustryJob {
 	public void setInstallerID(long installerID) {
 		this.installerID = installerID;
 	}
+
+    public String getInstallerName() {
+        return installerName;
+    }
+
+    public void setInstallerName(String installerName) {
+        this.installerName = installerName;
+    }
 
 	public int getRuns() {
 		return runs;
@@ -189,12 +189,12 @@ public class ApiIndustryJob {
 		this.charTimeMultiplier = charTimeMultiplier;
 	}
 
-	public int getInstalledItemTypeID() {
-		return installedItemTypeID;
+	public int getBlueprintTypeID() {
+		return blueprintTypeID;
 	}
 
-	public void setInstalledItemTypeID(int installedItemTypeID) {
-		this.installedItemTypeID = installedItemTypeID;
+	public void setBlueprintTypeID(int blueprintTypeID) {
+		this.blueprintTypeID = blueprintTypeID;
 	}
 
 	public int getOutputTypeID() {

@@ -19,6 +19,8 @@ import com.evenucleus.client.IPilotRepo;
 import com.evenucleus.client.IPilotService;
 import com.evenucleus.client.ISkillRepo;
 import com.evenucleus.client.Job;
+import com.evenucleus.client.JobRepo;
+import com.evenucleus.client.JobService;
 import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.KeyInfoRepo;
 import com.evenucleus.client.PendingNotification;
@@ -104,21 +106,37 @@ public class Alarm extends BroadcastReceiver {
                 skillRepo._pendingNotificationRepo = pendingNotificationRepo;
                 skillRepo._localdb= localdb;
 
+                JobService jobService = new JobService();
+                jobService._pilotRepo = pilotRepo;
+                jobService._corporationRepo = corpoRepo;
+                jobService._eveApiCaller = new EveApiCaller();
+                jobService._typeNameDict = typeNameDict;
+
+                JobRepo jobRepo = new JobRepo();
+                jobRepo._localdb = localdb;
+                jobRepo._pilotRepo = pilotRepo;
+                jobRepo._pendingNotificationRepo = pendingNotificationRepo;
+
 
                 PilotService.Result result = pilotService.Get();
+                JobService.Result resultJobs = jobService.Get();
                 UserData userData = new UserData();
                 userData.Pilots = result.pilots;
                 userData.Corporations = result.corporations;
-                userData.Jobs = new ArrayList<Job>();
+                userData.Jobs = resultJobs.jobs;
                 userData.JobSummary = new JobSummary();
 
                 pilotRepo.Update(userData);
                 skillRepo.Update(userData);
                 corpoRepo.Update(userData);
+                jobRepo.Update(userData);
 
                 postNotifications(pendingNotificationRepo);
 
-                return new DateTime(result.cachedUntil);
+                if (result.cachedUntil.isBefore(resultJobs.cachedUntil))
+                    return result.cachedUntil;
+                else
+                    return resultJobs.cachedUntil;
             }
             catch (Exception e)
             {

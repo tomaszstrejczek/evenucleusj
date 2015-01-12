@@ -12,6 +12,6 @@ public class Corporation {
     @DatabaseField
     public String Name;
 
-    @DatabaseField(canBeNull = true,foreign = true)
+    @DatabaseField(canBeNull = true,foreign = true, foreignAutoRefresh = true)
     public KeyInfo KeyInfo;
 }

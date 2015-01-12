@@ -63,19 +63,17 @@ public class JobService implements IJobService {
         }
 
         Set<Integer> typeIds = new HashSet<Integer>();
-        for(ApiIndustryJob j: tmpResult) if (!typeIds.contains(j.getInstalledItemTypeID())) typeIds.add(j.getInstalledItemTypeID());
+        for(ApiIndustryJob j: tmpResult) if (!typeIds.contains(j.getBlueprintTypeID())) typeIds.add(j.getBlueprintTypeID());
         Map<Integer,String> typeIdsMap = _typeNameDict.GetById(typeIds);
 
         for(ApiIndustryJob j:tmpResult) {
             Job job = new Job();
             Duration tillNow = new Duration(new DateTime(j.getBeginProductionTime()), new DateTime());
             Duration total = new Duration(new DateTime(j.getBeginProductionTime()), new DateTime(j.getEndProductionTime()));
-            job.PercentageOfCompletion = tillNow.getMillis() < 0? 0: (int) (100*tillNow.getMillis() / total.getMillis());
-            job.JobCompleted =  !new Date().before(j.getEndProductionTime());
-            job.JobDescription = String.format("%s %s %d", typeIdsMap.get(j.getInstalledItemTypeID()), GetActivityAnnotation(j.getActivityID()),j.getRuns());
-            job.Owner = null;
-            for(Pilot p:pilots) if (p.CharacterId == j.getInstallerID()) {job.Owner = p.Name;break;}
-            if (job.Owner == null) job.Owner = String.format("ID:%d", j.getInstallerID());
+            job.PercentageOfCompletion = tillNow.getMillis() < 0 || total.getMillis() <= 0 ? 0: (int) (100*tillNow.getMillis() / total.getMillis());
+            job.JobCompleted =  j.getEndProductionTime()==null || !new Date().before(j.getEndProductionTime());
+            job.JobDescription = String.format("%s %s %d", typeIdsMap.get(j.getBlueprintTypeID()), GetActivityAnnotation(j.getActivityID()),j.getRuns());
+            job.Owner = j.getInstallerName();
             job.IsManufacturing = j.getActivityID() == 1;
             result.jobs.add(job);
         }
