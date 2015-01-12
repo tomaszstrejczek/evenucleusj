@@ -29,7 +29,10 @@ public class JobRepoT extends TestBase {
         pendingNotificationRepo._localdb = _localdb;
         PilotRepo pilotsRepo = new PilotRepo();
         pilotsRepo._localdb = _localdb;
-        JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
+        JobRepo jobsRepo = new JobRepo();
+        jobsRepo._localdb = _localdb;
+        jobsRepo._pilotRepo = pilotsRepo;
+        jobsRepo._pendingNotificationRepo = pendingNotificationRepo;
 
         // stage 1
         UserData userData = new UserData();
@@ -107,7 +110,10 @@ public class JobRepoT extends TestBase {
         pendingNotificationRepo._localdb = _localdb;
         PilotRepo pilotsRepo = new PilotRepo();
         pilotsRepo._localdb = _localdb;
-        JobRepo jobsRepo = new JobRepo(_localdb, pilotsRepo, pendingNotificationRepo);
+        JobRepo jobsRepo = new JobRepo();
+        jobsRepo._localdb = _localdb;
+        jobsRepo._pilotRepo = pilotsRepo;
+        jobsRepo._pendingNotificationRepo = pendingNotificationRepo;
 
         // stage 1
         UserData userData = new UserData();

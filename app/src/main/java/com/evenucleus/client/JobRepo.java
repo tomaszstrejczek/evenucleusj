@@ -3,23 +3,28 @@ package com.evenucleus.client;
 import android.os.Debug;
 import android.util.Log;
 
+import com.evenucleus.evenucleus.MyDatabaseHelper;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.sql.SQLException;
 import java.util.List;
 
 /**
  * Created by tomeks on 2014-12-29.
  */
+@EBean
 public class JobRepo implements IJobRepo {
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
 
-    DatabaseHelper _localdb;
-    IPilotRepo _pilotRepo;
-    IPendingNotificationRepo _pendingNotificationRepo;
+    @Bean(PilotRepo.class)
+    public IPilotRepo _pilotRepo;
 
-    public JobRepo(DatabaseHelper localdb, IPilotRepo pilotRepo, IPendingNotificationRepo pendingNotificationRepo) {
-        _localdb = localdb;
-        _pilotRepo = pilotRepo;
-        _pendingNotificationRepo = pendingNotificationRepo;
-    }
+    @Bean(PendingNotificationRepo.class)
+    public IPendingNotificationRepo _pendingNotificationRepo;
+
     @Override
     public void Update(UserData data) throws SQLException {
         Log.d(JobRepo.class.getName(), "Update");

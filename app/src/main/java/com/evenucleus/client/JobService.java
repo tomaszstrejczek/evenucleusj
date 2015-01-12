@@ -3,6 +3,8 @@ package com.evenucleus.client;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Date;
 
 import android.util.Log;
 
@@ -24,16 +27,16 @@ import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
 public class JobService implements IJobService {
 
     @Bean(PilotRepo.class)
-    IPilotRepo _pilotRepo;
+    public IPilotRepo _pilotRepo;
 
     @Bean(CorporationRepo.class)
-    ICorporationRepo _corporationRepo;
+    public ICorporationRepo _corporationRepo;
 
     @Bean(EveApiCaller.class)
-    IEveApiCaller _eveApiCaller;
+    public IEveApiCaller _eveApiCaller;
 
     @Bean(TypeNameDict.class)
-    ITypeNameDict _typeNameDict;
+    public ITypeNameDict _typeNameDict;
 
 
     @Override
@@ -65,9 +68,38 @@ public class JobService implements IJobService {
 
         for(ApiIndustryJob j:tmpResult) {
             Job job = new Job();
-            
+            Duration tillNow = new Duration(new DateTime(j.getBeginProductionTime()), new DateTime());
+            Duration total = new Duration(new DateTime(j.getBeginProductionTime()), new DateTime(j.getEndProductionTime()));
+            job.PercentageOfCompletion = tillNow.getMillis() < 0? 0: (int) (100*tillNow.getMillis() / total.getMillis());
+            job.JobCompleted =  !new Date().before(j.getEndProductionTime());
+            job.JobDescription = String.format("%s %s %d", typeIdsMap.get(j.getInstalledItemTypeID()), GetActivityAnnotation(j.getActivityID()),j.getRuns());
+            job.Owner = null;
+            for(Pilot p:pilots) if (p.CharacterId == j.getInstallerID()) {job.Owner = p.Name;break;}
+            if (job.Owner == null) job.Owner = String.format("ID:%d", j.getInstallerID());
+            job.IsManufacturing = j.getActivityID() == 1;
+            result.jobs.add(job);
         }
 
-        return null;
+        return result;
     }
+
+    private String GetActivityAnnotation(int activity)
+    {
+        switch (activity)
+        {
+            case 1:
+                return "x";
+            case 3:
+                return "TE";
+            case 4:
+                return "ME";
+            case 5:
+                return "CP";
+            case 7:
+                return "RE";
+            default:
+                return String.format("?%d?", activity);
+        }
+    }
+
 }
