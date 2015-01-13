@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="5dip" >
 
     <TextView
@@ -14,4 +14,16 @@
         android:typeface="sans"
         android:textSize="15dip"
         android:textStyle="bold"/>
+
+    <ListView
+        android:id="@+id/jobsSublist"
+        android:layout_below="@id/pilotName"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1mm"
+        android:layout_marginLeft="0mm"
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+        />
+
 </RelativeLayout>

@@ -19,8 +19,11 @@ import org.androidannotations.annotations.RootContext;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,8 +31,12 @@ import java.util.Set;
  */
 @EBean
 public class JobListAdapter extends BaseAdapter {
-    List<Job> _jobList;
-    List<String> _owners;
+    public class JobInfo {
+        public String Owner;
+        public List<Job> Jobs;
+    }
+
+    List<JobInfo> _jobInfos;
 
     @Bean(JobRepo.class)
     IJobRepo _jobRepo;
@@ -40,10 +47,20 @@ public class JobListAdapter extends BaseAdapter {
     @AfterInject
     public void initAdapter() {
         try {
-            _jobList = _jobRepo.GetAll();
-            Set<String> owners = new HashSet<String>();
-            for(Job j:_jobList) if (!owners.contains(j.Owner)) owners.add(j.Owner);
-            _owners = new ArrayList<>(owners);
+            List<Job> jobList = _jobRepo.GetAll();
+            Map<String, JobInfo> owners = new HashMap<String, JobInfo>();
+            for(Job j:jobList)
+                if (owners.containsKey(j.Owner))
+                    owners.get(j.Owner).Jobs.add(j);
+                else
+                {
+                    JobInfo ji = new JobInfo();
+                    ji.Owner = j.Owner;
+                    ji.Jobs = new ArrayList(Arrays.asList(j));
+                    owners.put(ji.Owner, ji);
+                }
+
+            _jobInfos = new ArrayList<JobInfo>(owners.values());
         }
         catch (SQLException e)
         {
@@ -52,12 +69,12 @@ public class JobListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return _owners.size();
+        return _jobInfos.size();
     }
 
     @Override
-    public String getItem(int position) {
-        return _owners.get(position);
+    public JobInfo getItem(int position) {
+        return _jobInfos.get(position);
     }
 
     @Override

@@ -2,8 +2,10 @@ package com.evenucleus.evenucleus;
 
 import android.content.Context;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -15,6 +17,12 @@ public class JobItemView extends LinearLayout {
     @ViewById
     TextView pilotName;
 
+    @ViewById(R.id.jobsSublist)
+    ListView jobsSublist;
+
+    @Bean
+    JobSublistAdapter adapter;
+
     Context _context;
 
     public JobItemView(Context context) {
@@ -22,7 +30,9 @@ public class JobItemView extends LinearLayout {
         _context = context;
     }
 
-    public void bind(String name) {
-        pilotName.setText(name);
+    public void bind(JobListAdapter.JobInfo info) {
+        pilotName.setText(info.Owner);
+        adapter._jobInfo = info;
+        jobsSublist.setAdapter(adapter);
     }
 }
