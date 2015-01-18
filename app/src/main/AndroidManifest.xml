@@ -46,6 +46,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.evenucleus.evenucleus.MainActivity_" />
         </activity>
+        <activity
+            android:name=".FinancialsActivity_"
+            android:label="@string/title_activity_financials"
+            android:parentActivityName=".MainActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.evenucleus.evenucleus.MainActivity_" />
+        </activity>
     </application>
 
 </manifest>

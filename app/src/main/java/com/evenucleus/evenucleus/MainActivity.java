@@ -82,4 +82,8 @@ public class MainActivity extends ActionBarActivity {
     void settings() {
         SettingsActivity_.intent(this).start();
     }
+    @OptionsItem(R.id.action_financials)
+    void financials() {
+        FinancialsActivity_.intent(this).start();
+    }
 }

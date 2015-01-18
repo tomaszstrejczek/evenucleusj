@@ -10,5 +10,7 @@
     <string name="menu_add_key">Add key</string>
     <string name="title_activity_jobs">JobsActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_financials">FinancialsActivity</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
