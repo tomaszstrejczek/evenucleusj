@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.evenucleus.client.CorporationRepo;
+import com.evenucleus.client.DatabaseHelper;
 import com.evenucleus.client.EveApiCaller;
 import com.evenucleus.client.ICorporationRepo;
 import com.evenucleus.client.IPilotRepo;
@@ -27,6 +28,7 @@ import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.PilotService;
+import com.evenucleus.client.SettingsRepo;
 import com.evenucleus.client.SkillRepo;
 import com.evenucleus.client.TypeNameDict;
 import com.evenucleus.client.UserData;
@@ -72,6 +74,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected void onPreExecute () {
+            Log.d(MyTask.class.getName(), "onPreExecute");
             PowerManager pm = (PowerManager) _context.getSystemService(Context.POWER_SERVICE);
             _wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
             _wl.acquire();
@@ -81,6 +84,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected DateTime doInBackground(Void... params) {
+            Log.d(MyTask.class.getName(), "doInBackground");
             try {
                 MyDatabaseHelper localdb = new MyDatabaseHelper(_context);
                 TypeNameDict typeNameDict = new TypeNameDict();
@@ -117,6 +121,8 @@ public class Alarm extends BroadcastReceiver {
                 jobRepo._pilotRepo = pilotRepo;
                 jobRepo._pendingNotificationRepo = pendingNotificationRepo;
 
+                SettingsRepo settingsRepo = new SettingsRepo();
+                settingsRepo._localdb = localdb;
 
                 PilotService.Result result = pilotService.Get();
                 JobService.Result resultJobs = jobService.Get();
@@ -133,6 +139,8 @@ public class Alarm extends BroadcastReceiver {
 
                 postNotifications(pendingNotificationRepo);
 
+                settingsRepo.setLatestAlert(new Date());
+
                 if (result.cachedUntil.isBefore(resultJobs.cachedUntil))
                     return result.cachedUntil;
                 else
@@ -147,6 +155,7 @@ public class Alarm extends BroadcastReceiver {
         }
 
         private void postNotifications(PendingNotificationRepo repo) throws SQLException {
+            Log.d(MyTask.class.getName(), "postNotifications");
             NotificationManager mNotificationManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
 
             List<PendingNotification> notifications = repo.GetAll();
@@ -171,6 +180,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected void onPostExecute(DateTime result) {
+            Log.d(MyTask.class.getName(), "onPostExecute");
             if (_ex != null)
                 Toast.makeText(_context, "Exception: " + _ex.toString(), Toast.LENGTH_LONG).show(); // For example
 
@@ -179,7 +189,12 @@ public class Alarm extends BroadcastReceiver {
             Toast.makeText(_context, msg, Toast.LENGTH_LONG).show();
 
 
-            _alarm.SetAlarm(_context, result);
+            try {
+                _alarm.SetAlarm(_context, result);
+            } catch (SQLException e) {
+                Log.d(MyTask.class.getName(), String.format("onPostExecute SetAlarm %s", e.toString()));
+                e.printStackTrace();
+            }
             _context.sendBroadcast(new Intent(RefreshIntent));
 
             _wl.release();
@@ -188,6 +203,7 @@ public class Alarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d(Alarm.class.getName(), "onReceive");
         MyTask task = new MyTask(context, this);
         task.execute();
     }
@@ -196,8 +212,14 @@ public class Alarm extends BroadcastReceiver {
 
     }
 
-    public void SetAlarm(Context context, DateTime when)
-    {
+    public void SetAlarm(Context context, DateTime when) throws SQLException {
+        Log.d(Alarm.class.getName(), String.format("SetAlarm %s", when.toString()));
+
+        DatabaseHelper localdb = new MyDatabaseHelper(context);
+        SettingsRepo settingsRepo = new SettingsRepo();
+        settingsRepo._localdb = localdb;
+        settingsRepo.setNextAlert(when.toDate());
+
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Alarm.class);
         intent.putExtra(ONE_TIME, Boolean.FALSE);

@@ -46,6 +46,7 @@ public class DatabaseHelper
     private Dao<TypeNameEntry, Integer> typeNameEntryDao = null;
     private Dao<JournalEntry, Integer> journalEntryDao = null;
     private Dao<WalletTransaction, Integer> walletTransactionDao = null;
+    private Dao<Setting, String> setttingDao = null;
 
     public void Initialize(String fullPath) throws java.sql.SQLException {
         Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", fullPath));
@@ -82,6 +83,7 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, TypeNameEntry.class);
         TableUtils.createTable(_connectionSource, JournalEntry.class);
         TableUtils.createTable(_connectionSource, WalletTransaction.class);
+        TableUtils.createTable(_connectionSource, Setting.class);
     }
 
     /**
@@ -170,6 +172,13 @@ public class DatabaseHelper
             walletTransactionDao = DaoManager.createDao(_connectionSource, WalletTransaction.class);
         }
         return walletTransactionDao;
+    }
+
+    public Dao<Setting, String> getSettingDao() throws java.sql.SQLException {
+        if (setttingDao== null) {
+            setttingDao = DaoManager.createDao(_connectionSource, Setting.class);
+        }
+        return setttingDao;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.evenucleus.evenucleus;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
@@ -42,12 +43,16 @@ public class MainActivity extends ActionBarActivity {
         pilotList.setAdapter(adapter);
 
         DateTime when = new DateTime().plusSeconds(10);
-        new Alarm().SetAlarm(this.getApplicationContext(), when);
 
         try {
+            new Alarm().SetAlarm(this.getApplicationContext(), when);
             pendingNotificationRepo.IssueNew("Debug", "Alarm started");
         }
         catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage(e.toString())
+                    .show();
         }
     }
 
@@ -72,5 +77,9 @@ public class MainActivity extends ActionBarActivity {
     @OptionsItem(R.id.jobs)
     void menu_jobs() {
         JobsActivity_.intent(this).start();
+    }
+    @OptionsItem(R.id.action_settings)
+    void settings() {
+        SettingsActivity_.intent(this).start();
     }
 }

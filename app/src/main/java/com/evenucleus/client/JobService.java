@@ -50,6 +50,8 @@ public class JobService implements IJobService {
 
         List<Pilot> pilots = _pilotRepo.GetAll();
         for(Pilot p:pilots) {
+            if (p.KeyInfo==null)
+                continue;
             IndustryJobsResponse jobs = _eveApiCaller.getIndustryJobs(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId);
             if (result.cachedUntil.isAfter(new DateTime(jobs.getCachedUntil()))) result.cachedUntil = new DateTime(jobs.getCachedUntil());
             tmpResult.addAll(jobs.getAll());
@@ -57,6 +59,8 @@ public class JobService implements IJobService {
 
         List<Corporation> corps = _corporationRepo.GetAll();
         for(Corporation c:corps) {
+            if (c.KeyInfo == null)
+                continue;
             IndustryJobsResponse jobs = _eveApiCaller.getIndustryJobsCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode);
             if (result.cachedUntil.isAfter(new DateTime(jobs.getCachedUntil()))) result.cachedUntil = new DateTime(jobs.getCachedUntil());
             tmpResult.addAll(jobs.getAll());
