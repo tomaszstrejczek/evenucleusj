@@ -23,6 +23,7 @@ import com.evenucleus.client.Job;
 import com.evenucleus.client.JobRepo;
 import com.evenucleus.client.JobService;
 import com.evenucleus.client.JobSummary;
+import com.evenucleus.client.JournalRepo;
 import com.evenucleus.client.KeyInfoRepo;
 import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
@@ -32,6 +33,7 @@ import com.evenucleus.client.SettingsRepo;
 import com.evenucleus.client.SkillRepo;
 import com.evenucleus.client.TypeNameDict;
 import com.evenucleus.client.UserData;
+import com.evenucleus.client.WalletRepo;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
@@ -136,6 +138,20 @@ public class Alarm extends BroadcastReceiver {
                 skillRepo.Update(userData);
                 corpoRepo.Update(userData);
                 jobRepo.Update(userData);
+
+                JournalRepo journalRepo = new JournalRepo();
+                journalRepo._localdb = localdb;
+                journalRepo._pilotRepo = pilotRepo;
+                journalRepo._corporationRepo = corpoRepo;
+                journalRepo._eveApiCaller = new EveApiCaller();
+                WalletRepo walletRepo = new WalletRepo();
+                walletRepo._localdb = localdb;
+                walletRepo._pilotRepo = pilotRepo;
+                walletRepo._corporationRepo = corpoRepo;
+                walletRepo._eveApiCaller = new EveApiCaller();
+
+                journalRepo.ReplicateFromEve();
+                walletRepo.ReplicateFromEve();
 
                 postNotifications(pendingNotificationRepo);
 

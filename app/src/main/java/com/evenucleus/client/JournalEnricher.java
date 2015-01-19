@@ -12,9 +12,12 @@ import java.util.Map;
 import java.util.Set;
 
 import android.util.Log;
+import org.androidannotations.annotations.EBean;
+
 /**
  * Created by tomeks on 2015-01-01.
  */
+@EBean
 public class JournalEnricher implements IJournalEnricher {
     @Override
     public List<EnrichedJournalEntry> Enrich(List<JournalEntry> jes, List<WalletTransaction> wts) {

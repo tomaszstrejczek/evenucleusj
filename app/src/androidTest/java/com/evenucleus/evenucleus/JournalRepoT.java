@@ -64,7 +64,12 @@ public class JournalRepoT extends TestBase {
 
         EasyMock.replay(pilotRepo, eveApi);
 
-        JournalRepo journalRepo = new JournalRepo(_localdb, pilotRepo, null, eveApi);
+        JournalRepo journalRepo = new JournalRepo();
+        journalRepo._localdb = _localdb;
+        journalRepo._pilotRepo = pilotRepo;
+        journalRepo._corporationRepo = null;
+        journalRepo._eveApiCaller = eveApi;
+
         journalRepo.ReplicateFromEve();
         journalRepo.ReplicateFromEve();
 
@@ -125,7 +130,12 @@ public class JournalRepoT extends TestBase {
 
         EasyMock.replay(corpoRepo, eveApi);
 
-        JournalRepo journalRepo = new JournalRepo(_localdb, null, corpoRepo, eveApi);
+        JournalRepo journalRepo = new JournalRepo();
+        journalRepo._localdb = _localdb;
+        journalRepo._pilotRepo = null;
+        journalRepo._corporationRepo = corpoRepo;
+        journalRepo._eveApiCaller = eveApi;
+
         journalRepo.ReplicateFromEve();
         journalRepo.ReplicateFromEve();
 

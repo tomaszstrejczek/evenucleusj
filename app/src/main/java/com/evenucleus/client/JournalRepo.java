@@ -3,8 +3,12 @@ package com.evenucleus.client;
 import android.util.Log;
 
 import com.beimin.eveapi.exception.ApiException;
+import com.evenucleus.evenucleus.MyDatabaseHelper;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -15,19 +19,21 @@ import java.util.List;
 /**
  * Created by tomeks on 2014-12-31.
  */
+@EBean
 public class JournalRepo implements IJournalRepo {
 
-    DatabaseHelper _localdb;
-    IPilotRepo _pilotRepo;
-    ICorporationRepo _corporationRepo;
-    IEveApiCaller _eveApiCaller;
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
 
-    public JournalRepo(DatabaseHelper localdb, IPilotRepo pilotRepo, ICorporationRepo corporationRepo, IEveApiCaller eveApiCaller) {
-        _localdb = localdb;
-        _pilotRepo = pilotRepo;
-        _corporationRepo = corporationRepo;
-        _eveApiCaller = eveApiCaller;
-    }
+    @Bean(PilotRepo.class)
+    public IPilotRepo _pilotRepo;
+
+    @Bean(CorporationRepo.class)
+    public ICorporationRepo _corporationRepo;
+
+    @Bean(EveApiCaller.class)
+    public IEveApiCaller _eveApiCaller;
+
     @Override
     public void ReplicateFromEve() throws SQLException, ParseException, ApiException {
         Log.d(JournalRepo.class.getName(), "ReplicateFromEve");

@@ -91,7 +91,12 @@ public class WalletTransactionT extends TestBase {
 
         EasyMock.replay(pilotRepo, eveApi);
 
-        WalletRepo repo = new WalletRepo(_localdb, pilotRepo, null, eveApi);
+        WalletRepo repo = new WalletRepo();
+        repo._localdb = _localdb;
+        repo._pilotRepo = pilotRepo;
+        repo._corporationRepo = null;
+        repo._eveApiCaller = eveApi;
+
         repo.ReplicateFromEve();
         repo.ReplicateFromEve();
 
@@ -157,7 +162,12 @@ public class WalletTransactionT extends TestBase {
 
         EasyMock.replay(corpoRepo, eveApi);
 
-        WalletRepo repo = new WalletRepo(_localdb, null, corpoRepo, eveApi);
+        WalletRepo repo = new WalletRepo();
+        repo._localdb = _localdb;
+        repo._pilotRepo = null;
+        repo._corporationRepo = corpoRepo;
+        repo._eveApiCaller = eveApi;
+
         repo.ReplicateFromEve();
         repo.ReplicateFromEve();
 
