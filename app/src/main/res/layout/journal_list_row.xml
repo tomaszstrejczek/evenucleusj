@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="5dip" >
 
-    <GridLayout
-        android:layout_width="fill_parent"
+
+    <CheckBox
+        android:id="@+id/checkbox"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:columnCount="3"
-        android:rowCount="2"
+        android:src="@drawable/rihanna"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:orientation="vertical"
         >
-
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/rihanna"
-            android:layout_column="0"
-            android:layout_row="0"
-            android:layout_rowSpan="2"
-            />
-
         <TextView
             android:id="@+id/date"
             android:layout_width="wrap_content"
@@ -29,10 +26,8 @@
             android:text="Rihanna Love the way lie"
             android:textColor="#040404"
             android:typeface="sans"
-            android:textSize="15dip"
+            android:textSize="12dip"
             android:textStyle="bold"
-            android:layout_column="1"
-            android:layout_row="0"
             />
 
         <TextView
@@ -42,12 +37,16 @@
             android:text="Rihanna Love the way lie"
             android:textColor="#040404"
             android:typeface="sans"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:layout_column="1"
-            android:layout_row="1"
+            android:textSize="10dip"
             />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        >
         <TextView
             android:id="@+id/category"
             android:layout_width="wrap_content"
@@ -55,10 +54,8 @@
             android:text="Category"
             android:textColor="#040404"
             android:typeface="sans"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:layout_column="2"
-            android:layout_row="0"
+            android:textSize="12dip"
+            android:layout_gravity="right"
             />
 
         <TextView
@@ -68,11 +65,9 @@
             android:text="Amount"
             android:textColor="#040404"
             android:typeface="sans"
-            android:textSize="15dip"
-            android:textStyle="bold"
-            android:layout_column="2"
-            android:layout_row="1"
+            android:textSize="12dip"
+            android:layout_gravity="right"
             />
+    </LinearLayout>
 
-        </GridLayout>
-</RelativeLayout>
+</LinearLayout>

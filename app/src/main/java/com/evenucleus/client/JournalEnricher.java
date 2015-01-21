@@ -19,6 +19,14 @@ import org.androidannotations.annotations.EBean;
  */
 @EBean
 public class JournalEnricher implements IJournalEnricher {
+
+    class DateComparator2 implements Comparator<EnrichedJournalEntry> {
+        @Override
+        public int compare(EnrichedJournalEntry o1, EnrichedJournalEntry o2) {
+            return -o1.Date.compareTo(o2.Date);
+        }
+    }
+
     @Override
     public List<EnrichedJournalEntry> Enrich(List<JournalEntry> jes, List<WalletTransaction> wts) {
         Log.d(JournalEnricher.class.getName(), "Enrich");
@@ -32,7 +40,7 @@ public class JournalEnricher implements IJournalEnricher {
         for(Integer id:ids)
         {
             List<JournalEntry> filteredJes = new ArrayList<JournalEntry>();
-            for(JournalEntry je:jes) if (je.PilotId==id) filteredJes.add(je);
+            for(JournalEntry je:jes) if (je.PilotId==id && Math.abs(je.amount)>0.0) filteredJes.add(je);
 
             List<WalletTransaction> filteredWts = new ArrayList<WalletTransaction>();
             for(WalletTransaction wt: wts) if (wt.PilotId == id) filteredWts.add(wt);
@@ -47,7 +55,7 @@ public class JournalEnricher implements IJournalEnricher {
         for(Integer id:ids)
         {
             List<JournalEntry> filteredJes = new ArrayList<JournalEntry>();
-            for(JournalEntry je:jes) if (je.CorporationId==id) filteredJes.add(je);
+            for(JournalEntry je:jes) if (je.CorporationId==id && Math.abs(je.amount)>0.0) filteredJes.add(je);
 
             List<WalletTransaction> filteredWts = new ArrayList<WalletTransaction>();
             for(WalletTransaction wt: wts) if (wt.CorporationId== id) filteredWts.add(wt);
@@ -55,6 +63,8 @@ public class JournalEnricher implements IJournalEnricher {
             result.addAll(EnrichIndividual(filteredJes, filteredWts));
         }
 
+        Collections.sort(result, new DateComparator2());
+        
         return result;
     }
 
@@ -121,10 +131,12 @@ public class JournalEnricher implements IJournalEnricher {
         double buyAmount = 0;
         double sellAmount = 0;
         double manufacturing = 0;
+        double marketEscrow = 0;
         for(JournalEntry x:jes)
         {
             if (x.RefTypeName.equals("Brokers Fee")) brokerfee += Math.abs(x.amount);
             if (x.RefTypeName.equals("Transaction Tax")) tax += Math.abs(x.amount);
+            //if (x.RefTypeName.equals("Market Escrow") && !matching.containsKey(x)) marketEscrow+= x.amount;
             if (x.refTypeID == 120/*Manufacturing tax*/) manufacturingTax += Math.abs(x.amount);
             if (x.RefTypeName.equals("Manufacturing")) manufacturing += Math.abs(x.amount);
 
@@ -134,12 +146,13 @@ public class JournalEnricher implements IJournalEnricher {
                 sellAmount += Math.abs(x.amount);
         }
 
-        double brokerRate = buyAmount + sellAmount == 0.0 ? 0.0 : brokerfee / (buyAmount + sellAmount);
+        // in broker fee we also take into account market escroow
+        double brokerRate = buyAmount + sellAmount == 0.0 ? 0.0 : (brokerfee+Math.abs(marketEscrow)) / (buyAmount + sellAmount);
         double sellRate = sellAmount == 0.0 ? 0.0 : tax / sellAmount;
         double manufacturingRate = manufacturing == 0.0 ? 0.0 : manufacturingTax / manufacturing;
 
         for(JournalEntry x:jes) {
-            if (x.RefTypeName.equals("Brokers Fee") || x.RefTypeName.equals("Transaction Tax") || x.refTypeID==120/*Manufacturing tax*/)
+            if (x.RefTypeName.equals("Brokers Fee") || x.RefTypeName.equals("Transaction Tax") || x.refTypeID==120/*Manufacturing tax*/ /*|| x.RefTypeName.equals("Market Escrow")*/)
                 continue;
 
             double amount = x.amount;
@@ -159,8 +172,8 @@ public class JournalEnricher implements IJournalEnricher {
             if (matching.containsKey(x))
             {
                 WalletTransaction wt =matching.get(x);
-                entry.Description = String.format("%c %s x %d @ %f", wt.transactionType.charAt(0),  wt.typeName, wt.quantity,
-                        wt.price);
+                entry.Description = String.format("%c %s x %d @ %s", wt.transactionType.charAt(0),  wt.typeName, wt.quantity,
+                        Number2RoundedString.Convert(wt.price));
             }
             else
                 entry.Description = x.RefTypeName;

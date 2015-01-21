@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evenucleus.client.EnrichedJournalEntry;
+import com.evenucleus.client.Number2RoundedString;
 import com.evenucleus.client.Pilot;
 import com.koushikdutta.ion.Ion;
 
@@ -15,6 +16,8 @@ import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+
+import java.text.DateFormat;
 
 /**
  * Created by tomeks on 2015-01-04.
@@ -38,12 +41,12 @@ public class JournalItemView extends LinearLayout {
     }
 
     public void bind(EnrichedJournalEntry entry) {
-        date.setText(entry.Date.toString());
+        date.setText(DateFormat.getDateTimeInstance().format(entry.Date));
         description.setText(entry.Description);
         if (entry.Category != null)
             category.setText(entry.Category);
         else
             category.setText("");
-        amount.setText(Double.toString(entry.Amount));
+        amount.setText(Number2RoundedString.Convert(entry.Amount));
     }
 }
