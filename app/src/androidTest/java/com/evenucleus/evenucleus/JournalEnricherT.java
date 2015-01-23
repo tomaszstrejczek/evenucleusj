@@ -62,12 +62,17 @@ public class JournalEnricherT extends TestBase {
         int code = 3483492;
         String vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
         List<JournalEntry> jes = getJes(code, vcode);
-        List<WalletTransaction> wts = getWts(code, vcode);
 
-        List<EnrichedJournalEntry> result = enricher.Enrich(jes, wts);
+        //for(int i = jes.size()-1; i >= 133; --i) jes.remove(i);
+
+        List<WalletTransaction> wts = getWts(code, vcode);
 
         double srcsum = 0;
         for(JournalEntry j:jes) srcsum += j.amount;
+
+
+        List<EnrichedJournalEntry> result = enricher.Enrich(jes, wts);
+
         double destsum = 0;
         for(EnrichedJournalEntry j:result) destsum += j.Amount;
 

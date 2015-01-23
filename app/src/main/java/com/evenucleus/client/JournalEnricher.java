@@ -124,6 +124,8 @@ public class JournalEnricher implements IJournalEnricher {
         }
         wts = wts1;
 
+        GroupMarketEscrow(jes, matching);
+
         // spread broker fee and transaction tax into transactions
         double brokerfee = 0;
         double tax = 0;
@@ -182,4 +184,31 @@ public class JournalEnricher implements IJournalEnricher {
         }
         return result;
     }
+
+    private void GroupMarketEscrow(List<JournalEntry> jes, Map<JournalEntry, WalletTransaction> matching) {
+        // select escrow
+        List<JournalEntry> escrow = new ArrayList<JournalEntry>();
+        for(JournalEntry je: jes) if (je.RefTypeName.equals("Market Escrow") && je.amount < 0.0 && !matching.containsKey(je)) escrow.add(je);
+
+        Set<Long> matched = new HashSet<Long>();
+
+        for(Map.Entry<JournalEntry, WalletTransaction> je: matching.entrySet()) {
+            for(int i = escrow.size()-1; i >= 0; --i) {
+                JournalEntry candidate = escrow.get(i);
+                // same sign
+                if (je.getKey().amount < 0) {
+                    if (Math.abs(je.getKey().amount) + Math.abs(candidate.amount) <= Math.abs(je.getValue().price * je.getValue().quantity)) {
+                        je.getKey().amount += candidate.amount;
+                        escrow.remove(i);
+                        matched.add(candidate.refID);
+                    }
+                }
+            }
+        }
+
+        for(int i = jes.size()-1; i >= 0; --i)
+            if (matched.contains(jes.get(i).refID))
+                jes.remove(i);
+    }
+
 }
