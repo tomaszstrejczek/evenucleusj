@@ -10,9 +10,12 @@ import com.astuetz.PagerSlidingTabStrip;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_financials)
+@OptionsMenu(R.menu.menu_financials)
 public class FinancialsActivity extends ActionBarActivity {
 
     @ViewById(R.id.tabs)
@@ -25,6 +28,11 @@ public class FinancialsActivity extends ActionBarActivity {
     void afterViews() {
         pager.setAdapter(new FinancialsPageAdapter(getSupportFragmentManager()));
         tabs.setViewPager(pager);
+    }
+
+    @OptionsItem(R.id.action_settings)
+    void settings() {
+        FinancialsSettingsActivity_.intent(this).start();
     }
 
 }

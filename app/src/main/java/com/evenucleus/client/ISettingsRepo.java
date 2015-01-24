@@ -11,4 +11,7 @@ public interface ISettingsRepo {
 
     public Date getLatestAlert() throws SQLException;
     public void setLatestAlert(Date value) throws SQLException;
+
+    public Date getFinancialsLaterThan() throws SQLException;
+    public void setFinancialsLaterThan(Date value) throws SQLException;
 }

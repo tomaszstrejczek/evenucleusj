@@ -1,6 +1,7 @@
 package com.evenucleus.evenucleus;
 
 import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.App;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
@@ -14,14 +15,18 @@ import android.widget.BaseAdapter;
 import com.evenucleus.client.EnrichedJournalEntry;
 import com.evenucleus.client.IJournalEnricher;
 import com.evenucleus.client.IJournalRepo;
+import com.evenucleus.client.ISettingsRepo;
 import com.evenucleus.client.IWalletRepo;
 import com.evenucleus.client.JournalEnricher;
 import com.evenucleus.client.JournalEntry;
 import com.evenucleus.client.JournalRepo;
+import com.evenucleus.client.SettingsRepo;
 import com.evenucleus.client.WalletRepo;
 import com.evenucleus.client.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Created by tomeks on 2015-01-19.
@@ -31,14 +36,11 @@ public class JournalListAdapter extends BaseAdapter {
 
     List<EnrichedJournalEntry> _entries;
 
-    @Bean(JournalRepo.class)
-    IJournalRepo _journalRepo;
+    @Bean(SettingsRepo.class)
+    ISettingsRepo _settingsRepo;
 
-    @Bean(WalletRepo.class)
-    IWalletRepo _walletRepo;
-
-    @Bean(JournalEnricher.class)
-    IJournalEnricher _journalEnricher;
+    @App
+    MyApplication _app;
 
     @RootContext
     Context context;
@@ -46,9 +48,13 @@ public class JournalListAdapter extends BaseAdapter {
     @AfterInject
     public void afterInject() {
         try {
-            List<JournalEntry> jes = _journalRepo.GetAll();
-            List<WalletTransaction> wes = _walletRepo.GetAll();
-            _entries = _journalEnricher.Enrich(jes, wes);
+            Date laterThan = _settingsRepo.getFinancialsLaterThan();
+            List<EnrichedJournalEntry> data = _app.getEnrichedJournalEntries();
+            _entries = new ArrayList<EnrichedJournalEntry>();
+            for(EnrichedJournalEntry je: data) {
+                if (laterThan==null || je.Date.after(laterThan))
+                    _entries.add(je);
+            }
         }
         catch (Exception e) {
             new AlertDialog.Builder(context)

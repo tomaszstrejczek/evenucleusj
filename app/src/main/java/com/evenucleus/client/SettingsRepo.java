@@ -54,4 +54,26 @@ public class SettingsRepo implements ISettingsRepo {
         s.DateValue = value;
         _localdb.getSettingDao().createOrUpdate(s);
     }
+
+    @Override
+    public Date getFinancialsLaterThan() throws SQLException {
+        Log.d(SettingsRepo.class.getName(), "getFinancialsLaterThan");
+
+        Setting s = _localdb.getSettingDao().queryForId("financials_later_than");
+        if (s == null)
+            return null;
+        return s.DateValue;
+    }
+
+    @Override
+    public void setFinancialsLaterThan(Date value) throws SQLException {
+        Log.d(SettingsRepo.class.getName(), String.format("setFinancialsLaterThan %s", value.toString()));
+        Setting s = new Setting();
+        s.Key = "financials_later_than";
+        s.DateValue = value;
+        _localdb.getSettingDao().createOrUpdate(s);
+
+    }
+
+
 }

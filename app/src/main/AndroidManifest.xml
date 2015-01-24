@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".MyApplication_"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -53,6 +54,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.evenucleus.evenucleus.MainActivity_" />
+        </activity>
+        <activity
+            android:name=".FinancialsSettingsActivity_"
+            android:label="@string/title_activity_financials_settings"
+            android:parentActivityName=".FinancialsActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.evenucleus.evenucleus.FinancialsActivity_" />
         </activity>
     </application>
 
