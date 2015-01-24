@@ -2,7 +2,11 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.evenucleus.evenucleus.MyDatabaseHelper;
 import com.evenucleus.evenucleus.R;
+
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -11,14 +15,13 @@ import java.util.List;
 /**
  * Created by tomeks on 2014-12-29.
  */
+@EBean
 public class CategoryRepo implements ICategoryRepo {
-    DatabaseHelper _localdb;
-    IStringProvider _stringProvider;
+    @Bean(MyDatabaseHelper.class)
+    public DatabaseHelper _localdb;
 
-    public CategoryRepo(DatabaseHelper localdb, IStringProvider stringProvider) {
-        _localdb = localdb;
-        _stringProvider = stringProvider;
-    }
+    @Bean(StringProvider.class)
+    public IStringProvider _stringProvider;
 
     @Override
     public void AddCategory(String name) throws SQLException, UserException {

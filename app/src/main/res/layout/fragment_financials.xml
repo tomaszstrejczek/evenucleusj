@@ -10,6 +10,7 @@
         android:layout_marginTop="0mm"
         android:divider="#b5b5b5"
         android:dividerHeight="1dp"
+        android:drawSelectorOnTop="true"
         />
 
 </FrameLayout>

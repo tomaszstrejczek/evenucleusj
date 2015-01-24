@@ -60,6 +60,15 @@ public class JournalRepo implements IJournalRepo {
         return _localdb.getJournalEntryDao().queryForAll();
     }
 
+    @Override
+    public void AssignCategory(int journalEntryId, String category) throws SQLException {
+        Log.d(JournalRepo.class.getName(), String.format("AssignCategory %d %s", journalEntryId, category));
+
+        JournalEntry je = _localdb.getJournalEntryDao().queryForId(journalEntryId);
+        je.CategoryName = category;
+        _localdb.getJournalEntryDao().createOrUpdate(je);
+    }
+
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         Log.d(JournalRepo.class.getName(), String.format("Replicating for pilot %s", p.Name));
 

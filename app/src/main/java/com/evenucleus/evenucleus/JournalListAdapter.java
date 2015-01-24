@@ -25,8 +25,10 @@ import com.evenucleus.client.WalletRepo;
 import com.evenucleus.client.WalletTransaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by tomeks on 2015-01-19.
@@ -44,6 +46,8 @@ public class JournalListAdapter extends BaseAdapter {
 
     @RootContext
     Context context;
+
+    public Map<Integer, JournalItemView> _viewMap = new HashMap<Integer, JournalItemView>();
 
     @AfterInject
     public void afterInject() {
@@ -88,7 +92,10 @@ public class JournalListAdapter extends BaseAdapter {
             journalItemView = (JournalItemView) convertView;
         }
 
-        journalItemView.bind(getItem(position));
+        EnrichedJournalEntry je =getItem(position);
+        journalItemView.bind(je);
+        _viewMap.put(je.JournalEntryId, journalItemView);
+        journalItemView.setLongClickable(true);
 
         return journalItemView;
     }

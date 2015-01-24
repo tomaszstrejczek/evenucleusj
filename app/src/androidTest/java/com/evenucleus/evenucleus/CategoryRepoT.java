@@ -14,13 +14,17 @@ import java.util.List;
  */
 public class CategoryRepoT extends TestBase {
     public void test_EmptyCategoryList() throws SQLException {
-        CategoryRepo categoryRepo = new CategoryRepo(_localdb, new StringProvider(getContext()));
+        CategoryRepo categoryRepo = new CategoryRepo();
+        categoryRepo._localdb = _localdb;
+        categoryRepo._stringProvider = new StringProvider(getContext());
         List<String> list = categoryRepo.Get();
         Assert.assertEquals(0, list.size());
     }
 
     public void test_AddCategory() throws SQLException, UserException {
-        CategoryRepo categoryRepo = new CategoryRepo(_localdb, new StringProvider(getContext()));
+        CategoryRepo categoryRepo = new CategoryRepo();
+        categoryRepo._localdb = _localdb;
+        categoryRepo._stringProvider = new StringProvider(getContext());
         categoryRepo.AddCategory("ala");
 
         List<String> list = categoryRepo.Get();
@@ -29,7 +33,9 @@ public class CategoryRepoT extends TestBase {
     }
 
     public void test_AddCDuplicateategory() throws SQLException, UserException {
-        CategoryRepo categoryRepo = new CategoryRepo(_localdb, new StringProvider(getContext()));
+        CategoryRepo categoryRepo = new CategoryRepo();
+        categoryRepo._localdb = _localdb;
+        categoryRepo._stringProvider = new StringProvider(getContext());
         categoryRepo.AddCategory("ala");
         try
         {

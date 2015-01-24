@@ -2,6 +2,8 @@ package com.evenucleus.evenucleus;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import com.evenucleus.client.Number2RoundedString;
 import com.evenucleus.client.Pilot;
 import com.koushikdutta.ion.Ion;
 
+import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
@@ -32,6 +35,10 @@ public class JournalItemView extends LinearLayout {
     TextView category;
     @ViewById(R.id.amount)
     TextView amount;
+    @ViewById(R.id.checkbox)
+    public CheckBox checkBox;
+
+    EnrichedJournalEntry _journalEntry;
 
     Context _context;
 
@@ -41,12 +48,24 @@ public class JournalItemView extends LinearLayout {
     }
 
     public void bind(EnrichedJournalEntry entry) {
+        _journalEntry = entry;
         date.setText(DateFormat.getDateTimeInstance().format(entry.Date));
         description.setText(entry.Description);
-        if (entry.Category != null)
-            category.setText(entry.Category);
+        SetCategory(entry.Category);
+        amount.setText(Number2RoundedString.Convert(entry.Amount));
+        checkBox.setChecked(entry.Selected);
+    }
+
+    @CheckedChange(R.id.checkbox)
+    void checkedChangedOnMyButton(boolean isChecked, CompoundButton button) {
+        _journalEntry.Selected = isChecked;
+    }
+
+    public void SetCategory(String cat) {
+        if (cat != null)
+            category.setText(cat);
         else
             category.setText("");
-        amount.setText(Number2RoundedString.Convert(entry.Amount));
+
     }
 }

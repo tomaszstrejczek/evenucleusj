@@ -12,4 +12,5 @@ import java.util.List;
 public interface IJournalRepo {
     void ReplicateFromEve() throws SQLException, ParseException, ApiException;
     List<JournalEntry> GetAll() throws SQLException;
+    void AssignCategory(int journalEntryId, String category) throws SQLException;
 }

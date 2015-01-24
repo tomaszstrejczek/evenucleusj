@@ -15,4 +15,6 @@ public class EnrichedJournalEntry {
     public String Description;
 
     public String Category;
+
+    public boolean Selected;
 }

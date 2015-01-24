@@ -13,5 +13,6 @@
     <string name="title_activity_financials">FinancialsActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_financials_settings">FinancialsSettingsActivity</string>
+    <string name="title_activity_add_category">AddCategoryActivity</string>
 
 </resources>
