@@ -56,6 +56,7 @@ import android.util.Log;
 public class Alarm extends BroadcastReceiver {
     final public static String ONE_TIME = "onetime";
     final public static String RefreshIntent = "com.evenucleus.evenucleus.refresh";
+    final public static String CategorySetIntent = "com.evenucleus.evenucleus.categoryset";
 
     public Alarm() {
 

@@ -28,6 +28,8 @@ public class FinancialsActivity extends ActionBarActivity {
     void afterViews() {
         pager.setAdapter(new FinancialsPageAdapter(getSupportFragmentManager()));
         tabs.setViewPager(pager);
+
+        //pager.setOnPageChangeListener();
     }
 
     @OptionsItem(R.id.action_settings)

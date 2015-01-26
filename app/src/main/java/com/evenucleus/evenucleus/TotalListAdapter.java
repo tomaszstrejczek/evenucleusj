@@ -1,11 +1,5 @@
 package com.evenucleus.evenucleus;
 
-import org.androidannotations.annotations.AfterInject;
-import org.androidannotations.annotations.App;
-import org.androidannotations.annotations.Bean;
-import org.androidannotations.annotations.EBean;
-import org.androidannotations.annotations.RootContext;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.View;
@@ -13,33 +7,41 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.evenucleus.client.EnrichedJournalEntry;
-import com.evenucleus.client.IJournalEnricher;
-import com.evenucleus.client.IJournalRepo;
 import com.evenucleus.client.ISettingsRepo;
-import com.evenucleus.client.IWalletRepo;
-import com.evenucleus.client.JournalEnricher;
-import com.evenucleus.client.JournalEntry;
-import com.evenucleus.client.JournalRepo;
+import com.evenucleus.client.ITotalsCalculator;
 import com.evenucleus.client.SettingsRepo;
-import com.evenucleus.client.WalletRepo;
-import com.evenucleus.client.WalletTransaction;
+import com.evenucleus.client.TotalsCalculatorCategory;
+import com.evenucleus.client.TotalsCalculatorTotal;
 
+import org.androidannotations.annotations.AfterInject;
+import org.androidannotations.annotations.App;
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+import org.androidannotations.annotations.RootContext;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Date;
 import java.util.Map;
 
 /**
  * Created by tomeks on 2015-01-19.
  */
 @EBean
-public class JournalListAdapter extends BaseAdapter {
-
+public class TotalListAdapter extends BaseAdapter {
     List<EnrichedJournalEntry> _entries;
+    List<ITotalsCalculator.Total> _totals;
 
     @Bean(SettingsRepo.class)
     ISettingsRepo _settingsRepo;
+
+    @Bean(TotalsCalculatorCategory.class)
+    ITotalsCalculator _calculator1;
+    @Bean(TotalsCalculatorTotal.class)
+    ITotalsCalculator _calculatorTotal;
 
     @App
     MyApplication _app;
@@ -48,7 +50,7 @@ public class JournalListAdapter extends BaseAdapter {
     Context context;
 
     @AfterInject
-    public void afterInject() {
+    public void initAdapter() {
         try {
             Date laterThan = _settingsRepo.getFinancialsLaterThan();
             List<EnrichedJournalEntry> data = _app.getEnrichedJournalEntries();
@@ -57,6 +59,11 @@ public class JournalListAdapter extends BaseAdapter {
                 if (laterThan==null || je.Date.after(laterThan))
                     _entries.add(je);
             }
+
+            List<ITotalsCalculator> calculators = Arrays.asList(_calculator1, _calculatorTotal);
+            _totals = new ArrayList<ITotalsCalculator.Total>();
+            for(ITotalsCalculator calc: calculators)
+                _totals.addAll(calc.Calculate(_entries));
         }
         catch (Exception e) {
             new AlertDialog.Builder(context)
@@ -68,12 +75,12 @@ public class JournalListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return _entries.size();
+        return _totals.size();
     }
 
     @Override
-    public EnrichedJournalEntry getItem(int position) {
-        return _entries.get(position);
+    public ITotalsCalculator.Total getItem(int position) {
+        return _totals.get(position);
     }
 
     @Override
@@ -83,17 +90,16 @@ public class JournalListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        JournalItemView journalItemView;
+        TotalItemView totalItemView;
         if (convertView == null) {
-            journalItemView = JournalItemView_.build(context);
+            totalItemView = TotalItemView_.build(context);
         } else {
-            journalItemView = (JournalItemView) convertView;
+            totalItemView = (TotalItemView) convertView;
         }
 
-        EnrichedJournalEntry je =getItem(position);
-        journalItemView.bind(je);
-        journalItemView.setLongClickable(true);
+        ITotalsCalculator.Total item =getItem(position);
+        totalItemView.bind(item);
 
-        return journalItemView;
+        return totalItemView;
     }
 }
