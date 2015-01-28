@@ -15,6 +15,9 @@ public class EnrichedJournalEntry {
     public String Description;
 
     public String Category;
+    public boolean Suggested;
+    public String TypeName;    // name for the item sold or bought
+    public int Quantity;       // number of items sold or bought
 
     public boolean Selected;
 }

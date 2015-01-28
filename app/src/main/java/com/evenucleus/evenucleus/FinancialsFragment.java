@@ -1,20 +1,12 @@
 package com.evenucleus.evenucleus;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-import android.app.Fragment;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -24,11 +16,9 @@ import com.evenucleus.client.ICategoryRepo;
 import com.evenucleus.client.IJournalRepo;
 import com.evenucleus.client.JournalRepo;
 
-import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
@@ -115,7 +105,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             _journalRepo.AssignCategory(journalEntry.JournalEntryId, categorySelected);
             journalEntry.Selected = false;
             journalEntry.Category = categorySelected;
-            ((JournalItemView)info.targetView).SetCategory(categorySelected);
+            ((JournalItemView)info.targetView).SetCategory(categorySelected, false);
 
             int c = transactionList.getChildCount();
             for(int i = 0; i < c; ++i) {
@@ -125,7 +115,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
                     jiw._journalEntry.Selected = false;
                     jiw._journalEntry.Category = categorySelected;
                     jiw.checkBox.setChecked(false);
-                    jiw.SetCategory(categorySelected);
+                    jiw.SetCategory(categorySelected, false);
                 }
             }
 

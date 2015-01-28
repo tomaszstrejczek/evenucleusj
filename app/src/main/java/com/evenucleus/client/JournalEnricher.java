@@ -158,10 +158,19 @@ public class JournalEnricher implements IJournalEnricher {
                 continue;
 
             double amount = x.amount;
-            if (matching.containsKey(x) && matching.get(x).transactionType.equals("buy"))
+            String typeName = "";
+            int quantity = 0;
+            if (matching.containsKey(x) && matching.get(x).transactionType.equals("buy")) {
                 amount = Math.round(amount + brokerRate * amount);
+                typeName = matching.get(x).typeName;
+                quantity = -matching.get(x).quantity;
+            }
             else if (matching.containsKey(x) && matching.get(x).transactionType.equals("sell"))
+            {
                 amount = Math.round(amount - brokerRate * amount - sellRate * amount);
+                typeName = matching.get(x).typeName;
+                quantity = matching.get(x).quantity;
+            }
             else if (x.RefTypeName.equals("Manufacturing"))
                 amount = Math.round(amount + manufacturingRate * amount);
 
@@ -180,6 +189,9 @@ public class JournalEnricher implements IJournalEnricher {
             else
                 entry.Description = x.RefTypeName;
             entry.Category = x.CategoryName;
+            entry.TypeName = typeName;
+            entry.Quantity = quantity;
+            entry.Suggested = false;
             result.add(entry);
         }
         return result;

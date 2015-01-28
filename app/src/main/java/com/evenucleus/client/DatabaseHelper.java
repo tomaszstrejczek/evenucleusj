@@ -4,9 +4,7 @@ package com.evenucleus.client;
  * Created by tomeks on 2014-12-28.
  */
 
-import android.content.Context;
 import android.database.DatabaseUtils;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -34,7 +32,7 @@ public class DatabaseHelper
     private ConnectionSource _connectionSource;
 
     // the DAO object we use to access the SimpleData table
-    private Dao<Version, Integer> versionDao = null;
+    private Dao<VersionM, Integer> versionDao = null;
     private Dao<KeyInfo, Integer> keyInfoDao = null;
     private Dao<Pilot, Integer> pilotDao = null;
     private Dao<Skill, Integer> skillDao = null;
@@ -58,7 +56,7 @@ public class DatabaseHelper
 
         _database = SQLiteDatabase.openOrCreateDatabase(_fullPath, null);
         _connectionSource = new AndroidConnectionSource(_database);
-        boolean initialized = DoesTableExists(_database, "Version");
+        boolean initialized = DoesTableExists(_database, "VersionM");
         if (!initialized)
             CreateInitial();
     }
@@ -71,7 +69,7 @@ public class DatabaseHelper
     }
 
     private void CreateInitial() throws java.sql.SQLException {
-        TableUtils.createTable(_connectionSource, Version.class);
+        TableUtils.createTable(_connectionSource, VersionM.class);
         TableUtils.createTable(_connectionSource, KeyInfo.class);
         TableUtils.createTable(_connectionSource, Pilot.class);
         TableUtils.createTable(_connectionSource, Corporation.class);
@@ -84,15 +82,19 @@ public class DatabaseHelper
         TableUtils.createTable(_connectionSource, JournalEntry.class);
         TableUtils.createTable(_connectionSource, WalletTransaction.class);
         TableUtils.createTable(_connectionSource, Setting.class);
+
+        Category cat = new Category();
+        cat.Name = "Arbitrage";
+        getCategoryDao().createOrUpdate(cat);
     }
 
     /**
      * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
      * value.
      */
-    public Dao<Version, Integer> getVersionDao() throws java.sql.SQLException {
+    public Dao<VersionM, Integer> getVersionDao() throws java.sql.SQLException {
         if (versionDao == null) {
-            versionDao = DaoManager.createDao(_connectionSource, Version.class);
+            versionDao = DaoManager.createDao(_connectionSource, VersionM.class);
         }
         return versionDao;
     }

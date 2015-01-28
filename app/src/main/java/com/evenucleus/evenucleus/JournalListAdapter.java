@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.evenucleus.client.ArbitrageCategorySuggester;
 import com.evenucleus.client.EnrichedJournalEntry;
+import com.evenucleus.client.ICategorySuggester;
 import com.evenucleus.client.IJournalEnricher;
 import com.evenucleus.client.IJournalRepo;
 import com.evenucleus.client.ISettingsRepo;
@@ -41,6 +43,9 @@ public class JournalListAdapter extends BaseAdapter {
     @Bean(SettingsRepo.class)
     ISettingsRepo _settingsRepo;
 
+    @Bean(ArbitrageCategorySuggester.class)
+    ICategorySuggester _categrySuggester1;
+
     @App
     MyApplication _app;
 
@@ -57,6 +62,8 @@ public class JournalListAdapter extends BaseAdapter {
                 if (laterThan==null || je.Date.after(laterThan))
                     _entries.add(je);
             }
+
+            _categrySuggester1.Suggest(_entries);
         }
         catch (Exception e) {
             new AlertDialog.Builder(context)

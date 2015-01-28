@@ -81,7 +81,7 @@ public class ApiRequest implements Comparable<ApiRequest>, Serializable {
 		StringBuilder result = new StringBuilder();
 		result.append("Path: ").append(path.getPath()).append("\n");
 		result.append("Page: ").append(page.getPage()).append("\n");
-		result.append("Version: ").append(version).append("\n");
+		result.append("VersionM: ").append(version).append("\n");
 		result.append("Auth: ").append(auth.toString()).append("\n");
 		for (Entry<String, String> entry : params.entrySet()) {
 			result.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");

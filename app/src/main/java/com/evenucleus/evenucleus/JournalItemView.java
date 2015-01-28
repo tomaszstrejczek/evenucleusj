@@ -1,6 +1,7 @@
 package com.evenucleus.evenucleus;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -51,7 +52,7 @@ public class JournalItemView extends LinearLayout {
         _journalEntry = entry;
         date.setText(DateFormat.getDateTimeInstance().format(entry.Date));
         description.setText(entry.Description);
-        SetCategory(entry.Category);
+        SetCategory(entry.Category, entry.Suggested);
         amount.setText(Number2RoundedString.Convert(entry.Amount));
         checkBox.setChecked(entry.Selected);
     }
@@ -62,10 +63,14 @@ public class JournalItemView extends LinearLayout {
     }
 
     public void SetCategory(String cat) {
+        SetCategory(cat, false);
+    }
+    public void SetCategory(String cat, boolean suggested) {
         if (cat != null)
             category.setText(cat);
         else
             category.setText("");
 
+        category.setTextColor(suggested?Color.CYAN:Color.BLACK);
     }
 }

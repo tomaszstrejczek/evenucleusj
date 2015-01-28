@@ -1,6 +1,6 @@
 package com.evenucleus.evenucleus;
 
-import com.evenucleus.client.Version;
+import com.evenucleus.client.VersionM;
 
 
 import java.sql.SQLException;
@@ -12,16 +12,16 @@ import junit.framework.Assert;
  */
 public class LocalDBT extends TestBase{
     public void test_InsertRecord() throws SQLException {
-        List<Version> result =_localdb.getVersionDao().queryForAll();
-        for(Version v :result)
+        List<VersionM> result =_localdb.getVersionDao().queryForAll();
+        for(VersionM v :result)
             Assert.assertTrue(!"testver".equals(v.Name));
 
-        Version data = new Version() {{Name="testver";}};
+        VersionM data = new VersionM() {{Name="testver";}};
         _localdb.getVersionDao().createOrUpdate(data);
 
         result =_localdb.getVersionDao().queryForAll();
         boolean found = false;
-        for(Version v :result)
+        for(VersionM v :result)
             if (v.Name.equals("testver"))
                 found = true;
 

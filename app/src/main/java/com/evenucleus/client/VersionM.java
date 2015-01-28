@@ -5,7 +5,7 @@ import com.j256.ormlite.field.DatabaseField;
 /**
  * Created by tomeks on 2014-12-28.
  */
-public class Version {
+public class VersionM {
     @DatabaseField(generatedId = true)
     public int VersionId;
     @DatabaseField(uniqueIndex = true)
