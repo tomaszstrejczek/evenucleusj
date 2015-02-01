@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.evenucleus.client.IPendingNotificationRepo;
 import com.evenucleus.client.MyLogger;
 import com.evenucleus.client.PendingNotificationRepo;
+import com.logentries.logback.LogentriesAppender;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -21,8 +22,18 @@ import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
+import org.slf4j.ILoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.PatternLayout;
+import ch.qos.logback.classic.android.LogcatAppender;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.core.LayoutBase;
 
 
 @EActivity(R.layout.activity_main)
@@ -45,6 +56,39 @@ public class MainActivity extends ActionBarActivity {
     void afterUpdate() {
         Log.d(MainActivity.class.getName(), "afterupdate");
         logger.debug("afterupdate");
+
+        LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
+        lc.reset();
+
+        PatternLayout layout = new PatternLayout();
+        layout.setContext(lc);
+        layout.setPattern("%-5level:%d:%logger:%message");
+        layout.start();
+
+        LogentriesAppender appender = new LogentriesAppender();
+        appender.setContext(lc);
+        appender.setToken("4b5ef73c-f5c7-4b6c-a7c7-01f40b578910");
+        appender.setLayout(layout);
+
+        appender.start();
+
+        PatternLayoutEncoder encoder = new PatternLayoutEncoder();
+        encoder.setContext(lc);
+        encoder.setPattern("%message%n");
+        encoder.start();
+
+        LogcatAppender logcatAppender = new LogcatAppender();
+        logcatAppender.setContext(lc);
+        logcatAppender.setEncoder(encoder);
+        logcatAppender.start();
+
+        ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.addAppender(appender);
+        root.addAppender(logcatAppender);
+        root.setLevel(Level.TRACE);
+
+        Logger log = LoggerFactory.getLogger(getClass());
+        log.debug("Logger configured: {}", "test");
 
         pilotList.setAdapter(adapter);
 
