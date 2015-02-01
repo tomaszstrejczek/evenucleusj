@@ -13,6 +13,11 @@ import com.evenucleus.client.JournalRepo;
 import com.evenucleus.client.WalletRepo;
 import com.evenucleus.client.WalletTransaction;
 
+import org.acra.ACRA;
+import org.acra.ErrorReporter;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EApplication;
@@ -23,8 +28,22 @@ import java.util.List;
 /**
  * Created by tomeks on 2015-01-24.
  */
+@ReportsCrashes(forceCloseDialogAfterToast = false, customReportContent = {
+        ReportField.APP_VERSION_CODE, ReportField.ANDROID_VERSION,
+        ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA,
+        ReportField.STACK_TRACE }, mode = ReportingInteractionMode.TOAST, resToastText = R.string.application_crashed)
 @EApplication
 public class MyApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        ACRA.init(this);
+
+        LogentriesSender sender = new LogentriesSender(getApplicationContext(), true);
+        ErrorReporter.getInstance().setReportSender(sender);
+
+        super.onCreate();
+    }
 
     @Bean(JournalRepo.class)
     IJournalRepo _journalRepo;

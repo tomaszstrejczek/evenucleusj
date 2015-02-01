@@ -41,6 +41,8 @@ import ch.qos.logback.core.LayoutBase;
 @OptionsMenu(R.menu.menu_main)
 public class MainActivity extends ActionBarActivity {
 
+    public static final String LogentriesToken = "4b5ef73c-f5c7-4b6c-a7c7-01f40b578910";
+
     @ViewById
     ListView pilotList;
 
@@ -92,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
 
         LogentriesAppender appender = new LogentriesAppender();
         appender.setContext(lc);
-        appender.setToken("4b5ef73c-f5c7-4b6c-a7c7-01f40b578910");
+        appender.setToken(LogentriesToken);
         appender.setLayout(layout);
 
         appender.start();
