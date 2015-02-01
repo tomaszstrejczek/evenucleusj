@@ -4,6 +4,8 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.sql.SQLException;
@@ -25,6 +27,7 @@ import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
  */
 @EBean
 public class JobService implements IJobService {
+    final Logger logger = LoggerFactory.getLogger(JobService.class);
 
     @Bean(PilotRepo.class)
     public IPilotRepo _pilotRepo;
@@ -41,7 +44,7 @@ public class JobService implements IJobService {
 
     @Override
     public Result Get() throws SQLException, ApiException {
-        Log.d(JobService.class.getName(), "Get");
+        logger.debug("Get");
         Result result = new Result();
         result.cachedUntil = new DateTime().plusHours(1);
         result.jobs = new ArrayList<Job>();

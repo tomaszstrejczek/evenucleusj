@@ -6,6 +6,8 @@ import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import android.content.Context;
 import android.util.Log;
@@ -17,20 +19,22 @@ import java.io.File;
  */
 @EBean
 public class MyDatabaseHelper extends DatabaseHelper {
+    final Logger logger = LoggerFactory.getLogger(MyDatabaseHelper.class);
+
     public MyDatabaseHelper(Context context)
     {
         super();
 
-        Log.d(MyDatabaseHelper.class.getName(), "AfterInject");
+        logger.debug("AfterInject");
 
         File databasePath = context.getDatabasePath("evenucleus9.db");
-        Log.d(MyDatabaseHelper.class.getName(), String.format("Database path %s", databasePath.getPath()));
+        logger.debug("Database path {}", databasePath.getPath());
 
         try {
             Initialize(databasePath.getPath());
         }
         catch (Exception e) {
-            Log.e(MyDatabaseHelper.class.getName(), String.format("Fatal error %s: %s", e.toString(), e.getStackTrace().toString()));
+            logger.warn("Fatal error", e);
         }
     }
 }

@@ -7,6 +7,8 @@ import com.evenucleus.evenucleus.R;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
  */
 @EBean
 public class KeyInfoRepo implements IKeyInfoRepo {
+    final Logger logger = LoggerFactory.getLogger(KeyInfoRepo.class);
 
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
@@ -24,7 +27,7 @@ public class KeyInfoRepo implements IKeyInfoRepo {
 
     @Override
     public void AddKey(final int keyid, final String vcode) throws SQLException, UserException {
-        Log.d(KeyInfoRepo.class.getName(), String.format("AddKey %d", keyid));
+        logger.debug("AddKey {}", keyid);
         KeyInfo existing = _localdb.getKeyInfoDao().queryForId(keyid);
         if (existing!=null)
         {
@@ -38,21 +41,21 @@ public class KeyInfoRepo implements IKeyInfoRepo {
 
     @Override
     public void DeleteKey(int keyid) throws SQLException {
-        Log.d(KeyInfoRepo.class.getName(), String.format("DeleteKey %d", keyid));
+        logger.debug("DeleteKey {}", keyid);
 
         _localdb.getKeyInfoDao().deleteById(keyid);
     }
 
     @Override
     public List<KeyInfo> GetKeys() throws SQLException {
-        Log.d(KeyInfoRepo.class.getName(), "GetKeys");
+        logger.debug("GetKeys");
 
         return _localdb.getKeyInfoDao().queryForAll();
     }
 
     @Override
     public KeyInfo GetById(int id) throws SQLException {
-        Log.d(KeyInfoRepo.class.getName(), String.format("GetById %d", id));
+        logger.debug("GetById {}", id);
 
         KeyInfo existing = _localdb.getKeyInfoDao().queryForId(id);
         return existing;

@@ -7,6 +7,8 @@ import com.j256.ormlite.dao.ForeignCollection;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 @EBean
 public class SkillRepo implements ISkillRepo {
+    final Logger logger = LoggerFactory.getLogger(SkillRepo.class);
 
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
@@ -25,7 +28,7 @@ public class SkillRepo implements ISkillRepo {
 
     @Override
     public void Update(UserData data) throws SQLException {
-        Log.d(SkillRepo.class.getName(), "Update");
+        logger.debug("Update");
 
         List<Pilot> pilots = _localdb.getPilotDao().queryForAll();
         for(Pilot p:pilots)
@@ -96,7 +99,7 @@ public class SkillRepo implements ISkillRepo {
 
     @Override
     public List<String> GetForPilot(int pilotid) throws SQLException {
-        Log.d(SkillRepo.class.getName(), String.format("GetForPilot %d", pilotid));
+        logger.debug("GetForPilot {}", pilotid);
 
         List<String> result = new ArrayList<String>();
         List<Skill> skills = _localdb.getSkillDao().queryForEq("PilotId", pilotid);

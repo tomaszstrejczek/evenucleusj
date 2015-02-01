@@ -12,12 +12,16 @@ import java.text.ParseException;
 import java.util.List;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by tomeks on 2015-01-01.
  */
 @EBean
 public class WalletRepo implements IWalletRepo {
+    final Logger logger = LoggerFactory.getLogger(WalletRepo.class);
+
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
 
@@ -32,7 +36,7 @@ public class WalletRepo implements IWalletRepo {
 
     @Override
     public void ReplicateFromEve() throws SQLException, ParseException, ApiException {
-        Log.d(WalletRepo.class.getName(), "ReplicateFromEve");
+        logger.debug("ReplicateFromEve");
 
         // For testing we allow null _pilotRepo
         if (_pilotRepo != null)
@@ -57,7 +61,7 @@ public class WalletRepo implements IWalletRepo {
     }
 
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
-        Log.d(WalletRepo.class.getName(), String.format("Replicating for pilot %s", p.Name));
+        logger.debug("Replicating for pilot {}", p.Name);
 
         QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
         qb.where().eq("PilotId", p.PilotId);
@@ -73,7 +77,7 @@ public class WalletRepo implements IWalletRepo {
     }
 
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
-        Log.d(WalletRepo.class.getName(), String.format("Replicating for corporation %s", c.Name));
+        logger.debug("Replicating for corporation {}", c.Name);
 
         QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
         qb.where().eq("CorporationId", c.CorporationId);

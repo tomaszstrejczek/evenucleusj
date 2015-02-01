@@ -4,6 +4,8 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.joda.time.DateTime;
 import org.joda.time.DurationFieldType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import com.beimin.eveapi.exception.ApiException;
  */
 @EBean
 public class PilotService implements IPilotService {
+    final Logger logger = LoggerFactory.getLogger(PilotService.class);
 
     @Bean(KeyInfoRepo.class)
     public IKeyInfoRepo _keyInfoRepo;
@@ -40,7 +43,7 @@ public class PilotService implements IPilotService {
 
     @Override
     public Result Get() throws SQLException, UserException, ApiException {
-        Log.d(PilotService.class.getName(), "Get");
+        logger.debug("Get");
         Result r = new Result();
         r.pilots = new ArrayList<PilotDTO>();
         r.corporations = new ArrayList<Corporation>();

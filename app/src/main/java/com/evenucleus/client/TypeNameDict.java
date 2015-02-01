@@ -10,6 +10,8 @@ import com.evenucleus.evenucleus.MyDatabaseHelper;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,13 +27,14 @@ import java.util.Map;
  */
 @EBean
 public class TypeNameDict implements ITypeNameDict {
+    final Logger logger = LoggerFactory.getLogger(TypeNameDict.class);
 
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
 
     @Override
     public Map<Integer, String> GetById(Iterable<Integer> ids) throws SQLException, ApiException {
-        Log.d(TypeNameDict.class.getName(), "GetById");
+        logger.debug("GetById");
 
         Map<Integer, String> result = new HashMap<Integer, String>();
 
@@ -71,7 +74,7 @@ public class TypeNameDict implements ITypeNameDict {
 
     private Date _recentPurgeDate = null;
     private void purgeCacheIfNeeded() {
-        Log.d(CacheProvider.class.getName(), "purgeCacheIfNeeded");
+        logger.debug("purgeCacheIfNeeded");
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());

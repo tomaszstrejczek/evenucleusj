@@ -41,6 +41,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,6 +59,8 @@ public class Alarm extends BroadcastReceiver {
     final public static String ONE_TIME = "onetime";
     final public static String RefreshIntent = "com.evenucleus.evenucleus.refresh";
     final public static String CategorySetIntent = "com.evenucleus.evenucleus.categoryset";
+
+    final Logger logger = LoggerFactory.getLogger(Alarm.class);
 
     public Alarm() {
 
@@ -77,7 +81,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected void onPreExecute () {
-            Log.d(MyTask.class.getName(), "onPreExecute");
+            logger.debug("onPreExecute");
             PowerManager pm = (PowerManager) _context.getSystemService(Context.POWER_SERVICE);
             _wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
             _wl.acquire();
@@ -87,7 +91,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected DateTime doInBackground(Void... params) {
-            Log.d(MyTask.class.getName(), "doInBackground");
+            logger.debug("doInBackground");
             try {
                 MyDatabaseHelper localdb = new MyDatabaseHelper(_context);
                 TypeNameDict typeNameDict = new TypeNameDict();
@@ -165,24 +169,24 @@ public class Alarm extends BroadcastReceiver {
             }
             catch (Exception e)
             {
-                Log.e(Alarm.class.getName(), String.format("Exception %s: %s", e.toString(), e.getStackTrace().toString()));
+                logger.error("Exception ", e);
                 _ex = e;
                 return new DateTime().plusMinutes(5);
             }
         }
 
         private void postNotifications(PendingNotificationRepo repo) throws SQLException {
-            Log.d(MyTask.class.getName(), "postNotifications");
+            logger.debug("postNotifications");
             NotificationManager mNotificationManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
 
             List<PendingNotification> notifications = repo.GetAll();
-            Log.d(MyTask.class.getName(), String.format("Got %d notification to send", notifications.size()));
+            logger.debug("Got {} notification to send", notifications.size());
             String ns = Context.NOTIFICATION_SERVICE;
 
             for(PendingNotification n:notifications) {
                 PendingIntent pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(), 0);
 
-                Log.d(MyTask.class.getName(), String.format("Posting notification %d: %s", n.PendingNotificationId, n.Message2));
+                logger.debug("Posting notification {}: {}", n.PendingNotificationId, n.Message2);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(_context)
                         .setSmallIcon(R.drawable.ic_launcher)
@@ -197,7 +201,7 @@ public class Alarm extends BroadcastReceiver {
 
         @Override
         protected void onPostExecute(DateTime result) {
-            Log.d(MyTask.class.getName(), "onPostExecute");
+            logger.debug("onPostExecute");
             if (_ex != null)
                 Toast.makeText(_context, "Exception: " + _ex.toString(), Toast.LENGTH_LONG).show(); // For example
 
@@ -209,7 +213,7 @@ public class Alarm extends BroadcastReceiver {
             try {
                 _alarm.SetAlarm(_context, result);
             } catch (SQLException e) {
-                Log.d(MyTask.class.getName(), String.format("onPostExecute SetAlarm %s", e.toString()));
+                logger.error("onPostExecute SetAlarm", e.toString());
                 e.printStackTrace();
             }
             _context.sendBroadcast(new Intent(RefreshIntent));
@@ -220,7 +224,7 @@ public class Alarm extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d(Alarm.class.getName(), "onReceive");
+        logger.debug("onReceive");
         MyTask task = new MyTask(context, this);
         task.execute();
     }
@@ -230,7 +234,7 @@ public class Alarm extends BroadcastReceiver {
     }
 
     public void SetAlarm(Context context, DateTime when) throws SQLException {
-        Log.d(Alarm.class.getName(), String.format("SetAlarm %s", when.toString()));
+        logger.debug("SetAlarm {}", when.toString());
 
         DatabaseHelper localdb = new MyDatabaseHelper(context);
         SettingsRepo settingsRepo = new SettingsRepo();

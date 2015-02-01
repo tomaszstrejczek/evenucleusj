@@ -4,6 +4,8 @@ import android.util.Log;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,12 +16,14 @@ import java.util.List;
  */
 @EBean
 public class CorporationRepo implements ICorporationRepo {
+    final Logger logger = LoggerFactory.getLogger(CorporationRepo.class);
+
     @Bean
     public DatabaseHelper _localdb;
 
     @Override
     public void Update(UserData data) throws SQLException {
-        Log.d(CorporationRepo.class.getName(), "Update");
+        logger.debug("Update");
 
         List<String> validCorpoNames = new ArrayList<String>();
         for(Corporation s:data.Corporations)
@@ -52,7 +56,7 @@ public class CorporationRepo implements ICorporationRepo {
 
     @Override
     public List<Corporation> GetAll() throws SQLException {
-        Log.d(CorporationRepo.class.getName(), "GetAll");
+        logger.debug("GetAll");
         return _localdb.getCorporationDao().queryForAll();
     }
 }

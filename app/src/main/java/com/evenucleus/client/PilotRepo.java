@@ -9,6 +9,8 @@ import com.evenucleus.evenucleus.MyDatabaseHelper;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Set;
  */
 @EBean
 public class PilotRepo implements IPilotRepo {
+    final Logger logger = LoggerFactory.getLogger(PilotRepo.class);
 
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
@@ -47,7 +50,7 @@ public class PilotRepo implements IPilotRepo {
 
     @Override
     public void Update(UserData data) throws SQLException {
-        Log.d(PilotRepo.class.getName(), "Update");
+        logger.debug("Update");
 
         List<String> validPilotNames = new ArrayList<String>();
         for(PilotDTO s:data.Pilots)
@@ -92,20 +95,20 @@ public class PilotRepo implements IPilotRepo {
 
     @Override
     public List<Pilot> GetAll() throws SQLException {
-        Log.d(PilotRepo.class.getName(), "GetAll");
+        logger.debug("GetAll");
 
         return _localdb.getPilotDao().queryForAll();
     }
 
     @Override
     public void SetFreeManufacturingJobsNofificationCount(int pilotid, int value) {
-        Log.d(PilotRepo.class.getName(), String.format("SetFreeManufacturingJobsNofificationCount %d %d", pilotid, value));
+        logger.debug("SetFreeManufacturingJobsNofificationCount {} {}", pilotid, value);
         _localdb._database.execSQL("update pilot set FreeManufacturingJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
     }
 
     @Override
     public void SetFreeResearchJobsNofificationCount(int pilotid, int value) {
-        Log.d(PilotRepo.class.getName(), String.format("SetFreeResearchJobsNofificationCount %d %d", pilotid, value));
+        logger.debug("SetFreeResearchJobsNofificationCount {} {}", pilotid, value);
         _localdb._database.execSQL("update pilot set FreeResearchJobsNofificationCount=? where PilotId=?", new String[] {Integer.toString(value), Integer.toString(pilotid)});
     }
 }

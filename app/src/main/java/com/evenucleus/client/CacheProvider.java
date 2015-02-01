@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -19,6 +21,8 @@ import java.util.TimeZone;
  * Created by tomeks on 2014-12-31.
  */
 public class CacheProvider implements ICacheProvider {
+    final Logger logger = LoggerFactory.getLogger(CacheProvider.class);
+
 
     DatabaseHelper _localdb;
     public CacheProvider(DatabaseHelper localdb) {
@@ -27,7 +31,7 @@ public class CacheProvider implements ICacheProvider {
 
     @Override
     public <T> T Get(String key, ICacheValueProvider valueProvider, Class<T> clazz) throws SQLException, JSONException, ApiException {
-        Log.d(CacheProvider.class.getName(), String.format("Get %s", key));
+        logger.debug("Get {}", key);
 
         if (valueProvider == null)
             throw new IllegalArgumentException("valueProvider");
@@ -60,7 +64,7 @@ public class CacheProvider implements ICacheProvider {
 
     private Date _recentPurgeDate = null;
     private void purgeCacheIfNeeded() {
-        Log.d(CacheProvider.class.getName(), "purgeCacheIfNeeded");
+        logger.debug("purgeCacheIfNeeded");
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());

@@ -30,12 +30,15 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 
 @EActivity(R.layout.activity_add_key)
 public class AddKey extends ActionBarActivity {
+    final Logger logger = LoggerFactory.getLogger(AddKey.class);
 
     @Bean(EveApiCaller.class)
     IEveApiCaller eveApiCaller;
@@ -124,7 +127,7 @@ public class AddKey extends ActionBarActivity {
     private static int _testData = 0;
     @AfterViews
     void afterUpdate() {
-        Log.d(AddKey.class.getName(), "afterupdate");
+        logger.debug("afterupdate");
         OkButton.setEnabled(false);
 
         if (Configuration.ProvideSampleData())

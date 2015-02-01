@@ -17,10 +17,14 @@ import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @EActivity(R.layout.activity_jobs)
 @OptionsMenu(R.menu.menu_jobs)
 public class JobsActivity extends ActionBarActivity {
+    final Logger logger = LoggerFactory.getLogger(JobsActivity.class);
+
     @ViewById(R.id.jobsList)
     ListView jobList;
 
@@ -29,7 +33,7 @@ public class JobsActivity extends ActionBarActivity {
 
     @AfterViews
     void afterUpdate() {
-        Log.d(JobsActivity.class.getName(), "afterupdate");
+        logger.debug("afterupdate");
         jobList.setAdapter(adapter);
     }
 

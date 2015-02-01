@@ -3,13 +3,13 @@ package com.evenucleus.evenucleus;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
+import android.telephony.TelephonyManager;
 import android.widget.ListView;
 import android.util.Log;
 import android.widget.Toast;
 
 
 import com.evenucleus.client.IPendingNotificationRepo;
-import com.evenucleus.client.MyLogger;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.logentries.logback.LogentriesAppender;
 
@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.UUID;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
@@ -49,20 +50,44 @@ public class MainActivity extends ActionBarActivity {
     @Bean(PendingNotificationRepo.class)
     IPendingNotificationRepo pendingNotificationRepo;
 
-    @Bean
-    MyLogger logger;
-
     @AfterViews
     void afterUpdate() {
         Log.d(MainActivity.class.getName(), "afterupdate");
-        logger.debug("afterupdate");
+        initializeLogging();
+
+        pilotList.setAdapter(adapter);
+
+        DateTime when = new DateTime().plusSeconds(10);
+
+        try {
+            new Alarm().SetAlarm(this.getApplicationContext(), when);
+            pendingNotificationRepo.IssueNew("Debug", "Alarm started");
+        }
+        catch (Exception e) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage(e.toString())
+                    .show();
+        }
+    }
+
+    private void initializeLogging() {
+        final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
+
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        String deviceId = deviceUuid.toString();
 
         LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
         lc.reset();
 
         PatternLayout layout = new PatternLayout();
         layout.setContext(lc);
-        layout.setPattern("%-5level:%d:%logger:%message");
+        layout.setPattern("%-5level:%d:%logger:deviceId="+deviceId+":%message");
         layout.start();
 
         LogentriesAppender appender = new LogentriesAppender();
@@ -90,20 +115,6 @@ public class MainActivity extends ActionBarActivity {
         Logger log = LoggerFactory.getLogger(getClass());
         log.debug("Logger configured: {}", "test");
 
-        pilotList.setAdapter(adapter);
-
-        DateTime when = new DateTime().plusSeconds(10);
-
-        try {
-            new Alarm().SetAlarm(this.getApplicationContext(), when);
-            pendingNotificationRepo.IssueNew("Debug", "Alarm started");
-        }
-        catch (Exception e) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage(e.toString())
-                    .show();
-        }
     }
 
     @Receiver(actions = Alarm.RefreshIntent)

@@ -7,6 +7,8 @@ import com.evenucleus.evenucleus.MyDatabaseHelper;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -16,6 +18,8 @@ import java.util.List;
  */
 @EBean
 public class JobRepo implements IJobRepo {
+    final Logger logger = LoggerFactory.getLogger(JobRepo.class);
+
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
 
@@ -27,7 +31,7 @@ public class JobRepo implements IJobRepo {
 
     @Override
     public void Update(UserData data) throws SQLException {
-        Log.d(JobRepo.class.getName(), "Update");
+        logger.debug("Update");
         updateRepo(data);
         updateNotifications(data);
     }
@@ -108,7 +112,7 @@ public class JobRepo implements IJobRepo {
 
     @Override
     public List<Job> GetAll() throws SQLException {
-        Log.d(JobRepo.class.getName(), "GetAll");
+        logger.debug("GetAll");
         return _localdb.getJobDao().queryForAll();
     }
 }

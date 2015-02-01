@@ -8,18 +8,23 @@ import com.evenucleus.evenucleus.MyDatabaseHelper;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by tomeks on 2015-01-18.
  */
 @EBean
 public class SettingsRepo implements ISettingsRepo {
+    final Logger logger = LoggerFactory.getLogger(SettingsRepo.class);
+
+
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
 
     @Override
     public Date getNextAlert() throws SQLException {
-        Log.d(SettingsRepo.class.getName(), "getNextAlert");
+        logger.debug("getNextAlert");
 
         Setting s = _localdb.getSettingDao().queryForId("next_alert");
         if (s == null)
@@ -29,7 +34,7 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public void setNextAlert(Date value) throws SQLException {
-        Log.d(SettingsRepo.class.getName(), String.format("setNextAlert %s", value.toString()));
+        logger.debug("setNextAlert {}", value.toString());
         Setting s = new Setting();
         s.Key = "next_alert";
         s.DateValue = value;
@@ -38,7 +43,7 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public Date getLatestAlert() throws SQLException {
-        Log.d(SettingsRepo.class.getName(), "getLatestAlert");
+        logger.debug("getLatestAlert");
 
         Setting s = _localdb.getSettingDao().queryForId("latest_alert");
         if (s == null)
@@ -48,7 +53,7 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public void setLatestAlert(Date value) throws SQLException {
-        Log.d(SettingsRepo.class.getName(), String.format("setLatestAlert %s", value.toString()));
+        logger.debug("setLatestAlert {}", value.toString());
         Setting s = new Setting();
         s.Key = "latest_alert";
         s.DateValue = value;
@@ -57,7 +62,7 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public Date getFinancialsLaterThan() throws SQLException {
-        Log.d(SettingsRepo.class.getName(), "getFinancialsLaterThan");
+        logger.debug("getFinancialsLaterThan");
 
         Setting s = _localdb.getSettingDao().queryForId("financials_later_than");
         if (s == null)
@@ -67,7 +72,7 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public void setFinancialsLaterThan(Date value) throws SQLException {
-        Log.d(SettingsRepo.class.getName(), String.format("setFinancialsLaterThan %s", value.toString()));
+        logger.debug("setFinancialsLaterThan %s", value.toString());
         Setting s = new Setting();
         s.Key = "financials_later_than";
         s.DateValue = value;

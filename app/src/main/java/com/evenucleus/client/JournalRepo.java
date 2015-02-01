@@ -9,6 +9,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @EBean
 public class JournalRepo implements IJournalRepo {
+    final Logger logger = LoggerFactory.getLogger(JournalRepo.class);
 
     @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
@@ -36,7 +39,7 @@ public class JournalRepo implements IJournalRepo {
 
     @Override
     public void ReplicateFromEve() throws SQLException, ParseException, ApiException {
-        Log.d(JournalRepo.class.getName(), "ReplicateFromEve");
+        logger.debug("ReplicateFromEve");
 
         // For testing we allow null _pilotRepo
         if (_pilotRepo != null)
@@ -62,7 +65,7 @@ public class JournalRepo implements IJournalRepo {
 
     @Override
     public void AssignCategory(int journalEntryId, String category) throws SQLException {
-        Log.d(JournalRepo.class.getName(), String.format("AssignCategory %d %s", journalEntryId, category));
+        logger.debug("AssignCategory {} {}", journalEntryId, category);
 
         JournalEntry je = _localdb.getJournalEntryDao().queryForId(journalEntryId);
         je.CategoryName = category;
@@ -70,7 +73,7 @@ public class JournalRepo implements IJournalRepo {
     }
 
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
-        Log.d(JournalRepo.class.getName(), String.format("Replicating for pilot %s", p.Name));
+        logger.debug("Replicating for pilot {}", p.Name);
 
         QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
         qb.where().eq("PilotId", p.PilotId);
@@ -86,7 +89,7 @@ public class JournalRepo implements IJournalRepo {
     }
 
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
-        Log.d(JournalRepo.class.getName(), String.format("Replicating for corporation %s", c.Name));
+        logger.debug("Replicating for corporation {}", c.Name);
 
         QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
         qb.where().eq("CorporationId", c.CorporationId);

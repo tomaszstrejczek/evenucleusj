@@ -15,6 +15,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -25,6 +27,8 @@ import java.io.File;
 @EBean
 public class DatabaseHelper
 {
+    final Logger logger = LoggerFactory.getLogger(DatabaseHelper.class);
+
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
     private String _fullPath;
@@ -47,7 +51,7 @@ public class DatabaseHelper
     private Dao<Setting, String> setttingDao = null;
 
     public void Initialize(String fullPath) throws java.sql.SQLException {
-        Log.i(DatabaseHelper.class.getName(), String.format("Initialize %s", fullPath));
+        logger.info("Initialize {}", fullPath);
 
         _fullPath = fullPath;
         File f = new File(_fullPath);
@@ -69,6 +73,7 @@ public class DatabaseHelper
     }
 
     private void CreateInitial() throws java.sql.SQLException {
+        logger.debug("CreateInitial");
         TableUtils.createTable(_connectionSource, VersionM.class);
         TableUtils.createTable(_connectionSource, KeyInfo.class);
         TableUtils.createTable(_connectionSource, Pilot.class);
@@ -86,6 +91,8 @@ public class DatabaseHelper
         Category cat = new Category();
         cat.Name = "Arbitrage";
         getCategoryDao().createOrUpdate(cat);
+
+        logger.debug("CreateInitial finished");
     }
 
     /**

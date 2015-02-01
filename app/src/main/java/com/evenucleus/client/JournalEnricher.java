@@ -13,12 +13,15 @@ import java.util.Set;
 
 import android.util.Log;
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by tomeks on 2015-01-01.
  */
 @EBean
 public class JournalEnricher implements IJournalEnricher {
+    final Logger logger = LoggerFactory.getLogger(JournalEnricher.class);
 
     class DateComparator2 implements Comparator<EnrichedJournalEntry> {
         @Override
@@ -29,7 +32,7 @@ public class JournalEnricher implements IJournalEnricher {
 
     @Override
     public List<EnrichedJournalEntry> Enrich(List<JournalEntry> jes, List<WalletTransaction> wts) {
-        Log.d(JournalEnricher.class.getName(), "Enrich");
+        logger.debug("Enrich");
 
         List<EnrichedJournalEntry> result = new ArrayList<EnrichedJournalEntry>();
 
