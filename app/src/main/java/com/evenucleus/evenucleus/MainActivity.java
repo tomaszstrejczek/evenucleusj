@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 
 import com.evenucleus.client.IPendingNotificationRepo;
+import com.evenucleus.client.MyLogger;
 import com.evenucleus.client.PendingNotificationRepo;
 
 import org.androidannotations.annotations.AfterViews;
@@ -37,9 +38,14 @@ public class MainActivity extends ActionBarActivity {
     @Bean(PendingNotificationRepo.class)
     IPendingNotificationRepo pendingNotificationRepo;
 
+    @Bean
+    MyLogger logger;
+
     @AfterViews
     void afterUpdate() {
         Log.d(MainActivity.class.getName(), "afterupdate");
+        logger.debug("afterupdate");
+
         pilotList.setAdapter(adapter);
 
         DateTime when = new DateTime().plusSeconds(10);

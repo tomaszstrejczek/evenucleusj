@@ -62,4 +62,5 @@ dependencies {
     compile 'com.koushikdutta.ion:ion:2.0.4'
     compile 'joda-time:joda-time:2.6'
     compile 'com.jpardogo.materialtabstrip:library:1.0.8'
+    compile files('libs/logentries-android-2.1.4.jar')
 }
