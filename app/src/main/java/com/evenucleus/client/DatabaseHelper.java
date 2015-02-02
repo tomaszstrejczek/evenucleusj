@@ -68,7 +68,7 @@ public class DatabaseHelper
 
     private boolean DoesTableExists(SQLiteDatabase database, String tablename)
     {
-        long cnt = DatabaseUtils.queryNumEntries(database, "sqlite_master", "type='table' AND name=?", new String[] {tablename});
+        long cnt = DatabaseUtils.queryNumEntries(database, "sqlite_master", "type='table' AND name=? COLLATE NOCASE", new String[] {tablename});
         return cnt > 0;
     }
 

@@ -71,6 +71,6 @@ public class JournalItemView extends LinearLayout {
         else
             category.setText("");
 
-        category.setTextColor(suggested?Color.CYAN:Color.BLACK);
+        category.setTextColor(suggested?Color.parseColor("#10bcc9"):Color.BLACK);
     }
 }

@@ -45,6 +45,9 @@ public class JobService implements IJobService {
     @Override
     public Result Get() throws SQLException, ApiException {
         logger.debug("Get");
+
+        List<DateTime> cachedUntils = new ArrayList<DateTime>();
+
         Result result = new Result();
         result.cachedUntil = new DateTime().plusHours(1);
         result.jobs = new ArrayList<Job>();
@@ -56,7 +59,7 @@ public class JobService implements IJobService {
             if (p.KeyInfo==null)
                 continue;
             IndustryJobsResponse jobs = _eveApiCaller.getIndustryJobs(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId);
-            if (result.cachedUntil.isAfter(new DateTime(jobs.getCachedUntil()))) result.cachedUntil = new DateTime(jobs.getCachedUntil());
+            cachedUntils.add(new DateTime(jobs.getCachedUntil()));
             tmpResult.addAll(jobs.getAll());
         }
 
@@ -65,7 +68,7 @@ public class JobService implements IJobService {
             if (c.KeyInfo == null)
                 continue;
             IndustryJobsResponse jobs = _eveApiCaller.getIndustryJobsCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode);
-            if (result.cachedUntil.isAfter(new DateTime(jobs.getCachedUntil()))) result.cachedUntil = new DateTime(jobs.getCachedUntil());
+            cachedUntils.add(new DateTime(jobs.getCachedUntil()));
             tmpResult.addAll(jobs.getAll());
         }
 
@@ -85,6 +88,9 @@ public class JobService implements IJobService {
             job.Url = String.format("https://image.eveonline.com/Type/%d_64.png", j.getBlueprintTypeID());
             result.jobs.add(job);
         }
+
+        result.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils);
+        logger.debug("JobService cachedUntil {}", result.cachedUntil);
 
         return result;
     }

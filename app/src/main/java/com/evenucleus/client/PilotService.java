@@ -44,6 +44,9 @@ public class PilotService implements IPilotService {
     @Override
     public Result Get() throws SQLException, UserException, ApiException {
         logger.debug("Get");
+
+        List<DateTime> cachedUntils = new ArrayList<DateTime>();
+
         Result r = new Result();
         r.pilots = new ArrayList<PilotDTO>();
         r.corporations = new ArrayList<Corporation>();
@@ -74,9 +77,9 @@ public class PilotService implements IPilotService {
                 SkillQueueResponse skillQueue = _eveApiCaller.GetSkillQueue(k.KeyId, k.VCode, c.getCharacterID());
 
                 // Calculate cache refresh date
-                if (r.cachedUntil.isAfter(new DateTime(sheet.getCachedUntil()))) r.cachedUntil = new DateTime(sheet.getCachedUntil());
-                if (r.cachedUntil.isAfter(new DateTime(skillInTraining.getCachedUntil()))) r.cachedUntil = new DateTime(skillInTraining.getCachedUntil());
-                if (r.cachedUntil.isAfter(new DateTime(skillQueue.getCachedUntil()))) r.cachedUntil = new DateTime(skillQueue.getCachedUntil());
+                cachedUntils.add(new DateTime(sheet.getCachedUntil()));
+                cachedUntils.add(new DateTime(skillInTraining.getCachedUntil()));
+                cachedUntils.add(new DateTime(skillQueue.getCachedUntil()));
 
                 // Calculate number of manufacturing & research slots
                 long massProductionTypeId = 3387;
@@ -119,6 +122,9 @@ public class PilotService implements IPilotService {
                 r.pilots.add(p);
             }
         }
+
+        r.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils);
+        logger.debug("PilotService cachedUntil {}", r.cachedUntil);
 
         return r;
     }

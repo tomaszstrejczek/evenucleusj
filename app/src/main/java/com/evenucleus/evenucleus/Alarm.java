@@ -25,6 +25,7 @@ import com.evenucleus.client.JobService;
 import com.evenucleus.client.JobSummary;
 import com.evenucleus.client.JournalRepo;
 import com.evenucleus.client.KeyInfoRepo;
+import com.evenucleus.client.NextRefreshCalculator;
 import com.evenucleus.client.PendingNotification;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.evenucleus.client.PilotRepo;
@@ -46,6 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -162,10 +164,9 @@ public class Alarm extends BroadcastReceiver {
 
                 settingsRepo.setLatestAlert(new Date());
 
-                if (result.cachedUntil.isBefore(resultJobs.cachedUntil))
-                    return result.cachedUntil;
-                else
-                    return resultJobs.cachedUntil;
+                DateTime cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), Arrays.asList(resultJobs.cachedUntil, result.cachedUntil));
+                logger.debug("Alarm cachedUntil {}", cachedUntil);
+                    return cachedUntil;
             }
             catch (Exception e)
             {
