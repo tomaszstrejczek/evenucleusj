@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ import android.util.Log;
 public class Alarm extends BroadcastReceiver {
     final public static String ONE_TIME = "onetime";
     final public static String RefreshIntent = "com.evenucleus.evenucleus.refresh";
+    final public static String OneTimeIntent = "com.evenucleus.evenucleus.onetime";
     final public static String CategorySetIntent = "com.evenucleus.evenucleus.categoryset";
 
     final Logger logger = LoggerFactory.getLogger(Alarm.class);
@@ -234,6 +236,17 @@ public class Alarm extends BroadcastReceiver {
 
     }
 
+    public void StartAlarm(Context context) throws SQLException {
+        logger.debug("StartAlarm");
+
+        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(context, Alarm.class);
+        intent.putExtra(ONE_TIME, Boolean.FALSE);
+        intent.setAction(OneTimeIntent);
+
+        onReceive(context, intent);
+    }
+
     public void SetAlarm(Context context, DateTime when) throws SQLException {
         logger.debug("SetAlarm {}", when.toString());
 
@@ -245,12 +258,16 @@ public class Alarm extends BroadcastReceiver {
         AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Alarm.class);
         intent.putExtra(ONE_TIME, Boolean.FALSE);
+        intent.setAction(OneTimeIntent);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 
         DateTime dtNow = new DateTime();
         Duration d = new Duration(dtNow, when);
 
-        am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + d.getMillis() , pi);
+        // If the alarm is too close then we invoke it one time and set periodic to something longer
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime()+d.getMillis(),
+                d.getMillis()<AlarmManager.INTERVAL_FIFTEEN_MINUTES?AlarmManager.INTERVAL_FIFTEEN_MINUTES:d.getMillis(), pi);
 
         //After after 30 seconds
         //am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 5 , pi);

@@ -59,10 +59,8 @@ public class MainActivity extends ActionBarActivity {
 
         pilotList.setAdapter(adapter);
 
-        DateTime when = new DateTime().plusSeconds(10);
-
         try {
-            new Alarm().SetAlarm(this.getApplicationContext(), when);
+            new Alarm().StartAlarm(this.getApplicationContext());
             pendingNotificationRepo.IssueNew("Debug", "Alarm started");
         }
         catch (Exception e) {

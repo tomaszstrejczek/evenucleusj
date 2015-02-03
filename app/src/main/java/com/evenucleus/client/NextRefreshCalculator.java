@@ -20,6 +20,9 @@ public class NextRefreshCalculator {
             }
         }
 
+        if (cnt == 0)
+            return now.plusMinutes(60);
+
         Duration avg = new Duration(sum.getMillis()/cnt);
         return now.plus(avg);
     }
