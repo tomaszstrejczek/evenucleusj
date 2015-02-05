@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.beimin.eveapi.utils.StringUtils;
 import com.evenucleus.client.ArbitrageCategorySuggester;
 import com.evenucleus.client.EnrichedJournalEntry;
 import com.evenucleus.client.ICategorySuggester;
@@ -56,14 +57,28 @@ public class JournalListAdapter extends BaseAdapter {
     public void afterInject() {
         try {
             Date laterThan = _settingsRepo.getFinancialsLaterThan();
-            List<EnrichedJournalEntry> data = _app.getEnrichedJournalEntries();
-            _entries = new ArrayList<EnrichedJournalEntry>();
-            for(EnrichedJournalEntry je: data) {
-                if (laterThan==null || je.Date.after(laterThan))
-                    _entries.add(je);
-            }
+            String byCategory = _settingsRepo.getFilterBy();
+            boolean onlySuggested = _settingsRepo.getOnlySuggested();
 
-            _categrySuggester1.Suggest(_entries);
+            List<EnrichedJournalEntry> data = _app.getEnrichedJournalEntries();
+            List<EnrichedJournalEntry> entries1 = new ArrayList<EnrichedJournalEntry>();
+
+            for(EnrichedJournalEntry je: data) {
+                if (laterThan==null || je.Date.after(laterThan)) {
+                    entries1.add(je);
+                }
+            }
+            _categrySuggester1.Suggest(entries1);
+            _entries = new ArrayList<EnrichedJournalEntry>();
+            for(EnrichedJournalEntry je: entries1) {
+                if   (byCategory == null || byCategory.equals(FinancialsSettingsActivity.NOFILTER)
+                        || ((je.Category==null || je.Category.isEmpty()) && byCategory.equals(FinancialsSettingsActivity.NOCATEGORY))
+                        || (je.Category!=null && je.Category.equals(byCategory))) {
+                    if (!onlySuggested || je.Suggested || je.Category==null || je.Category.isEmpty()) {
+                        _entries.add(je);
+                    }
+                }
+            }
         }
         catch (Exception e) {
             new AlertDialog.Builder(context)

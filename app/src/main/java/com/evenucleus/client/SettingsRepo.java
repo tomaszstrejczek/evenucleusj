@@ -72,12 +72,51 @@ public class SettingsRepo implements ISettingsRepo {
 
     @Override
     public void setFinancialsLaterThan(Date value) throws SQLException {
-        logger.debug("setFinancialsLaterThan %s", value.toString());
+        logger.debug("setFinancialsLaterThan {}", value.toString());
         Setting s = new Setting();
         s.Key = "financials_later_than";
         s.DateValue = value;
         _localdb.getSettingDao().createOrUpdate(s);
 
+    }
+
+    @Override
+    public String getFilterBy() throws SQLException {
+        logger.debug("getFilterBy");
+
+        Setting s = _localdb.getSettingDao().queryForId("financials_filter_by");
+        if (s == null)
+            return null;
+        return s.StringValue;
+    }
+
+    @Override
+    public void setFilterBy(String value) throws SQLException {
+        logger.debug("setFilterBy {}", value.toString());
+        Setting s = new Setting();
+        s.Key = "financials_filter_by";
+        s.StringValue = value;
+        _localdb.getSettingDao().createOrUpdate(s);
+
+    }
+
+    @Override
+    public boolean getOnlySuggested() throws SQLException {
+        logger.debug("getOnlySuggested");
+
+        Setting s = _localdb.getSettingDao().queryForId("financials_only_suggested");
+        if (s == null)
+            return false;
+        return s.BooleanValue;
+    }
+
+    @Override
+    public void setOnlySuggested(boolean value) throws SQLException {
+        logger.debug("setOnlySuggested {}", value);
+        Setting s = new Setting();
+        s.Key = "financials_only_suggested";
+        s.BooleanValue = value;
+        _localdb.getSettingDao().createOrUpdate(s);
     }
 
 

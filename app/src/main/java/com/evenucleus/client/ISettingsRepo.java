@@ -14,4 +14,10 @@ public interface ISettingsRepo {
 
     public Date getFinancialsLaterThan() throws SQLException;
     public void setFinancialsLaterThan(Date value) throws SQLException;
+
+    public String getFilterBy() throws SQLException;
+    public void setFilterBy(String value) throws SQLException;
+
+    public boolean getOnlySuggested() throws SQLException;
+    public void setOnlySuggested(boolean value) throws SQLException;
 }

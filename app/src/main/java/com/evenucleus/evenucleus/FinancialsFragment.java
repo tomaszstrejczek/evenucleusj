@@ -105,6 +105,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             _journalRepo.AssignCategory(journalEntry.JournalEntryId, categorySelected);
             journalEntry.Selected = false;
             journalEntry.Category = categorySelected;
+            journalEntry.Suggested = false;
             ((JournalItemView)info.targetView).SetCategory(categorySelected, false);
 
             int c = transactionList.getChildCount();
@@ -114,6 +115,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
                     _journalRepo.AssignCategory(jiw._journalEntry.JournalEntryId, item.getTitle().toString());
                     jiw._journalEntry.Selected = false;
                     jiw._journalEntry.Category = categorySelected;
+                    jiw._journalEntry.Suggested = false;
                     jiw.checkBox.setChecked(false);
                     jiw.SetCategory(categorySelected, false);
                 }
@@ -122,9 +124,13 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             for(EnrichedJournalEntry je: adapter._entries)
                 if (je.Selected) {
                     je.Selected = false;
+                    je.Suggested = false;
                     _journalRepo.AssignCategory(je.JournalEntryId, categorySelected);
                     je.Category = categorySelected;
                 }
+
+            adapter.afterInject();
+            adapter.notifyDataSetChanged();
 
             getActivity().sendBroadcast(new Intent(Alarm.CategorySetIntent));
 
