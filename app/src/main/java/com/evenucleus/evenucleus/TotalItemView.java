@@ -1,25 +1,19 @@
 package com.evenucleus.evenucleus;
 
 import android.content.Context;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.evenucleus.client.EnrichedJournalEntry;
 import com.evenucleus.client.ITotalsCalculator;
 import com.evenucleus.client.Number2RoundedString;
 
-import org.androidannotations.annotations.CheckedChange;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-
-import java.text.DateFormat;
 
 /**
  * Created by tomeks on 2015-01-04.
  */
-@EViewGroup(R.layout.total_list_row2)
+@EViewGroup(R.layout.total_list_row)
 public class TotalItemView extends LinearLayout {
     @ViewById(R.id.name)
     TextView name;
