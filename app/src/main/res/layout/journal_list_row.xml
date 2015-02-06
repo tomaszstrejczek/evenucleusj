@@ -14,60 +14,64 @@
         />
 
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="5"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rihanna Love the way lie"
-            android:textColor="#040404"
-            android:typeface="sans"
-            android:textSize="12dip"
-            android:textStyle="bold"
-            />
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:stretchColumns="*">
 
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rihanna Love the way lie"
-            android:textColor="#040404"
-            android:typeface="sans"
-            android:textSize="10dip"
-            />
-    </LinearLayout>
+        <TableRow
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rihanna Love the way lie"
+                android:textColor="#040404"
+                android:typeface="sans"
+                android:textSize="12dip"
+                android:textStyle="bold"
+                android:layout_span="7"
+                />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:orientation="vertical"
-        >
-        <TextView
-            android:id="@+id/category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:textColor="#040404"
-            android:typeface="sans"
-            android:textSize="12dip"
-            android:layout_gravity="right"
-            />
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Category"
+                android:textColor="#040404"
+                android:typeface="sans"
+                android:textSize="12dip"
+                android:layout_span="2"
+                android:layout_gravity="right"
+                />
+        </TableRow>
+        <TableRow
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rihanna Love the way lie and ala ma kota @ 40"
+                android:textColor="#040404"
+                android:typeface="sans"
+                android:textSize="10dip"
+                android:layout_span="7"
+                />
 
-        <TextView
-            android:id="@+id/amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Amount"
-            android:textColor="#040404"
-            android:typeface="sans"
-            android:textSize="12dip"
-            android:layout_gravity="right"
-            />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount"
+                android:textColor="#040404"
+                android:typeface="sans"
+                android:textSize="12dip"
+                android:layout_gravity="right"
+                android:layout_span="2"
+                />
+
+        </TableRow>
+    </TableLayout>
 </LinearLayout>

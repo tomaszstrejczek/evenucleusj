@@ -33,7 +33,7 @@ import java.util.Map;
 @EBean
 public class TotalListAdapter extends BaseAdapter {
     List<EnrichedJournalEntry> _entries;
-    List<ITotalsCalculator.Total> _totals;
+    public List<ITotalsCalculator.Total> _totals;
 
     @Bean(SettingsRepo.class)
     ISettingsRepo _settingsRepo;

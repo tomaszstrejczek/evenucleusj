@@ -19,7 +19,7 @@ import java.text.DateFormat;
 /**
  * Created by tomeks on 2015-01-04.
  */
-@EViewGroup(R.layout.total_list_row)
+@EViewGroup(R.layout.total_list_row2)
 public class TotalItemView extends LinearLayout {
     @ViewById(R.id.name)
     TextView name;

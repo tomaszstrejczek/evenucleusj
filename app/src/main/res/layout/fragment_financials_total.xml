@@ -8,63 +8,71 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         >
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dip"
+            android:stretchColumns="*"
             >
+            <TableRow android:layout_height="fill_parent"
+                android:layout_width="fill_parent">
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textColor="#040404"
+                    android:typeface="sans"
+                    android:textSize="10dip"
+                    />
+
+                <TextView
+                    android:id="@+id/income"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Income"
+                    android:textColor="#040404"
+                    android:typeface="sans"
+                    android:textSize="10dip"
+                    android:gravity="right"
+                    />
+
+                <TextView
+                    android:id="@+id/expense"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Expense"
+                    android:textColor="#040404"
+                    android:typeface="sans"
+                    android:textSize="10dip"
+                    android:gravity="right"
+                    />
+
+                <TextView
+                    android:id="@+id/profit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Profit"
+                    android:textColor="#040404"
+                    android:typeface="sans"
+                    android:textSize="10dip"
+                    android:gravity="right"
+                    />
+            </TableRow>
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TableLayout android:id="@+id/totalsTable"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Category"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
-                android:layout_weight="1"
+                android:stretchColumns="*"
                 />
+        </ScrollView>
 
-            <TextView
-                android:id="@+id/income"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Income"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
-                android:layout_weight="1"
-                android:gravity="right"
-                />
-
-            <TextView
-                android:id="@+id/expense"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Expense"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
-                android:layout_weight="1"
-                android:gravity="right"
-                />
-
-            <TextView
-                android:id="@+id/profit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profit"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
-                android:layout_weight="1"
-                android:gravity="right"
-                />
-
-        </LinearLayout>
-
+<!--
         <ListView
             android:id="@+id/totalsList"
             android:layout_width="fill_parent"
@@ -74,8 +82,6 @@
             android:dividerHeight="1dp"
             android:drawSelectorOnTop="true"
             />
-
+-->
     </LinearLayout>
-
-
 </FrameLayout>

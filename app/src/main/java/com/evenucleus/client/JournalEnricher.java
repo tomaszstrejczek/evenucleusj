@@ -186,7 +186,7 @@ public class JournalEnricher implements IJournalEnricher {
             if (matching.containsKey(x))
             {
                 WalletTransaction wt =matching.get(x);
-                entry.Description = String.format("%c %s x %d @ %s", wt.transactionType.charAt(0),  wt.typeName, wt.quantity,
+                entry.Description = String.format("%c %s x %d @ %s", wt.transactionType.charAt(0),  wt.typeName.length()>35?wt.typeName.substring(0,35)+"...":wt.typeName, wt.quantity,
                         Number2RoundedString.Convert(wt.price));
             }
             else
