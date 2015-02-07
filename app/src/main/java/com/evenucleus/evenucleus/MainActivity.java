@@ -61,7 +61,6 @@ public class MainActivity extends ActionBarActivity {
 
         try {
             new Alarm().StartAlarm(this.getApplicationContext());
-            pendingNotificationRepo.IssueNew("Debug", "Alarm started");
         }
         catch (Exception e) {
             new AlertDialog.Builder(this)

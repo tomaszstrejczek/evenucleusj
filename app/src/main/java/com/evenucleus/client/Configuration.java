@@ -5,6 +5,6 @@ package com.evenucleus.client;
  */
 public class Configuration {
     public static boolean ProvideSampleData() {
-        return true;
+        return false;
     }
 }

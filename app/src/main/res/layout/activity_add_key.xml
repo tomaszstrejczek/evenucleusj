@@ -6,47 +6,103 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.evenucleus.evenucleus.AddKey">
 
-    <TextView android:id="@+id/KeyIdLabel"
-        android:layout_marginTop="5mm"
-        android:text="Key ID:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <EditText android:id="@+id/KeyEdit"
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/KeyIdLabel"
-        />
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
-    <TextView android:id="@+id/VCodeLabel"
-        android:text="Verification code:"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/KeyEdit"
-        />
-    <EditText android:id="@+id/VCodeEdit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/VCodeLabel"
-        />
+            <TextView android:id="@+id/heading1"
+                android:layout_marginTop="5mm"
+                android:text="Install key via Eve Key Mgmt page:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                tools:ignore="NewApi" />
 
-    <LinearLayout
-        android:layout_marginTop="5mm"
-        android:layout_below="@id/VCodeEdit"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        >
+            <Button android:id="@+id/InstallButton"
+                android:layout_marginLeft="0dip"
+                android:text="Install"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/heading1"
+                />
 
-        <Button android:id="@+id/OkButton"
-            android:text="OK"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            <TextView android:id="@+id/heading2"
+                android:layout_marginTop="5mm"
+                android:text="Or manually enter key:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                tools:ignore="NewApi"
+                android:layout_below="@id/InstallButton"
+                />
 
-        <Button android:id="@+id/CancelButton"
-            android:layout_marginLeft="5mm"
-            android:text="Cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
-    </LinearLayout>
+            <TextView android:id="@+id/KeyIdLabel"
+                android:layout_marginTop="5mm"
+                android:text="Key ID:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/heading2"
+                />
+            <EditText android:id="@+id/KeyEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/KeyIdLabel"
+                />
+
+            <TextView android:id="@+id/VCodeLabel"
+                android:text="Verification code:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/KeyEdit"
+                />
+            <EditText android:id="@+id/VCodeEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/VCodeLabel"
+                />
+
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_marginTop="5mm"
+                android:layout_below="@id/VCodeEdit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                >
+
+                <Button android:id="@+id/OkButton"
+                    android:text="OK"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button android:id="@+id/CancelButton"
+                    android:layout_marginLeft="5mm"
+                    android:text="Cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <TextView android:id="@+id/heading3"
+                android:layout_marginTop="5mm"
+                android:text="Create key if needed:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
+                tools:ignore="NewApi"
+                android:layout_below="@id/buttons"
+                />
+            <Button android:id="@+id/CreateButton"
+                android:layout_marginLeft="0dip"
+                android:text="Create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/heading3"
+                />
+
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

@@ -2,6 +2,8 @@ package com.evenucleus.evenucleus;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.TextChange;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -120,14 +123,27 @@ public class AddKey extends ActionBarActivity {
 
     @Click(R.id.CancelButton)
     void OnCancelButton() {
-        NavUtils.navigateUpFromSameTask(this);
+        KeyManagementActivity_.intent(this).start();
+        //NavUtils.navigateUpFromSameTask(this);
     }
 
+    @Click(R.id.InstallButton)
+    void OnInstallButton() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://support.eveonline.com/api/Key/ActivateInstallLinks"));
+        startActivity(browserIntent);
+    }
+
+    @Click(R.id.CreateButton)
+    void OnCreateButton() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://community.eveonline.com/support/api-key/CreatePredefined?accessMask=17236104"));
+        startActivity(browserIntent);
+    }
 
     private static int _testData = 0;
     @AfterViews
     void afterUpdate() {
         logger.debug("afterupdate");
+
         OkButton.setEnabled(false);
 
         if (Configuration.ProvideSampleData())
@@ -150,6 +166,20 @@ public class AddKey extends ActionBarActivity {
             {
                 KeyEdit.setText("2812727");
                 VCodeEdit.setText("Qw5OES3cKXnLh14qLNJ1BqWa2YvbowvR5lMtHgG3wkqnExToTsraIURLHApLlavC");
+            }
+        }
+
+        Intent intent = getIntent();
+        if (intent!=null && intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            Uri uri = intent.getData();
+            if (uri.getScheme().equals("eve")) {
+                String keyID = uri.getQueryParameter("keyID");
+                String vcode = uri.getQueryParameter("vCode");
+                if (keyID!=null && vcode != null && !keyID.isEmpty() && !vcode.isEmpty()) {
+                    KeyEdit.setText(keyID);
+                    VCodeEdit.setText(vcode);
+                    OnOkButton();
+                }
             }
         }
     }
