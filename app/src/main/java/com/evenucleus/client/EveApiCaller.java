@@ -19,9 +19,11 @@ import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
 
 import org.androidannotations.annotations.EBean;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,14 +54,15 @@ public class EveApiCaller implements IEveApiCaller {
     }
 
     @Override
-    public String GetCorporationName(int keyid, String vcode) throws ApiException, UserException {
+    public Map.Entry<String, Long> GetCorporationData(int keyid, String vcode) throws ApiException, UserException {
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         api.setAuth(auth);
         ApiKeyInfoResponse response = api.getAPIKeyInfo();
         if (response.hasError())
             throw new UserException(response.getError().toString());
-        return response.getEveCharacters().iterator().next().getCorporationName();
+        return new AbstractMap.SimpleEntry<String, Long>(response.getEveCharacters().iterator().next().getCorporationName(), response.getEveCharacters().iterator().next().getCorporationID());
+
     }
 
     public Set<EveCharacter> getCharacters(int keyid, String vcode) throws ApiException {

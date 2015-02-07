@@ -9,6 +9,7 @@ import com.beimin.eveapi.shared.industryjobs.IndustryJobsResponse;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -17,7 +18,7 @@ import java.util.Set;
 public interface IEveApiCaller {
     public boolean CheckKey(int keyid, String vcode) throws ApiException, UserException;
     public boolean IsCorporationKey(int keyid, String vcode) throws ApiException, UserException;
-    public String GetCorporationName(int keyid, String vcode) throws ApiException, UserException;
+    public Map.Entry<String, Long> GetCorporationData(int keyid, String vcode) throws ApiException, UserException;
     public Set<EveCharacter> getCharacters(int keyid, String vcode) throws ApiException;
     public List<JournalEntry> getJournalEntries(int keyid, String vcode, long characterId, int pilotid, long lastStoredId) throws ApiException;
     public List<JournalEntry> getJournalEntriesCorpo(int keyid, String vcode, int corporationid, long lastStoredId) throws ApiException;

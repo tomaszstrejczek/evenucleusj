@@ -145,7 +145,7 @@ public class EveApiT extends InstrumentationTestCase {
         int code = 3692329;
         String vcode = "aPQOKWEr0r9bp7yVNVgtx9O9xSPDOgTEXY9FhM93ArndOcE3ZTTV1xGnTDHDoeii";
         IEveApiCaller api = GetEveApiCaller();
-        String name = api.GetCorporationName(code, vcode);
+        String name = api.GetCorporationData(code, vcode).getKey();
         Assert.assertEquals("My Random Corporation", name);
     }
 

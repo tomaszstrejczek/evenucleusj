@@ -58,7 +58,9 @@ public class PilotService implements IPilotService {
             {
                 Corporation ci = new Corporation();
                 ci.KeyInfo = k;
-                ci.Name = _eveApiCaller.GetCorporationName(k.KeyId, k.VCode);
+                Map.Entry<String, Long> v = _eveApiCaller.GetCorporationData(k.KeyId, k.VCode);
+                ci.Name = v.getKey();
+                ci.EveCorporationId = v.getValue();
                 r.corporations.add(ci);
                 continue;
             }

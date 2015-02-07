@@ -2,6 +2,8 @@ package com.evenucleus.client;
 
 import android.util.Log;
 
+import com.evenucleus.evenucleus.MyDatabaseHelper;
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.slf4j.Logger;
@@ -18,7 +20,7 @@ import java.util.List;
 public class CorporationRepo implements ICorporationRepo {
     final Logger logger = LoggerFactory.getLogger(CorporationRepo.class);
 
-    @Bean
+    @Bean(MyDatabaseHelper.class)
     public DatabaseHelper _localdb;
 
     @Override

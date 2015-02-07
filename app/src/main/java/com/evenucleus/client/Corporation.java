@@ -12,6 +12,13 @@ public class Corporation {
     @DatabaseField
     public String Name;
 
+    @DatabaseField
+    public long EveCorporationId;
+
     @DatabaseField(canBeNull = true,foreign = true, foreignAutoRefresh = true)
     public KeyInfo KeyInfo;
+
+    public String getUrl() {
+        return String.format("https://image.eveonline.com/Corporation/%d_64.png", EveCorporationId);
+    }
 }

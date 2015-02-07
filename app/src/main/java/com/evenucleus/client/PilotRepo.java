@@ -33,6 +33,7 @@ public class PilotRepo implements IPilotRepo {
     @Override
     public void SimpleUpdateFromKey(int keyid, String vcode) throws ApiException, SQLException {
         List<Pilot> storedPilots = _localdb.getPilotDao().queryForAll();
+        KeyInfo k = _localdb.getKeyInfoDao().queryForId(keyid);
         List<String> names = new ArrayList<String>();
         for(Pilot p:storedPilots) names.add(p.Name);
 
@@ -42,6 +43,7 @@ public class PilotRepo implements IPilotRepo {
             {
                 Pilot p = new Pilot();
                 p.Name = c.getName();
+                p.KeyInfo = k;
                 p.CharacterId = c.getCharacterID();
                 _localdb.getPilotDao().createOrUpdate(p);
             }

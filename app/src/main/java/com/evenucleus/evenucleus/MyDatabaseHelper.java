@@ -27,7 +27,7 @@ public class MyDatabaseHelper extends DatabaseHelper {
 
         logger.debug("AfterInject");
 
-        File databasePath = context.getDatabasePath("evenucleus9.db");
+        File databasePath = context.getDatabasePath("evenucleus1.db");
         logger.debug("Database path {}", databasePath.getPath());
 
         try {

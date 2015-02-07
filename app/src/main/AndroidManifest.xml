@@ -24,10 +24,10 @@
         <activity
             android:name=".AddKey_"
             android:label="Add key"
-            android:parentActivityName=".MainActivity_" >
+            android:parentActivityName=".KeyManagementActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.evenucleus.evenucleus.MainActivity_" />
+                android:value="com.evenucleus.evenucleus.KeyManagementActivity_" />
         </activity>
         <activity
             android:name=".JobsActivity_"
@@ -63,6 +63,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.evenucleus.evenucleus.FinancialsActivity_" />
+        </activity>
+        <activity
+            android:name=".KeyManagementActivity_"
+            android:label="@string/title_activity_key_management" >
+            android:parentActivityName=".MainActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.evenucleus.evenucleus.MainActivity_" />
         </activity>
     </application>
 

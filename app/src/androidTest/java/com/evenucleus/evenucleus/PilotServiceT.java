@@ -87,6 +87,7 @@ public class PilotServiceT extends TestBase {
         List<Corporation> corporations = corpoRepo.GetAll();
         Assert.assertEquals(1, corporations.size());
         Assert.assertEquals("My Random Corporation", corporations.iterator().next().Name);
+        Assert.assertTrue(corporations.iterator().next().EveCorporationId != 0);
     }
 
 }

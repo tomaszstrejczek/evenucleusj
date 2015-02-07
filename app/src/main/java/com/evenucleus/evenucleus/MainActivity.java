@@ -131,9 +131,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
 
-    @OptionsItem
-    void add_key() {
-        AddKey_.intent(this).start();
+    @OptionsItem(R.id.key_management)
+    void key_management() {
+        KeyManagementActivity_.intent(this).start();
     }
     @OptionsItem(R.id.jobs)
     void menu_jobs() {

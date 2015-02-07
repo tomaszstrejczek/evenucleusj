@@ -15,5 +15,7 @@
     <string name="title_activity_financials_settings">FinancialsSettingsActivity</string>
     <string name="title_activity_add_category">AddCategoryActivity</string>
     <string name="application_crashed">Application crashed</string>
+    <string name="title_activity_key_management">KeyManagementActivity</string>
+    <string name="tag_button">tagButton</string>
 
 </resources>

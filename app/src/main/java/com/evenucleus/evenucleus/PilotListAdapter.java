@@ -36,6 +36,11 @@ public class PilotListAdapter extends BaseAdapter{
     public void initAdapter() {
         try {
             _pilotList = _pilotRepo.GetAll();
+
+            // remove null keys
+            for(int i = _pilotList.size()-1; i>=0; --i)
+                if (_pilotList.get(i).KeyInfo==null)
+                    _pilotList.remove(i);
         }
         catch (SQLException e)
         {

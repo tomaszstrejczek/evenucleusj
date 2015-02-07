@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.evenucleus.evenucleus.KeyManagementActivity">
+    <item android:id="@+id/add_key" android:title="Add key"
+        android:orderInCategory="100" app:showAsAction="never" />
+</menu>
