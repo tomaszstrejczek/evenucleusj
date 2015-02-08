@@ -85,6 +85,7 @@ public class JobService implements IJobService {
             job.JobDescription = String.format("%s %s %d", typeIdsMap.get(j.getBlueprintTypeID()), GetActivityAnnotation(j.getActivityID()),j.getRuns());
             job.Owner = j.getInstallerName();
             job.IsManufacturing = j.getActivityID() == 1;
+            job.JobEnd = j.getEndProductionTime();
             job.Url = String.format("https://image.eveonline.com/Type/%d_64.png", j.getBlueprintTypeID());
             result.jobs.add(job);
         }

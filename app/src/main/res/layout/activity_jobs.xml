@@ -22,11 +22,12 @@
             <ImageView android:src="@drawable/manufacturingicon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 />
-            <TextView android:id="@+id/MarginSlots"
+            <TextView android:id="@+id/ManufacturingSlots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2mm"
+                android:layout_marginLeft="5dip"
                 android:text="1/10"/>
         </LinearLayout>
         <LinearLayout
@@ -42,7 +43,7 @@
             <TextView android:id="@+id/ResearchSlots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="2mm"
+                android:layout_marginLeft="5dip"
                 android:text="1/10"/>
         </LinearLayout>
     </GridLayout>

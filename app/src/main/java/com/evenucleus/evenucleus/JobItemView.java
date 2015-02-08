@@ -5,6 +5,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.evenucleus.client.Job;
+
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
@@ -18,10 +20,7 @@ public class JobItemView extends LinearLayout {
     TextView pilotName;
 
     @ViewById(R.id.jobsSublist)
-    ListView jobsSublist;
-
-    @Bean
-    JobSublistAdapter adapter;
+    LinearLayout jobsSublist;
 
     Context _context;
 
@@ -32,7 +31,12 @@ public class JobItemView extends LinearLayout {
 
     public void bind(JobListAdapter.JobInfo info) {
         pilotName.setText(info.Owner);
-        adapter._jobInfo = info;
-        jobsSublist.setAdapter(adapter);
+
+        jobsSublist.removeAllViews();
+        for(Job j: info.Jobs) {
+            JobSubItemView view = JobSubItemView_.build(getContext());
+            view.bind(j);
+            jobsSublist.addView(view);
+        }
     }
 }

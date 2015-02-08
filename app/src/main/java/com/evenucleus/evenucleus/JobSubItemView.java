@@ -28,9 +28,6 @@ public class JobSubItemView extends LinearLayout {
     @ViewById(R.id.jobProgress)
     TextView jobProgress;
 
-    @ViewById(R.id.jobPercentage)
-    TextView jobPercentage;
-
     @ViewById(R.id.jobImage)
     ImageView jobImage;
 
@@ -48,7 +45,6 @@ public class JobSubItemView extends LinearLayout {
                 .load(job.Url);
 
         jobName.setText(job.JobDescription);
-        jobPercentage.setText(Integer.toString(job.PercentageOfCompletion));
 
         // currentTrainingDuration
         DateTime now = new DateTime();

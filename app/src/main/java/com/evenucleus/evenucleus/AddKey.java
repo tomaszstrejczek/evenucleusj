@@ -135,7 +135,7 @@ public class AddKey extends ActionBarActivity {
 
     @Click(R.id.CreateButton)
     void OnCreateButton() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://community.eveonline.com/support/api-key/CreatePredefined?accessMask=17236104"));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://community.eveonline.com/support/api-key/CreatePredefined?accessMask=23527561"));
         startActivity(browserIntent);
     }
 

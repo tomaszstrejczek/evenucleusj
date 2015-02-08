@@ -41,11 +41,12 @@ public class IndustryJobsHandler extends AbstractContentListHandler<IndustryJobs
 		job.setInstalledItemFlag(getInt(attrs, "installedItemFlag"));
 		job.setOutputFlag(getInt(attrs, "outputFlag"));
 		job.setActivityID(getInt(attrs, "activityID"));
-		job.setCompletedStatus(getInt(attrs, "completedStatus"));
+		job.setCompletedStatus(getInt(attrs, "status"));
 		job.setInstallTime(getDate(attrs, "installTime"));
-		job.setBeginProductionTime(getDate(attrs, "beginProductionTime"));
-		job.setEndProductionTime(getDate(attrs, "endProductionTime"));
-		job.setPauseProductionTime(getDate(attrs, "pauseProductionTime"));
+		job.setBeginProductionTime(getDate(attrs, "startDate"));
+		job.setEndProductionTime(getDate(attrs, "endDate"));
+		job.setPauseProductionTime(getDate(attrs, "pauseDate"));
+        job.setTimeInSeconds(getInt(attrs, "timeInSeconds"));
 		return job;
 	}
 

@@ -36,6 +36,7 @@ public class ApiIndustryJob {
 	private Date beginProductionTime;
 	private Date endProductionTime;
 	private Date pauseProductionTime;
+    private int timeInSeconds;
 
 	public long getJobID() {
 		return jobID;
@@ -300,4 +301,13 @@ public class ApiIndustryJob {
 	public void setPauseProductionTime(Date pauseProductionTime) {
 		this.pauseProductionTime = pauseProductionTime;
 	}
+
+    public int getTimeInSeconds() {
+        return timeInSeconds;
+    }
+
+    public void setTimeInSeconds(int timeInSeconds) {
+        this.timeInSeconds= timeInSeconds;
+    }
+
 }
