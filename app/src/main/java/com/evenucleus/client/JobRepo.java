@@ -74,7 +74,7 @@ public class JobRepo implements IJobRepo {
             {
                 if (actualManufacturingCount >= pd.MaxManufacturingJobs)
                 {
-                    Log.d(JobRepo.class.getName(), String.format("reset notification - maximum number of jobs running %s", p.Name));
+                    logger.debug("reset notification - maximum number of jobs running {}", p.Name);
                     _pilotRepo.SetFreeManufacturingJobsNofificationCount(p.PilotId, 0);                  // reset notification - maximum number of jobs running
                 }
             }
@@ -82,7 +82,7 @@ public class JobRepo implements IJobRepo {
             {
                 if (actualManufacturingCount < pd.MaxManufacturingJobs)
                 {   // notify about free manufacturing slots
-                    Log.d(JobRepo.class.getName(), String.format("{scheduling man notification for %s", p.Name));
+                    logger.debug("scheduling man notification for {}", p.Name);
                     _pendingNotificationRepo.IssueNew(p.Name,
                             String.format("%d free manufacturing slots",
                                     pd.MaxManufacturingJobs - actualManufacturingCount));
@@ -94,7 +94,7 @@ public class JobRepo implements IJobRepo {
             {
                 if (actualResearchCount >= pd.MaxResearchJobs)
                 {
-                    Log.d(JobRepo.class.getName(), String.format("resetting notification for %s", p.Name));
+                    logger.debug("resetting notification for {}", p.Name);
                     _pilotRepo.SetFreeResearchJobsNofificationCount(p.PilotId,0);                  // reset notification - maximum number of jobs running
                 }
             }
@@ -102,7 +102,7 @@ public class JobRepo implements IJobRepo {
             {
                 if (actualResearchCount < pd.MaxResearchJobs)
                 {   // notify about free research slots
-                    Log.d(JobRepo.class.getName(), String.format("Scheduling research notification for %s", p.Name));
+                    logger.debug("Scheduling research notification for {}", p.Name);
                     _pendingNotificationRepo.IssueNew(p.Name,
                             String.format("%d free research slots", pd.MaxResearchJobs - actualResearchCount));
                     _pilotRepo.SetFreeResearchJobsNofificationCount(p.PilotId, 1);

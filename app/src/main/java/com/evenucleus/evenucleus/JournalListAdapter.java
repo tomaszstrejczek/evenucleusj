@@ -100,8 +100,15 @@ public class JournalListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        EnrichedJournalEntry item = getItem(position);
+        return (long) item.JournalEntryId;
     }
+
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

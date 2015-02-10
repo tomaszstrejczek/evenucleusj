@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -21,15 +22,18 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @EFragment(R.layout.fragment_financials)
 public class FinancialsFragment extends android.support.v4.app.Fragment {
     @ViewById(R.id.transactionList)
-    ListView transactionList;
+    ListView mListView;
 
     @Bean
-    JournalListAdapter adapter;
+    JournalListAdapter mAdapter;
 
     @Bean(CategoryRepo.class)
     ICategoryRepo _categoryRepo;
@@ -40,9 +44,9 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
 
     @AfterViews
     public void AfterViews() {
-        transactionList.setAdapter(adapter);
+        mListView.setAdapter(mAdapter);
 
-        registerForContextMenu(transactionList);
+        registerForContextMenu(mListView);
     }
 
     @Override
@@ -53,6 +57,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
 
         try {
             List<String> categories = _categoryRepo.Get();
+            Collections.sort(categories);
             for(String s: categories)
                 menu.add(s);
         }
@@ -108,9 +113,9 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             journalEntry.Suggested = false;
             ((JournalItemView)info.targetView).SetCategory(categorySelected, false);
 
-            int c = transactionList.getChildCount();
+            int c = mListView.getChildCount();
             for(int i = 0; i < c; ++i) {
-                JournalItemView jiw = (JournalItemView) transactionList.getChildAt(i);
+                JournalItemView jiw = (JournalItemView) mListView.getChildAt(i);
                 if (jiw.checkBox.isChecked()) {
                     _journalRepo.AssignCategory(jiw._journalEntry.JournalEntryId, item.getTitle().toString());
                     jiw._journalEntry.Selected = false;
@@ -121,7 +126,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
                 }
             }
 
-            for(EnrichedJournalEntry je: adapter._entries)
+            for(EnrichedJournalEntry je: mAdapter._entries)
                 if (je.Selected) {
                     je.Selected = false;
                     je.Suggested = false;
@@ -129,8 +134,9 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
                     je.Category = categorySelected;
                 }
 
-            adapter.afterInject();
-            adapter.notifyDataSetChanged();
+            //mAdapter.afterInject();
+            //mAdapter.notifyDataSetChanged();
+            updateAdapterWithAnimation();
 
             getActivity().sendBroadcast(new Intent(Alarm.CategorySetIntent));
 
@@ -145,4 +151,99 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
 
         return true;
     }
+
+    HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
+    private static final int MOVE_DURATION = 150;
+
+    /**
+     * This method animates all other views in the ListView container (not including removed view)
+     * into their final positions. The approach here is to figure out where
+     * everything is now, then allow layout to run, then figure out where everything is after
+     * layout, and then to run animations between all of those start/end positions.
+     */
+    private void updateAdapterWithAnimation() {
+        int firstVisiblePosition = mListView.getFirstVisiblePosition();
+        for (int i = 0; i < mListView.getChildCount(); ++i) {
+            View child = mListView.getChildAt(i);
+            int position = firstVisiblePosition + i;
+            long itemId = mAdapter.getItemId(position);
+            mItemIdTopMap.put(itemId, child.getTop());
+        }
+
+        // store ids before removal
+        HashSet<Integer> before = new HashSet<Integer>();
+        for(EnrichedJournalEntry j:mAdapter._entries)
+            before.add(j.JournalEntryId);
+
+        // possibly remove items
+        mAdapter.afterInject();
+        mAdapter.notifyDataSetChanged();
+
+        // detect removed items & update mItemIdTopMap
+            // first we need ids of new items
+        HashSet<Integer> current = new HashSet<Integer>();
+        for(EnrichedJournalEntry j: mAdapter._entries) current.add(j.JournalEntryId);
+            // then we calculate removed
+        HashSet<Integer> removed = new HashSet<Integer>();
+        for(Integer id:before)
+            if (!current.contains(id)) {
+                removed.add(id);
+                mItemIdTopMap.remove(id);
+            }
+
+        final ViewTreeObserver observer = mListView.getViewTreeObserver();
+        observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                observer.removeOnPreDrawListener(this);
+                boolean firstAnimation = true;
+                int firstVisiblePosition = mListView.getFirstVisiblePosition();
+                for (int i = 0; i < mListView.getChildCount(); ++i) {
+                    final View child = mListView.getChildAt(i);
+                    int position = firstVisiblePosition + i;
+                    long itemId = mAdapter.getItemId(position);
+                    Integer startTop = mItemIdTopMap.get(itemId);
+                    int top = child.getTop();
+                    if (startTop != null) {
+                        if (startTop != top) {
+                            int delta = startTop - top;
+                            child.setTranslationY(delta);
+                            child.animate().setDuration(MOVE_DURATION).translationY(0);
+                            if (firstAnimation) {
+                                child.animate().withEndAction(new Runnable() {
+                                    public void run() {
+//                                        mBackgroundContainer.hideBackground();
+//                                        mSwiping = false;
+                                        mListView.setEnabled(true);
+                                    }
+                                });
+                                firstAnimation = false;
+                            }
+                        }
+                    } else {
+                        // Animate new views along with the others. The catch is that they did not
+                        // exist in the start state, so we must calculate their starting position
+                        // based on neighboring views.
+                        int childHeight = child.getHeight() + mListView.getDividerHeight();
+                        startTop = top + (i > 0 ? childHeight : -childHeight);
+                        int delta = startTop - top;
+                        child.setTranslationY(delta);
+                        child.animate().setDuration(MOVE_DURATION).translationY(0);
+                        if (firstAnimation) {
+                            child.animate().withEndAction(new Runnable() {
+                                public void run() {
+//                                    mBackgroundContainer.hideBackground();
+//                                    mSwiping = false;
+                                    mListView.setEnabled(true);
+                                }
+                            });
+                            firstAnimation = false;
+                        }
+                    }
+                }
+                mItemIdTopMap.clear();
+                return true;
+            }
+        });
+    }
+
 }
