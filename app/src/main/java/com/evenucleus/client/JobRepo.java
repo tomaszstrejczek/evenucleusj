@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Date;
 
 /**
  * Created by tomeks on 2014-12-29.
@@ -59,13 +60,14 @@ public class JobRepo implements IJobRepo {
             assert pd!=null;
 
             int actualManufacturingCount = 0;
+            Date now = new Date();
             for(Job x:data.Jobs)
-                if (x.Owner.equals(p.Name) && x.IsManufacturing)
+                if (x.Owner.equals(p.Name) && x.IsManufacturing && x.JobEnd!=null && x.JobEnd.after(now))
                     ++actualManufacturingCount;
 
             int actualResearchCount = 0;
             for(Job x:data.Jobs)
-                if (x.Owner.equals(p.Name) && !x.IsManufacturing)
+                if (x.Owner.equals(p.Name) && !x.IsManufacturing && x.JobEnd!=null && x.JobEnd.after(now))
                     ++actualResearchCount;
 
             if (p.FreeManufacturingJobsNofificationCount > 0)
