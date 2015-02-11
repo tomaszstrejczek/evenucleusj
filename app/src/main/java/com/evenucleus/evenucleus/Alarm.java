@@ -187,7 +187,9 @@ public class Alarm extends BroadcastReceiver {
             String ns = Context.NOTIFICATION_SERVICE;
 
             for(PendingNotification n:notifications) {
-                PendingIntent pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(), 0);
+                Intent intent = new Intent(_context.getApplicationContext(), MainActivity_.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                PendingIntent pendingIntent = PendingIntent.getActivity(_context, 0, intent, 0);
 
                 logger.debug("Posting notification {}: {}", n.PendingNotificationId, n.Message2);
 
