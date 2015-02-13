@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.jar.Attributes;
+import org.joda.time.DateTime;
 
 /**
  * Created by tomeks on 2014-12-29.
@@ -80,6 +81,7 @@ public class JobRepoT extends TestBase {
         Job j = new Job();
         j.IsManufacturing = true;
         j.Owner = "Pilot1";
+        j.JobEnd = new DateTime().plusMinutes(1).toDate();
         userData2.Jobs = Arrays.asList(j);
         userData2.JobSummary = new JobSummary();
 
@@ -161,6 +163,7 @@ public class JobRepoT extends TestBase {
         Job j = new Job();
         j.IsManufacturing = false;
         j.Owner = "Pilot1";
+        j.JobEnd = new DateTime().plusMinutes(1).toDate();
         userData2.Jobs = Arrays.asList(j);
         userData2.JobSummary = new JobSummary();
 
