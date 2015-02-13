@@ -28,11 +28,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.evenucleus.evenucleus.KeyManagementActivity_" />
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="eve"/>
+
+                <data android:scheme="eve" />
             </intent-filter>
         </activity>
         <activity
@@ -48,7 +51,7 @@
 
         <activity
             android:name=".SettingsActivity_"
-            android:label="@string/title_activity_settings"
+            android:label="Settings"
             android:parentActivityName=".MainActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -56,7 +59,7 @@
         </activity>
         <activity
             android:name=".FinancialsActivity_"
-            android:label="@string/title_activity_financials"
+            android:label="Financials"
             android:parentActivityName=".MainActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -64,7 +67,7 @@
         </activity>
         <activity
             android:name=".FinancialsSettingsActivity_"
-            android:label="@string/title_activity_financials_settings"
+            android:label="Settings"
             android:parentActivityName=".FinancialsActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -72,11 +75,19 @@
         </activity>
         <activity
             android:name=".KeyManagementActivity_"
-            android:label="@string/title_activity_key_management" >
+            android:label="Key management" >
             android:parentActivityName=".MainActivity_" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.evenucleus.evenucleus.MainActivity_" />
+        </activity>
+        <activity
+            android:name=".FinancialsByCategoryActivity_"
+            android:label="By category"
+            android:parentActivityName=".FinancialsActivity_" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.evenucleus.evenucleus.FinancialsActivity_" />
         </activity>
     </application>
 

@@ -6,8 +6,10 @@ import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.RootContext;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -24,6 +26,7 @@ import com.evenucleus.client.JournalEnricher;
 import com.evenucleus.client.JournalEntry;
 import com.evenucleus.client.JournalRepo;
 import com.evenucleus.client.SettingsRepo;
+import com.evenucleus.client.TotalsCalculatorTotal;
 import com.evenucleus.client.WalletRepo;
 import com.evenucleus.client.WalletTransaction;
 
@@ -58,6 +61,21 @@ public class JournalListAdapter extends BaseAdapter {
         try {
             Date laterThan = _settingsRepo.getFinancialsLaterThan();
             String byCategory = _settingsRepo.getFilterBy();
+
+            Activity activity = (Activity) context;
+            Intent intent = activity.getIntent();
+            if (intent != null) {
+                String action = intent.getAction();
+                if (action != null) {
+                    if (action.equals(TotalsCalculatorTotal.TotalName)) {
+                        byCategory = FinancialsSettingsActivity.NOCATEGORY;
+                    }
+                    else
+                        byCategory = action;
+                }
+            }
+
+
             boolean onlySuggested = _settingsRepo.getOnlySuggested();
 
             List<EnrichedJournalEntry> data = _app.getEnrichedJournalEntries();

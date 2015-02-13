@@ -13,10 +13,12 @@ import java.util.Map;
  */
 @EBean
 public class TotalsCalculatorTotal implements ITotalsCalculator {
+    public static final String TotalName = "Total";
+
     @Override
     public Collection<Total> Calculate(List<EnrichedJournalEntry> entries) {
         Total result = new Total();
-        result.Name = "Total";
+        result.Name = TotalName;
 
         for(EnrichedJournalEntry je: entries) {
             if (je.Amount < 0)

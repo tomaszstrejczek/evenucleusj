@@ -17,6 +17,7 @@ import com.evenucleus.client.ITotalsCalculator;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ItemClick;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.RootContext;
 import org.androidannotations.annotations.UiThread;
@@ -48,4 +49,8 @@ public class FinancialsTotalFragment extends android.support.v4.app.Fragment {
         adapter.notifyDataSetChanged();
     }
 
+    @ItemClick(R.id.totalsList)
+    void listClicked(ITotalsCalculator.Total clicked) {
+        FinancialsByCategoryActivity_.intent(this).action(clicked.Name).start();
+    }
 }
