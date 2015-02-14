@@ -9,12 +9,12 @@
 
     <TextView android:text="Filter" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         tools:ignore="NewApi" />
 
     <TextView android:text="Take later than:" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
 
     <Button android:id="@+id/laterThan"
@@ -26,7 +26,7 @@
     <TextView android:text="By category:" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/abc_control_padding_material"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
 
     <Spinner
@@ -38,6 +38,6 @@
         android:text="Only suggested" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/abc_control_padding_material"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
 </LinearLayout>

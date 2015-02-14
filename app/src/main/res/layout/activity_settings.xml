@@ -9,29 +9,29 @@
 
     <TextView android:text="Synchronization" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         tools:ignore="NewApi" />
 
     <TextView android:text="Synchronized on:" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
 
     <TextView android:id="@+id/SynchronizedOn"
         android:text="-" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:ignore="NewApi" />
 
     <TextView android:text="Next synchronization" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
 
     <TextView android:id="@+id/NextSynchronization"
         android:text="-" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Material.Body1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:ignore="NewApi" />
 
 </LinearLayout>

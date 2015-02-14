@@ -32,7 +32,7 @@ public class CorporationRepo implements ICorporationRepo {
             validCorpoNames.add(s.Name);
 
         List<Corporation> storedCorpos = _localdb.getCorporationDao().queryForAll();
-        List<Corporation> toremove = new ArrayList<>();
+        List<Corporation> toremove = new ArrayList<Corporation>();
         for(Corporation s:storedCorpos)
             if (!validCorpoNames.contains(s.Name))
                 toremove.add(s);

@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @EActivity(R.layout.activity_jobs)
-@OptionsMenu(R.menu.menu_jobs)
 public class JobsActivity extends ActionBarActivity {
     final Logger logger = LoggerFactory.getLogger(JobsActivity.class);
 

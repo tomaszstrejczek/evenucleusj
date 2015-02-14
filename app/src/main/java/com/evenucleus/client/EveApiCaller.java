@@ -18,6 +18,8 @@ import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
 import com.beimin.eveapi.shared.wallet.transactions.WalletTransactionsResponse;
 
 import org.androidannotations.annotations.EBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -31,49 +33,74 @@ import java.util.Set;
  */
 @EBean
 public class EveApiCaller implements IEveApiCaller {
+    final Logger logger = LoggerFactory.getLogger(EveApiCaller.class);
+
     @Override
     public boolean CheckKey(int keyid, String vcode) throws ApiException, UserException {
+        logger.debug("CheckKey {}", keyid);
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         api.setAuth(auth);
         ApiKeyInfoResponse response = api.getAPIKeyInfo();
         if (response.hasError())
             throw new UserException(response.getError().toString());
-        return response.isCharacterKey() || response.isCorporationKey() || response.isAccountKey();
+        boolean result = response.isCharacterKey() || response.isCorporationKey() || response.isAccountKey();
+        logger.debug("CheckKey result {}", result);
+        return result;
     }
 
     @Override
     public boolean IsCorporationKey(int keyid, String vcode) throws ApiException, UserException {
+        logger.debug("IsCorporationKey {}", keyid);
+
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         api.setAuth(auth);
         ApiKeyInfoResponse response = api.getAPIKeyInfo();
         if (response.hasError())
             throw new UserException(response.getError().toString());
-        return response.isCorporationKey();
+        boolean result = response.isCorporationKey();
+        logger.debug("IsCorporationKey result {}", result);
+        return result;
     }
 
     @Override
     public Map.Entry<String, Long> GetCorporationData(int keyid, String vcode) throws ApiException, UserException {
+        logger.debug("GetCorporationData {}", keyid);
+
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         api.setAuth(auth);
         ApiKeyInfoResponse response = api.getAPIKeyInfo();
         if (response.hasError())
             throw new UserException(response.getError().toString());
-        return new AbstractMap.SimpleEntry<String, Long>(response.getEveCharacters().iterator().next().getCorporationName(), response.getEveCharacters().iterator().next().getCorporationID());
-
+        Map.Entry<String, Long> result = new AbstractMap.SimpleEntry<String, Long>(response.getEveCharacters().iterator().next().getCorporationName(), response.getEveCharacters().iterator().next().getCorporationID());
+        logger.debug("GetCorporationData result {} {}", result.getKey(), result.getValue());
+        return result;
     }
 
     public Set<EveCharacter> getCharacters(int keyid, String vcode) throws ApiException {
+        logger.debug("getCharacters {}", keyid);
+
         EveApi api = new EveApi();
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         api.setAuth(auth);
-        return api.getCharacters();
+        Set<EveCharacter> result = api.getCharacters();
+
+        StringBuilder builder = new StringBuilder();
+        for(EveCharacter ev: result) {
+            builder.append(ev.getName());
+            builder.append('-');
+            builder.append(ev.getCharacterID());
+            builder.append(';');
+        }
+        logger.debug("getCharacters result {}", builder.toString());
+        return result;
     }
 
     @Override
     public List<JournalEntry> getJournalEntries(int keyid, String vcode, long characterId, int pilotid, long lastStoredId) throws ApiException {
+        logger.debug("getJournalEntries {} {} {}", keyid, characterId, lastStoredId);
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
 
@@ -106,11 +133,14 @@ public class EveApiCaller implements IEveApiCaller {
             result.add(entry);
         }
 
+        logger.debug("getJournalEntries returns count {}", result.size());
         return result;
     }
 
     @Override
     public List<JournalEntry> getJournalEntriesCorpo(int keyid, String vcode, int corporationid, long lastStoredId) throws ApiException {
+        logger.debug("getJournalEntriesCorpo {} {}", keyid, lastStoredId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
 
         List<ApiJournalEntry> result1 = new ArrayList<ApiJournalEntry>();
@@ -142,11 +172,14 @@ public class EveApiCaller implements IEveApiCaller {
             result.add(entry);
         }
 
+        logger.debug("getJournalEntriesCorpo returns count {}", result.size());
         return result;
     }
 
     @Override
     public List<WalletTransaction> getWalletTransactions(int keyid, String vcode, long characterId, int pilotid, long lastStoredId) throws ApiException {
+        logger.debug("getWalletTransactions keyid={} characterid={} laststoredid={}", keyid, characterId, lastStoredId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
 
@@ -178,11 +211,14 @@ public class EveApiCaller implements IEveApiCaller {
             result.add(entry);
         }
 
+        logger.debug("getWalletTransactions returns count {}", result.size());
         return result;
     }
 
     @Override
     public List<WalletTransaction> getWalletTransactionsCorpo(int keyid, String vcode, int corporationid, long lastStoredId) throws ApiException {
+        logger.debug("getWalletTransactionsCorpo keyud={} corporationid={} laststoredid={}", keyid, corporationid, lastStoredId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
 
         List<ApiWalletTransaction> result1 = new ArrayList<ApiWalletTransaction>();
@@ -213,11 +249,14 @@ public class EveApiCaller implements IEveApiCaller {
             result.add(entry);
         }
 
+        logger.debug("getWalletTransactionsCorpo returns count {}", result.size());
         return result;
     }
 
     @Override
     public CharacterSheetResponse GetCharacterSheet(int keyid, String vcode, long characterId) throws ApiException {
+        logger.debug("GetCharacterSheet keyid={} characterid={}", keyid, characterId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
         return CharacterSheetParser.getInstance().getResponse(auth);
@@ -225,6 +264,8 @@ public class EveApiCaller implements IEveApiCaller {
 
     @Override
     public SkillInTrainingResponse GetSkillInTraining(int keyid, String vcode, long characterId) throws ApiException {
+        logger.debug("GetSkillInTraining keyid={} characterid={}", keyid, characterId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
         return SkillInTrainingParser.getInstance().getResponse(auth);
@@ -232,23 +273,35 @@ public class EveApiCaller implements IEveApiCaller {
 
     @Override
     public SkillQueueResponse GetSkillQueue(int keyid, String vcode, long characterId) throws ApiException {
+        logger.debug("GetSkillQueue keyid={} characterid={} ", keyid, characterId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
-        return SkillQueueParser.getInstance().getResponse(auth);
+        SkillQueueResponse result= SkillQueueParser.getInstance().getResponse(auth);
+        logger.debug("GetSkillQueue result count {}", result.getAll().size());
+        return result;
     }
 
     @Override
     public IndustryJobsResponse getIndustryJobs(int keyid, String vcode, long characterId) throws ApiException {
+        logger.debug("getIndustryJobs keyid={} characterid={}", keyid, characterId);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
         auth.setCharacterID(characterId);
 
-        return com.beimin.eveapi.character.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
+        IndustryJobsResponse result = com.beimin.eveapi.character.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
+        logger.debug("getIndustryJobs result count {}", result.getAll().size());
+        return result;
     }
 
     @Override
     public IndustryJobsResponse getIndustryJobsCorpo(int keyid, String vcode) throws ApiException {
+        logger.debug("getIndustryJobsCorpo keyid={}", keyid);
+
         ApiAuthorization auth = new ApiAuthorization(keyid, vcode);
-        return com.beimin.eveapi.corporation.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
+        IndustryJobsResponse result = com.beimin.eveapi.corporation.industryjobs.IndustryJobsParser.getInstance().getResponse(auth);
+        logger.debug("getIndustryJobsCorpo result count {}", result.getAll().size());
+        return result;
     }
 
 }
