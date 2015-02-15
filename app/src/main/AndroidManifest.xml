@@ -17,11 +17,11 @@
         android:name=".MyApplication_"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
+        android:label= "EVE Profit"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity_"
-            android:label="@string/app_name" >
+            android:label="EVE Profit" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
