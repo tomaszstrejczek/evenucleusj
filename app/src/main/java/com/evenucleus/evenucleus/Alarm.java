@@ -194,7 +194,7 @@ public class Alarm extends BroadcastReceiver {
                 logger.debug("Posting notification {}: {}", n.PendingNotificationId, n.Message2);
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(_context)
-                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setSmallIcon(R.drawable.notification)
                         .setContentTitle(n.Message)
                         .setContentText(n.Message2)
                         .setContentIntent(pendingIntent);

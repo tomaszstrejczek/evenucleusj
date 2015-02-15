@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 @EActivity(R.layout.activity_key_management)
 @OptionsMenu(R.menu.menu_key_management)
-public class KeyManagementActivity extends ActionBarActivity {
+public class KeyManagementActivity extends MyActivityBase {
     final Logger logger = LoggerFactory.getLogger(KeyManagementActivity.class);
 
     @ViewById(R.id.keyList)

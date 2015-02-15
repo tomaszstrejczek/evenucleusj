@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.apptentive.android.sdk.Apptentive;
 import com.evenucleus.client.CategoryRepo;
 import com.evenucleus.client.EnrichedJournalEntry;
 import com.evenucleus.client.ICategoryRepo;
@@ -80,6 +81,8 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
 
         if (categorySelected == "New category")
         {
+            Apptentive.engage(getActivity(), "new_category");
+
             final EditText txtUrl = new EditText(getActivity());
             new AlertDialog.Builder(getActivity())
                     .setTitle("Add category")
@@ -106,6 +109,8 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
         }
 
         try {
+            Apptentive.engage(getActivity(), "category_set");
+
             EnrichedJournalEntry journalEntry = ((JournalItemView)info.targetView)._journalEntry;
             _journalRepo.AssignCategory(journalEntry.JournalEntryId, categorySelected);
             journalEntry.Selected = false;

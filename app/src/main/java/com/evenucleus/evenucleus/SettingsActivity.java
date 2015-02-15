@@ -21,7 +21,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 @EActivity(R.layout.activity_settings)
-public class SettingsActivity extends ActionBarActivity {
+public class SettingsActivity extends MyActivityBase {
     @Bean(SettingsRepo.class)
     ISettingsRepo _settingsRepo;
 

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @EActivity(R.layout.activity_jobs)
-public class JobsActivity extends ActionBarActivity {
+public class JobsActivity extends MyActivityBase {
     final Logger logger = LoggerFactory.getLogger(JobsActivity.class);
 
     @ViewById(R.id.jobsList)

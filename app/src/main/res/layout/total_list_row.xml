@@ -19,9 +19,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Category 1"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:layout_span="1"
                 />
 
@@ -31,9 +29,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="10b"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:gravity="right"
                 android:layout_span="1"
                 />
@@ -44,9 +40,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="20b"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:gravity="right"
                 android:layout_span="1"
                 />
@@ -57,9 +51,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="20b"
-                android:textColor="#040404"
-                android:typeface="sans"
-                android:textSize="10dip"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:gravity="right"
                 android:layout_span="1"
                 />

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 
+import com.apptentive.android.sdk.Apptentive;
 import com.evenucleus.client.IPendingNotificationRepo;
 import com.evenucleus.client.PendingNotificationRepo;
 import com.logentries.logback.LogentriesAppender;
@@ -39,7 +40,7 @@ import ch.qos.logback.core.LayoutBase;
 
 @EActivity(R.layout.activity_main)
 @OptionsMenu(R.menu.menu_main)
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends MyActivityBase {
 
     public static final String LogentriesToken = "4b5ef73c-f5c7-4b6c-a7c7-01f40b578910";
 
@@ -145,5 +146,9 @@ public class MainActivity extends ActionBarActivity {
     @OptionsItem(R.id.action_financials)
     void financials() {
         FinancialsActivity_.intent(this).start();
+    }
+    @OptionsItem(R.id.message_center)
+    void message_center() {
+        Apptentive.showMessageCenter(this);
     }
 }

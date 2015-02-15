@@ -22,9 +22,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Category"
-                    android:textColor="#040404"
-                    android:typeface="sans"
-                    android:textSize="10dip"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     />
 
                 <TextView
@@ -33,9 +31,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Income"
-                    android:textColor="#040404"
-                    android:typeface="sans"
-                    android:textSize="10dip"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:gravity="right"
                     />
 
@@ -45,9 +41,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Expense"
-                    android:textColor="#040404"
-                    android:typeface="sans"
-                    android:textSize="10dip"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:gravity="right"
                     />
 
@@ -57,9 +51,7 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="Profit"
-                    android:textColor="#040404"
-                    android:typeface="sans"
-                    android:textSize="10dip"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:gravity="right"
                     />
             </TableRow>

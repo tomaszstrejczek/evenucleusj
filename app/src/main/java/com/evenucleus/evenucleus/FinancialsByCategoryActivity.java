@@ -12,7 +12,7 @@ import org.androidannotations.annotations.OptionsMenu;
 
 
 @EActivity(R.layout.activity_financials_by_category)
-public class FinancialsByCategoryActivity extends ActionBarActivity {
+public class FinancialsByCategoryActivity extends MyActivityBase {
     @AfterViews
     public void AfterViews() {
     }

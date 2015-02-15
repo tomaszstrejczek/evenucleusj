@@ -1,11 +1,13 @@
 package com.evenucleus.evenucleus;
 
+import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.apptentive.android.sdk.Apptentive;
 import com.astuetz.PagerSlidingTabStrip;
 
 import org.androidannotations.annotations.AfterViews;
@@ -16,7 +18,7 @@ import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_financials)
 @OptionsMenu(R.menu.menu_financials)
-public class FinancialsActivity extends ActionBarActivity {
+public class FinancialsActivity extends MyActivityBase {
 
     @ViewById(R.id.tabs)
     PagerSlidingTabStrip tabs;
@@ -29,7 +31,25 @@ public class FinancialsActivity extends ActionBarActivity {
         pager.setAdapter(new FinancialsPageAdapter(getSupportFragmentManager()));
         tabs.setViewPager(pager);
 
-        //pager.setOnPageChangeListener();
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position==1)
+                    Apptentive.engage(FinancialsActivity.this, "totals_selected");
+                else
+                    Apptentive.engage(FinancialsActivity.this, "financials_selected");
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @OptionsItem(R.id.action_settings)

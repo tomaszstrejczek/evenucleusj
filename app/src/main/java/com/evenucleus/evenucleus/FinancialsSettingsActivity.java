@@ -38,7 +38,7 @@ import java.util.List;
 
 
 @EActivity(R.layout.activity_financials_settings)
-public class FinancialsSettingsActivity extends ActionBarActivity {
+public class FinancialsSettingsActivity extends MyActivityBase {
     public static final String NOFILTER = "no filter";
     public static final String NOCATEGORY = "no category";
 

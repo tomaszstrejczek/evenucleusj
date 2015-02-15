@@ -40,7 +40,7 @@ import java.util.List;
 
 
 @EActivity(R.layout.activity_add_key)
-public class AddKey extends ActionBarActivity {
+public class AddKey extends MyActivityBase {
     final Logger logger = LoggerFactory.getLogger(AddKey.class);
 
     @Bean(EveApiCaller.class)
