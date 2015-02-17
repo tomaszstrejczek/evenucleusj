@@ -77,6 +77,14 @@ public class JournalEnricher implements IJournalEnricher {
             return o1.date.compareTo(o2.date);
         }
     }
+
+    class DateComparatorWT implements Comparator<WalletTransaction> {
+        @Override
+        public int compare(WalletTransaction o1, WalletTransaction o2) {
+            return o1.transactionDateTime.compareTo(o2.transactionDateTime);
+        }
+    }
+
     private List<EnrichedJournalEntry> EnrichIndividual(List<JournalEntry> jes, List<WalletTransaction> wts) {
         List<EnrichedJournalEntry> result = new ArrayList<EnrichedJournalEntry>();
 
@@ -84,6 +92,7 @@ public class JournalEnricher implements IJournalEnricher {
             return result;
 
         Collections.sort(jes, new DateComparator());
+        Collections.sort(wts, new DateComparatorWT());
 
         // Filter out transactions before first date of journal entry
         Date first = jes.iterator().next().date;
@@ -92,28 +101,39 @@ public class JournalEnricher implements IJournalEnricher {
         wts = wts1;
 
         Map<JournalEntry, WalletTransaction> matching = new IdentityHashMap<JournalEntry, WalletTransaction>();
-        Map<Long, WalletTransaction> dictWts = new HashMap<Long, WalletTransaction>();
-        for(WalletTransaction w: wts) dictWts.put(w.journalTransactionID, w);
-        Map<Long, JournalEntry> dictJes = new HashMap<Long, JournalEntry>();
-        for(JournalEntry je: jes) dictJes.put(je.refID, je);
+        Map<Long, WalletTransaction> dictWtsByJournalId = new HashMap<Long, WalletTransaction>();
+        for(WalletTransaction w: wts) {
+            dictWtsByJournalId.put(w.journalTransactionID, w);
+        }
+        Map<Long, JournalEntry> dictJesByRefId = new HashMap<Long, JournalEntry>();
+        for(JournalEntry je: jes) {
+            dictJesByRefId.put(je.refID, je);
+        }
 
         // Match by journalTransactionId && skip them from furher matching
         wts1 = new ArrayList<WalletTransaction>();
         for(WalletTransaction w:wts)
         {
-            if (dictJes.containsKey(w.journalTransactionID))
-                matching.put(dictJes.get(w.journalTransactionID), w);
+            if (dictJesByRefId.containsKey(w.journalTransactionID))
+                matching.put(dictJesByRefId.get(w.journalTransactionID), w);
             else
                 wts1.add(w);
         }
         wts = wts1;
 
-        // Match by date and amount
+        // Match by argname1 || date and amount
         wts1 = new ArrayList<WalletTransaction>();
         for(WalletTransaction w:wts)
         {
             JournalEntry found = null;
+            String transactionIDAsString = String.valueOf(w.transactionID);
             for(JournalEntry je: jes)
+                if (je.argName1.equals(transactionIDAsString))
+                {
+                    found = je;
+                    break;
+                }
+                else
                 if (je.date.equals(w.transactionDateTime) && Math.abs(je.amount - w.price*w.quantity)<0.01)
                 {
                     found = je;
