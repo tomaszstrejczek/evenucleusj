@@ -68,6 +68,7 @@ public class JournalRepo implements IJournalRepo {
         logger.debug("AssignCategory {} {}", journalEntryId, category);
 
         JournalEntry je = _localdb.getJournalEntryDao().queryForId(journalEntryId);
+        logger.debug("AssignCategoryInfo {} {}", je.refID, je.date);
         je.CategoryName = category;
         _localdb.getJournalEntryDao().createOrUpdate(je);
     }
