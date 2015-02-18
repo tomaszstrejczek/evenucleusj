@@ -22,6 +22,7 @@ import org.joda.time.Period;
 import org.joda.time.PeriodType;
 
 import java.text.DateFormat;
+import java.util.TimeZone;
 
 /**
  * Created by tomeks on 2015-01-04.
@@ -50,7 +51,9 @@ public class JournalItemView extends LinearLayout {
 
     public void bind(EnrichedJournalEntry entry) {
         _journalEntry = entry;
-        date.setText(DateFormat.getDateTimeInstance().format(entry.Date));
+        DateFormat df =DateFormat.getDateTimeInstance();
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        date.setText(df.format(entry.Date));
         description.setText(entry.Description);
         SetCategory(entry.Category, entry.Suggested);
         amount.setText(Number2RoundedString.Convert(entry.Amount));

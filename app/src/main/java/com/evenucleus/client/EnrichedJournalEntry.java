@@ -9,6 +9,7 @@ public class EnrichedJournalEntry {
     public int JournalEntryId;
     public int PilotId;
     public int CorporationId;
+    public long RefID;
 
     public Date Date;
     public double Amount;

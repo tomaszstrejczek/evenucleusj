@@ -100,6 +100,7 @@ public class JournalEnricher implements IJournalEnricher {
         for(WalletTransaction wt: wts) if (!wt.transactionDateTime.before(first)) wts1.add(wt);
         wts = wts1;
 
+
         Map<JournalEntry, WalletTransaction> matching = new IdentityHashMap<JournalEntry, WalletTransaction>();
         Map<Long, WalletTransaction> dictWtsByJournalId = new HashMap<Long, WalletTransaction>();
         for(WalletTransaction w: wts) {
@@ -121,6 +122,23 @@ public class JournalEnricher implements IJournalEnricher {
         }
         wts = wts1;
 
+        /*
+        if (jes.get(0).ownerName1.equals("MicioGatto")) {
+            List<JournalEntry> fjes = new ArrayList<>();
+            for(JournalEntry j: jes)
+                if (j.date.getHours()==23 && j.date.getMinutes()==18)
+                    fjes.add(j);
+
+            List<WalletTransaction> fw = new ArrayList<>();
+            for(WalletTransaction t: wts)
+                if (t.transactionDateTime.getHours()==23 && t.transactionDateTime.getMinutes()==18)
+                    fw.add(t);
+
+
+            logger.debug("Micio");
+        }
+        */
+
         // Match by argname1 || date and amount
         wts1 = new ArrayList<WalletTransaction>();
         for(WalletTransaction w:wts)
@@ -128,13 +146,13 @@ public class JournalEnricher implements IJournalEnricher {
             JournalEntry found = null;
             String transactionIDAsString = String.valueOf(w.transactionID);
             for(JournalEntry je: jes)
-                if (je.argName1.equals(transactionIDAsString))
+                if (je.argName1.equals(transactionIDAsString) && !matching.containsKey(je))
                 {
                     found = je;
                     break;
                 }
                 else
-                if (je.date.equals(w.transactionDateTime) && Math.abs(je.amount - w.price*w.quantity)<0.01)
+                if (je.date.equals(w.transactionDateTime) && Math.abs(je.amount - w.price*w.quantity)<0.01 && !matching.containsKey(je))
                 {
                     found = je;
                     break;
@@ -203,6 +221,7 @@ public class JournalEnricher implements IJournalEnricher {
             entry.CorporationId = x.CorporationId;
             entry.Date = x.date;
             entry.Amount = amount;
+            entry.RefID = x.refID;
             if (matching.containsKey(x))
             {
                 WalletTransaction wt =matching.get(x);
