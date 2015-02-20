@@ -216,12 +216,11 @@ public class JournalEnricher implements IJournalEnricher {
                 amount = Math.round(amount + manufacturingRate * amount);
 
             EnrichedJournalEntry entry = new EnrichedJournalEntry();
-            entry.JournalEntryId = x.JournalEntryId;
+            entry.RefID = x.refID;
             entry.PilotId = x.PilotId;
             entry.CorporationId = x.CorporationId;
             entry.Date = x.date;
             entry.Amount = amount;
-            entry.RefID = x.refID;
             if (matching.containsKey(x))
             {
                 WalletTransaction wt =matching.get(x);

@@ -14,8 +14,8 @@ public class JournalEntry {
     }
 
     public JournalEntry(ApiJournalEntry entry) {
-        date = entry.getDate();
         refID = entry.getRefID();
+        date = entry.getDate();
         refTypeID = entry.getRefTypeID();
         ownerName1 = entry.getOwnerName1();
         ownerID1 = entry.getOwnerID1();
@@ -30,8 +30,9 @@ public class JournalEntry {
         taxAmount = entry.getTaxAmount();
     }
 
-    @DatabaseField(generatedId = true)
-    public int JournalEntryId;
+    @DatabaseField(id = true)
+    public long refID;
+
 
     @DatabaseField
     public int PilotId;
@@ -42,8 +43,6 @@ public class JournalEntry {
 
     @DatabaseField
     public Date date;
-    @DatabaseField
-    public long refID;
     @DatabaseField
     public int refTypeID;
     @DatabaseField

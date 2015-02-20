@@ -119,7 +119,7 @@ public class JournalListAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         EnrichedJournalEntry item = getItem(position);
-        return (long) item.JournalEntryId;
+        return item.RefID;
     }
 
     @Override

@@ -64,7 +64,7 @@ public class JournalRepo implements IJournalRepo {
     }
 
     @Override
-    public void AssignCategory(int journalEntryId, String category) throws SQLException {
+    public void AssignCategory(long journalEntryId, String category) throws SQLException {
         logger.debug("AssignCategory {} {}", journalEntryId, category);
 
         JournalEntry je = _localdb.getJournalEntryDao().queryForId(journalEntryId);
@@ -76,7 +76,7 @@ public class JournalRepo implements IJournalRepo {
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         logger.debug("Replicating for pilot {}", p.Name);
 
-        QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
+        QueryBuilder<JournalEntry, Long> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
         qb.where().eq("PilotId", p.PilotId);
         GenericRawResults<String[]> results = _localdb.getJournalEntryDao().queryRaw(qb.prepareStatementString());
         String[] rs = results.getFirstResult();
@@ -92,7 +92,7 @@ public class JournalRepo implements IJournalRepo {
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
         logger.debug("Replicating for corporation {}", c.Name);
 
-        QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
+        QueryBuilder<JournalEntry, Long> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
         qb.where().eq("CorporationId", c.CorporationId);
         GenericRawResults<String[]> results = _localdb.getJournalEntryDao().queryRaw(qb.prepareStatementString());
         String[] rs = results.getFirstResult();

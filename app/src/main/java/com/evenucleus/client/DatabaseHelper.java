@@ -19,7 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
@@ -29,6 +33,7 @@ import java.util.List;
 public class DatabaseHelper
 {
     final Logger logger = LoggerFactory.getLogger(DatabaseHelper.class);
+    final String db_version1 = "Version1";
 
     // any time you make changes to your database objects, you may have to increase the database version
     private static final int DATABASE_VERSION = 1;
@@ -47,8 +52,8 @@ public class DatabaseHelper
     private Dao<Category, Integer> categoryDao = null;
     private Dao<CacheEntry, String> cacheEntryDao = null;
     private Dao<TypeNameEntry, Integer> typeNameEntryDao = null;
-    private Dao<JournalEntry, Integer> journalEntryDao = null;
-    private Dao<WalletTransaction, Integer> walletTransactionDao = null;
+    private Dao<JournalEntry, Long> journalEntryDao = null;
+    private Dao<WalletTransaction, Long> walletTransactionDao = null;
     private Dao<Setting, String> setttingDao = null;
 
     public void Initialize(String fullPath) throws java.sql.SQLException {
@@ -64,6 +69,15 @@ public class DatabaseHelper
         boolean initialized = DoesTableExists(_database, "VersionM");
         if (!initialized)
             CreateInitial();
+
+        HashSet<String> versions = new HashSet<String>();
+        for(VersionM v: getVersionDao().queryForAll()) {
+            logger.info("Installed version {}", v.Name);
+            versions.add(v.Name);
+        }
+
+        if (!versions.contains(db_version1))
+            UpgradeToVersion1();
     }
 
 
@@ -71,6 +85,87 @@ public class DatabaseHelper
     {
         long cnt = DatabaseUtils.queryNumEntries(database, "sqlite_master", "type='table' AND name=? COLLATE NOCASE", new String[] {tablename});
         return cnt > 0;
+    }
+
+    // Changing primary key of wallettransaction and journal entry
+    private void UpgradeToVersion1() throws SQLException {
+        logger.info("UpgradeToVersion1");
+        upgradeToVersion1_jes();
+        upgradeToVersion1_wts();
+
+        VersionM ver = new VersionM();
+        ver.Name = db_version1;
+        getVersionDao().createOrUpdate(ver);
+    }
+    private void upgradeToVersion1_jes() throws SQLException {
+        logger.info("UpgradeToVersion1_jes");
+        // We can load all records because we only removed one column
+        List<JournalEntry> jes = getJournalEntryDao().queryForAll();
+        _database.execSQL("alter table journalentry rename to journalentry_old");
+        logger.info("journalentry renamed");
+        try {
+            _database.execSQL("CREATE TABLE `journalentry` (`CategoryName` VARCHAR , `RefTypeName` VARCHAR , `argName1` VARCHAR , `date` VARCHAR , `ownerName1` VARCHAR , `ownerName2` VARCHAR , `reason` VARCHAR , `taxAmount` DOUBLE PRECISION , `taxReceiverID` BIGINT , `CorporationId` INTEGER , `amount` DOUBLE PRECISION , `argID1` BIGINT , `balance` DOUBLE PRECISION , `ownerID1` BIGINT , `ownerID2` BIGINT , `refID` BIGINT , `PilotId` INTEGER , `refTypeID` INTEGER , PRIMARY KEY (`refID`) )");
+            logger.info("new journalentry table created");
+
+            Dao<JournalEntry, Long> jesDao = getJournalEntryDao();
+            Map<Long, JournalEntry> saved = new HashMap<Long, JournalEntry>();
+            int cnt = 0;
+            for (JournalEntry je : jes) {
+                ++cnt;
+                if (cnt % 100 == 0) {
+                    logger.debug("Processed {} journalentry records", cnt);
+                }
+                if (saved.containsKey(je.refID)) {
+                    JournalEntry prev = saved.get(je.refID);
+                    if ((prev.CategoryName == null || prev.CategoryName.isEmpty()) && je.CategoryName != null && !je.CategoryName.isEmpty()) {
+                        prev.CategoryName = je.CategoryName;
+                        jesDao.createOrUpdate(prev);
+                    }
+                } else {
+                    saved.put(je.refID, je);
+                    jesDao.createOrUpdate(je);
+                }
+            }
+        } catch (Exception e) {
+            logger.error("exception caught {}", e);
+            if (DoesTableExists(_database, "journalentry"))
+                _database.execSQL("drop table journalentry");
+            _database.execSQL("alter table journalentry_old rename to journalentry");
+            throw e;
+        }
+    }
+
+    private void upgradeToVersion1_wts() throws SQLException {
+        logger.info("UpgradeToVersion1_wts");
+        // We can load all records because we only removed one column
+        List<WalletTransaction> wts = getWalletTransactionDao().queryForAll();
+        _database.execSQL("alter table wallettransaction rename to wallettransaction_old");
+        logger.info("wallettransaction renamed");
+        try {
+            _database.execSQL("CREATE TABLE `wallettransaction` (`characterID` BIGINT , `characterName` VARCHAR , `clientName` VARCHAR , `stationName` VARCHAR , `transactionDateTime` VARCHAR , `transactionFor` VARCHAR , `transactionType` VARCHAR , `typeName` VARCHAR , `clientID` BIGINT , `journalTransactionID` BIGINT , `price` DOUBLE PRECISION , `transactionID` BIGINT , `CategoryId` INTEGER , `CorporationId` INTEGER , `PilotId` INTEGER , `quantity` INTEGER , `stationID` INTEGER , `typeID` INTEGER , PRIMARY KEY (`transactionID`) )");
+            logger.info("new wallettransaction table created");
+
+            Dao<WalletTransaction, Long> wtsDao = getWalletTransactionDao();
+            Map<Long, WalletTransaction> saved = new HashMap<Long, WalletTransaction>();
+            int cnt = 0;
+            for (WalletTransaction w : wts) {
+                ++cnt;
+                if (cnt % 100 == 0) {
+                    logger.debug("Processed {} wallettransaction records", cnt);
+                }
+                if (!saved.containsKey(w.transactionID)) {
+                    saved.put(w.transactionID, w);
+                    wtsDao.createOrUpdate(w);
+                }
+            }
+
+        } catch (Exception e) {
+            logger.error("exception caught {}", e);
+            if (DoesTableExists(_database, "wallettransaction"))
+                _database.execSQL("drop table wallettransaction");
+            _database.execSQL("alter table wallettransaction_old rename to wallettransaction");
+            throw e;
+        }
     }
 
     private void CreateInitial() throws java.sql.SQLException {
@@ -170,14 +265,14 @@ public class DatabaseHelper
         return typeNameEntryDao;
     }
 
-    public Dao<JournalEntry, Integer> getJournalEntryDao() throws java.sql.SQLException {
+    public Dao<JournalEntry, Long> getJournalEntryDao() throws java.sql.SQLException {
         if (journalEntryDao== null) {
             journalEntryDao = DaoManager.createDao(_connectionSource, JournalEntry.class);
         }
         return journalEntryDao;
     }
 
-    public Dao<WalletTransaction, Integer> getWalletTransactionDao() throws java.sql.SQLException {
+    public Dao<WalletTransaction, Long> getWalletTransactionDao() throws java.sql.SQLException {
         if (walletTransactionDao== null) {
             walletTransactionDao = DaoManager.createDao(_connectionSource, WalletTransaction.class);
         }

@@ -30,8 +30,8 @@ public class WalletTransaction {
         journalTransactionID = entry.getJournalTransactionID();
     }
 
-    @DatabaseField(generatedId = true)
-    public int WalletTransactionId;
+    @DatabaseField(id=true)
+    public long transactionID;
 
     @DatabaseField
     public int PilotId;
@@ -42,8 +42,6 @@ public class WalletTransaction {
 
     @DatabaseField
     public Date transactionDateTime;
-    @DatabaseField
-    public long transactionID;
     @DatabaseField
     public int quantity;
     @DatabaseField

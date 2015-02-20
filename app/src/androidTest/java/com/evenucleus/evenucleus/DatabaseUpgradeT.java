@@ -38,8 +38,14 @@ public class DatabaseUpgradeT extends InstrumentationTestCase {
         List<JournalEntry> jes = db.getJournalEntryDao().queryForAll();
         Assert.assertTrue(jes.size()>0);
 
+        cnt = db.getJournalEntryDao().queryRawValue("select count(*) from (select refid, count(*) from journalentry group by refid having count(*)>1)");
+        Assert.assertEquals(0, cnt);
+
         List<WalletTransaction> wts = db.getWalletTransactionDao().queryForAll();
         Assert.assertTrue(wts.size()>0);
+
+        cnt = db.getWalletTransactionDao().queryRawValue("select count(*) from (select transactionID, count(*) from wallettransaction group by transactionID having count(*)>1)");
+        Assert.assertEquals(0, cnt);
     }
 
     private void createFileFromInputStream(InputStream inputStream, File f) throws IOException {

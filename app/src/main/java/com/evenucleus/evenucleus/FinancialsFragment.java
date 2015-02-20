@@ -112,7 +112,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             Apptentive.engage(getActivity(), "category_set");
 
             EnrichedJournalEntry journalEntry = ((JournalItemView)info.targetView)._journalEntry;
-            _journalRepo.AssignCategory(journalEntry.JournalEntryId, categorySelected);
+            _journalRepo.AssignCategory(journalEntry.RefID, categorySelected);
             journalEntry.Selected = false;
             journalEntry.Category = categorySelected;
             journalEntry.Suggested = false;
@@ -122,7 +122,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
             for(int i = 0; i < c; ++i) {
                 JournalItemView jiw = (JournalItemView) mListView.getChildAt(i);
                 if (jiw.checkBox.isChecked()) {
-                    _journalRepo.AssignCategory(jiw._journalEntry.JournalEntryId, item.getTitle().toString());
+                    _journalRepo.AssignCategory(jiw._journalEntry.RefID, item.getTitle().toString());
                     jiw._journalEntry.Selected = false;
                     jiw._journalEntry.Category = categorySelected;
                     jiw._journalEntry.Suggested = false;
@@ -135,7 +135,7 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
                 if (je.Selected) {
                     je.Selected = false;
                     je.Suggested = false;
-                    _journalRepo.AssignCategory(je.JournalEntryId, categorySelected);
+                    _journalRepo.AssignCategory(je.RefID, categorySelected);
                     je.Category = categorySelected;
                 }
 
@@ -176,9 +176,9 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
         }
 
         // store ids before removal
-        HashSet<Integer> before = new HashSet<Integer>();
+        HashSet<Long> before = new HashSet<Long>();
         for(EnrichedJournalEntry j:mAdapter._entries)
-            before.add(j.JournalEntryId);
+            before.add(j.RefID);
 
         // possibly remove items
         mAdapter.afterInject();
@@ -186,11 +186,11 @@ public class FinancialsFragment extends android.support.v4.app.Fragment {
 
         // detect removed items & update mItemIdTopMap
             // first we need ids of new items
-        HashSet<Integer> current = new HashSet<Integer>();
-        for(EnrichedJournalEntry j: mAdapter._entries) current.add(j.JournalEntryId);
+        HashSet<Long> current = new HashSet<Long>();
+        for(EnrichedJournalEntry j: mAdapter._entries) current.add(j.RefID);
             // then we calculate removed
-        HashSet<Integer> removed = new HashSet<Integer>();
-        for(Integer id:before)
+        HashSet<Long> removed = new HashSet<Long>();
+        for(Long id:before)
             if (!current.contains(id)) {
                 removed.add(id);
                 mItemIdTopMap.remove(id);

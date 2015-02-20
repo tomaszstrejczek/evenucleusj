@@ -63,7 +63,7 @@ public class WalletRepo implements IWalletRepo {
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         logger.debug("Replicating for pilot {}", p.Name);
 
-        QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
+        QueryBuilder<WalletTransaction, Long> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
         qb.where().eq("PilotId", p.PilotId);
         GenericRawResults<String[]> results = _localdb.getWalletTransactionDao().queryRaw(qb.prepareStatementString());
         String[] rs = results.getFirstResult();
@@ -79,7 +79,7 @@ public class WalletRepo implements IWalletRepo {
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
         logger.debug("Replicating for corporation {}", c.Name);
 
-        QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
+        QueryBuilder<WalletTransaction, Long> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
         qb.where().eq("CorporationId", c.CorporationId);
         GenericRawResults<String[]> results = _localdb.getWalletTransactionDao().queryRaw(qb.prepareStatementString());
         String[] rs = results.getFirstResult();
