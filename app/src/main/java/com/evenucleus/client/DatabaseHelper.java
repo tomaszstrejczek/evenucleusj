@@ -96,6 +96,9 @@ public class DatabaseHelper
         VersionM ver = new VersionM();
         ver.Name = db_version1;
         getVersionDao().createOrUpdate(ver);
+
+        _database.execSQL("drop table journalentry_old");
+        _database.execSQL("drop table wallettransaction_old");
     }
     private void upgradeToVersion1_jes() throws SQLException {
         logger.info("UpgradeToVersion1_jes");
