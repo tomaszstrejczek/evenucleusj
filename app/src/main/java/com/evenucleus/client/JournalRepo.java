@@ -9,12 +9,14 @@ import com.j256.ormlite.stmt.QueryBuilder;
 
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +49,16 @@ public class JournalRepo implements IJournalRepo {
             List<Pilot> pilots = _pilotRepo.GetAll();
             for(Pilot p:pilots)
                 replicateForPilot(p);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append('(');
+            for(Pilot p: pilots) {
+                sb.append(String.valueOf(p.PilotId));
+                sb.append(',');
+            }
+            sb.append("0)");
+
+            _localdb.getJournalEntryDao().executeRaw("delete from journalentry where pilotid not in " + sb.toString());
         }
 
         // For testing we allow null _corporationRepo
@@ -56,6 +68,16 @@ public class JournalRepo implements IJournalRepo {
         List<Corporation> corporations = _corporationRepo.GetAll();
         for(Corporation c:corporations)
             replicateForCorporation(c);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for(Corporation c: corporations) {
+            sb.append(String.valueOf(c.CorporationId));
+            sb.append(',');
+        }
+        sb.append("0)");
+
+        _localdb.getJournalEntryDao().executeRaw("delete from journalentry where corporationid not in " + sb.toString());
     }
 
     @Override
@@ -76,32 +98,63 @@ public class JournalRepo implements IJournalRepo {
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         logger.debug("Replicating for pilot {}", p.Name);
 
-        QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
-        qb.where().eq("PilotId", p.PilotId);
-        GenericRawResults<String[]> results = _localdb.getJournalEntryDao().queryRaw(qb.prepareStatementString());
-        String[] rs = results.getFirstResult();
-        long lastStoredID = 0;
-        if (rs != null && rs[0]!=null)
-            lastStoredID = Long.parseLong(rs[0]);
+        List<JournalEntry> stored = _localdb.getJournalEntryDao().queryForEq("pilotid", p.PilotId);
 
-        List<JournalEntry> list = _eveApiCaller.getJournalEntries(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId, p.PilotId, lastStoredID);
+        /*
+        if (true || p.Name.equals("stryju")) {
+            List<JournalEntry> dbg = new ArrayList<JournalEntry>();
+            for(JournalEntry je:stored)
+                if (je.date.getDate()==14 && je.amount < -1.5e9)
+                    dbg.add(je);
+            if (dbg.size()>0)
+                logger.debug("done");
+        }
+        */
+
+        List<JournalEntry> list = _eveApiCaller.getJournalEntries(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId, p.PilotId, 0);
         for(JournalEntry x:list)
-            _localdb.getJournalEntryDao().createOrUpdate(x);
+            if (!stored.contains(x))
+                _localdb.getJournalEntryDao().createOrUpdate(x);
+
+        // removed duplicates from stored
+        for(int i = stored.size()-1; i > 0; --i) {
+            JournalEntry je = stored.get(i);
+            stored.remove(i);
+            int idx = stored.indexOf(je);
+            if (idx >= 0) {
+                JournalEntry duplicate = stored.get(idx);
+                if (StringUtils.isEmpty(je.CategoryName) && StringUtils.isNotEmpty(duplicate.CategoryName)) {
+                    je.CategoryName = duplicate.CategoryName;
+                    _localdb.getJournalEntryDao().createOrUpdate(je);
+                }
+                _localdb.getJournalEntryDao().deleteById(duplicate.JournalEntryId);
+            }
+        }
     }
 
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
         logger.debug("Replicating for corporation {}", c.Name);
 
-        QueryBuilder<JournalEntry, Integer> qb = _localdb.getJournalEntryDao().queryBuilder().selectRaw("MAX(refID)");
-        qb.where().eq("CorporationId", c.CorporationId);
-        GenericRawResults<String[]> results = _localdb.getJournalEntryDao().queryRaw(qb.prepareStatementString());
-        String[] rs = results.getFirstResult();
-        long lastStoredID = 0;
-        if (rs != null && rs[0]!=null)
-            lastStoredID = Long.parseLong(rs[0]);
+        List<JournalEntry> stored = _localdb.getJournalEntryDao().queryForEq("CorporationId", c.CorporationId);
 
-        List<JournalEntry> list = _eveApiCaller.getJournalEntriesCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode, c.CorporationId, lastStoredID);
+        List<JournalEntry> list = _eveApiCaller.getJournalEntriesCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode, c.CorporationId, 0);
         for(JournalEntry x:list)
-            _localdb.getJournalEntryDao().createOrUpdate(x);
+            if (!stored.contains(x))
+                _localdb.getJournalEntryDao().createOrUpdate(x);
+
+        // removed duplicates from stored
+        for(int i = stored.size()-1; i > 0; --i) {
+            JournalEntry je = stored.get(i);
+            stored.remove(i);
+            int idx = stored.indexOf(je);
+            if (idx >= 0) {
+                JournalEntry duplicate = stored.get(idx);
+                if (StringUtils.isEmpty(je.CategoryName) && StringUtils.isNotEmpty(duplicate.CategoryName)) {
+                    je.CategoryName = duplicate.CategoryName;
+                    _localdb.getJournalEntryDao().createOrUpdate(je);
+                }
+                _localdb.getJournalEntryDao().deleteById(duplicate.JournalEntryId);
+            }
+        }
     }
 }

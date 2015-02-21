@@ -4,6 +4,9 @@ import com.beimin.eveapi.shared.wallet.RefType;
 import com.beimin.eveapi.shared.wallet.journal.ApiJournalEntry;
 import com.j256.ormlite.field.DatabaseField;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Date;
 
 /**
@@ -28,6 +31,31 @@ public class JournalEntry {
         reason = entry.getReason();
         taxReceiverID = entry.getTaxReceiverID();
         taxAmount = entry.getTaxAmount();
+    }
+
+    @Override
+    public boolean equals(Object otherO) {
+        if (!(otherO instanceof JournalEntry)) return false;
+        
+        JournalEntry other = (JournalEntry) otherO;
+        if (refID == other.refID)
+            return true;
+
+        return
+                ObjectUtils.equals(date, other.date) &&
+                //refID == other.refID &&
+                refTypeID == other.refTypeID &&
+                StringUtils.equals(ownerName1, other.ownerName1) &&
+                ownerID1 == other.ownerID1 &&
+                StringUtils.equals(ownerName2, other.ownerName2) &&
+                ownerID2 == other.ownerID2 &&
+                StringUtils.equals(argName1, other.argName1) &&
+                argID1 == other.argID1 &&
+                amount == other.amount &&
+                balance == other.balance &&
+                StringUtils.equals(reason, other.reason) &&
+                ObjectUtils.equals(taxReceiverID, other.taxReceiverID) &&
+                ObjectUtils.equals(taxAmount, other.taxAmount);
     }
 
     @DatabaseField(generatedId = true)

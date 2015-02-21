@@ -63,32 +63,41 @@ public class WalletRepo implements IWalletRepo {
     private void replicateForPilot(Pilot p) throws SQLException, ParseException, ApiException {
         logger.debug("Replicating for pilot {}", p.Name);
 
-        QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
-        qb.where().eq("PilotId", p.PilotId);
-        GenericRawResults<String[]> results = _localdb.getWalletTransactionDao().queryRaw(qb.prepareStatementString());
-        String[] rs = results.getFirstResult();
-        long lastStoredID = 0;
-        if (rs != null && rs[0]!=null)
-            lastStoredID = Long.parseLong(rs[0]);
+        List<WalletTransaction> stored = _localdb.getWalletTransactionDao().queryForEq("pilotid", p.PilotId);
 
-        List<WalletTransaction> list = _eveApiCaller.getWalletTransactions(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId, p.PilotId, lastStoredID);
+        List<WalletTransaction> list = _eveApiCaller.getWalletTransactions(p.KeyInfo.KeyId, p.KeyInfo.VCode, p.CharacterId, p.PilotId, 0);
         for(WalletTransaction x:list)
-            _localdb.getWalletTransactionDao().createOrUpdate(x);
+            if (!stored.contains(x))
+                _localdb.getWalletTransactionDao().createOrUpdate(x);
+
+        // removed duplicates from stored
+        for(int i = stored.size()-1; i > 0; --i) {
+            WalletTransaction je = stored.get(i);
+            stored.remove(i);
+            int idx = stored.indexOf(je);
+            if (idx >= 0)
+                _localdb.getWalletTransactionDao().deleteById(stored.get(idx).WalletTransactionId);
+        }
+
     }
 
     private void replicateForCorporation(Corporation c) throws SQLException, ApiException {
         logger.debug("Replicating for corporation {}", c.Name);
 
-        QueryBuilder<WalletTransaction, Integer> qb = _localdb.getWalletTransactionDao().queryBuilder().selectRaw("MAX(transactionID)");
-        qb.where().eq("CorporationId", c.CorporationId);
-        GenericRawResults<String[]> results = _localdb.getWalletTransactionDao().queryRaw(qb.prepareStatementString());
-        String[] rs = results.getFirstResult();
-        long lastStoredID = 0;
-        if (rs != null && rs[0]!=null)
-            lastStoredID = Long.parseLong(rs[0]);
+        List<WalletTransaction> stored = _localdb.getWalletTransactionDao().queryForEq("CorporationID", c.CorporationId);
 
-        List<WalletTransaction> list = _eveApiCaller.getWalletTransactionsCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode, c.CorporationId, lastStoredID);
+        List<WalletTransaction> list = _eveApiCaller.getWalletTransactionsCorpo(c.KeyInfo.KeyId, c.KeyInfo.VCode, c.CorporationId, 0);
         for(WalletTransaction x:list)
-            _localdb.getWalletTransactionDao().createOrUpdate(x);
+            if (!stored.contains(x))
+                _localdb.getWalletTransactionDao().createOrUpdate(x);
+
+        // removed duplicates from stored
+        for(int i = stored.size()-1; i > 0; --i) {
+            WalletTransaction je = stored.get(i);
+            stored.remove(i);
+            int idx = stored.indexOf(je);
+            if (idx >= 0)
+                _localdb.getWalletTransactionDao().deleteById(stored.get(idx).WalletTransactionId);
+        }
     }
 }

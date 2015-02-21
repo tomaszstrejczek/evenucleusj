@@ -74,7 +74,11 @@ public class JournalEnricher implements IJournalEnricher {
     class DateComparator implements Comparator<JournalEntry> {
         @Override
         public int compare(JournalEntry o1, JournalEntry o2) {
-            return o1.date.compareTo(o2.date);
+            int r = o1.date.compareTo(o2.date);
+            if (r == 0)
+                return o1.refID > o2.refID ? 1: o1.refID < o2.refID ? -1 : 0;
+            else
+                return r;
         }
     }
 
@@ -85,6 +89,17 @@ public class JournalEnricher implements IJournalEnricher {
         }
     }
 
+    public void verifyJes(List<JournalEntry> entries) {
+        if (entries.size() == 0) return;
+        double initial = entries.get(0).balance - entries.get(0).amount;
+        for(JournalEntry je: entries) {
+            if (Math.abs(initial + je.amount - je.balance) > 1) {
+                logger.warn("different pilotid={}, corpoID={}, {} / {}, diff = {}", je.PilotId, je.CorporationId, initial + je.amount, je.balance, initial + je.amount - je.balance);
+            }
+            initial = je.balance;
+        }
+    }
+
     private List<EnrichedJournalEntry> EnrichIndividual(List<JournalEntry> jes, List<WalletTransaction> wts) {
         List<EnrichedJournalEntry> result = new ArrayList<EnrichedJournalEntry>();
 
@@ -92,6 +107,7 @@ public class JournalEnricher implements IJournalEnricher {
             return result;
 
         Collections.sort(jes, new DateComparator());
+        verifyJes(jes);
         Collections.sort(wts, new DateComparatorWT());
 
         // Filter out transactions before first date of journal entry

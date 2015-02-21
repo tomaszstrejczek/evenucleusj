@@ -3,6 +3,9 @@ package com.evenucleus.client;
 import com.beimin.eveapi.shared.wallet.transactions.ApiWalletTransaction;
 import com.j256.ormlite.field.DatabaseField;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Date;
 
 /**
@@ -30,6 +33,29 @@ public class WalletTransaction {
         journalTransactionID = entry.getJournalTransactionID();
     }
 
+    @Override
+    public boolean equals(Object otherO) {
+        if (!(otherO instanceof WalletTransaction)) return false;
+
+        WalletTransaction other = (WalletTransaction) otherO;
+        return
+                ObjectUtils.equals(transactionDateTime, other.transactionDateTime) &&
+                //transactionID == other.transactionID &&
+                quantity == other.quantity &&
+                StringUtils.equals(typeName, other.typeName) &&
+                        typeID == other.typeID &&
+                        price == other.price &&
+                        clientID == other.clientID &&
+                        StringUtils.equals(clientName, other.clientName) &&
+                        ObjectUtils.equals(characterID, other.characterID) &&
+                        StringUtils.equals(characterName, other.characterName) &&
+                        stationID == other.stationID &&
+                        StringUtils.equals(stationName, other.stationName) &&
+                        StringUtils.equals(transactionType, other.transactionType) &&
+                        ObjectUtils.equals(transactionFor, other.transactionFor) &&
+                        journalTransactionID == other.journalTransactionID;
+    }
+    
     @DatabaseField(generatedId = true)
     public int WalletTransactionId;
 
