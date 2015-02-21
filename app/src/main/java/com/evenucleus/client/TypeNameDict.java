@@ -53,13 +53,17 @@ public class TypeNameDict implements ITypeNameDict {
 
         if (missing.size() > 0)
         {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DAY_OF_MONTH, 7);
+
             TypeNameParser parser = TypeNameParser.getInstance();
             TypeNameResponse r = parser.getResponse(missing);
             for(EveTypeName t: r.getAll())
             {
                 TypeNameEntry entry = new TypeNameEntry();
                 entry.Key = t.getTypeID();
-                entry.CachedUntil = r.getCachedUntil();
+                entry.CachedUntil = cal.getTime();
                 entry.Data = t.getTypeName();
                 hit.add(entry);
                 _localdb.getTypeNameEntryDao().createOrUpdate(entry);
