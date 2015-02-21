@@ -1,9 +1,11 @@
 package com.evenucleus.evenucleus;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -29,8 +31,15 @@ public class FinancialsActivity extends MyActivityBase {
     @AfterViews
     void afterViews() {
         pager.setAdapter(new FinancialsPageAdapter(getSupportFragmentManager()));
-        tabs.setViewPager(pager);
 
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pager.setPageMargin(pageMargin);
+
+        tabs.setViewPager(pager);
+        tabs.setDividerWidth(2);
+
+        /*
         pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -50,6 +59,7 @@ public class FinancialsActivity extends MyActivityBase {
 
             }
         });
+        */
     }
 
     @OptionsItem(R.id.action_settings)

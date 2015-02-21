@@ -7,10 +7,11 @@
         android:id="@+id/transactionList"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="0mm"
+        android:layout_margin="8dip"
         android:divider="#b5b5b5"
         android:dividerHeight="1dp"
         android:drawSelectorOnTop="true"
+        android:background="@drawable/background_card"
         />
 
 </FrameLayout>
