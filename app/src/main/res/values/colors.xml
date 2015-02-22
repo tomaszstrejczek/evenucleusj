@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#D82069</color>
+    <color name="primaryDark">#581845</color>
+
+    <color name="yellow">#F0C55D</color>
+    <color name="orange">#F97D63</color>
+    <color name="black">#2C1E2C</color>
+    <color name="darkbl">#220E53</color>
+    <color name="skylight">#A0CAC8</color>
+    <color name="darkpurple">#504375</color>
+</resources>

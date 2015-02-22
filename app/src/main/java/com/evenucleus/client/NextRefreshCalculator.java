@@ -9,21 +9,10 @@ import java.util.Collection;
  * Created by tomeks on 2015-02-02.
  */
 public class NextRefreshCalculator {
-    public DateTime Calculate(DateTime now, Collection<DateTime> cachedUntils) {
-        Duration sum = new Duration(0);
-        int cnt = 0;
-        for(DateTime d: cachedUntils) {
-            Duration dur = new Duration(now, d);
-            if (dur.getMillis() > 0) {
-                sum = sum.plus(dur);
-                ++cnt;
-            }
-        }
+    public DateTime Calculate(DateTime now, Collection<DateTime> cachedUntils, int frequencyInMinutes) {
+        if (frequencyInMinutes == 0)
+            return null;
 
-        if (cnt == 0)
-            return now.plusMinutes(60);
-
-        Duration avg = new Duration(sum.getMillis()/cnt);
-        return now.plus(avg);
+        return now.plusMinutes(frequencyInMinutes);
     }
 }

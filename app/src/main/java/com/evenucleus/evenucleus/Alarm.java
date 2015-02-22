@@ -103,10 +103,14 @@ public class Alarm extends BroadcastReceiver {
                 KeyInfoRepo keyInfoRepo = new KeyInfoRepo();
                 keyInfoRepo._localdb = localdb;
 
+                SettingsRepo settingsRepo = new SettingsRepo();
+                settingsRepo._localdb = localdb;
+
                 PilotService pilotService = new PilotService();
                 pilotService._typeNameDict = typeNameDict;
                 pilotService._eveApiCaller = new EveApiCaller();
                 pilotService._keyInfoRepo = keyInfoRepo;
+                pilotService._settingsRepo = settingsRepo;
 
                 PilotRepo pilotRepo = new PilotRepo();
                 pilotRepo._localdb = localdb;
@@ -126,14 +130,12 @@ public class Alarm extends BroadcastReceiver {
                 jobService._corporationRepo = corpoRepo;
                 jobService._eveApiCaller = new EveApiCaller();
                 jobService._typeNameDict = typeNameDict;
+                jobService._settingsRepo = settingsRepo;
 
                 JobRepo jobRepo = new JobRepo();
                 jobRepo._localdb = localdb;
                 jobRepo._pilotRepo = pilotRepo;
                 jobRepo._pendingNotificationRepo = pendingNotificationRepo;
-
-                SettingsRepo settingsRepo = new SettingsRepo();
-                settingsRepo._localdb = localdb;
 
                 PilotService.Result result = pilotService.Get();
                 JobService.Result resultJobs = jobService.Get();
@@ -166,9 +168,9 @@ public class Alarm extends BroadcastReceiver {
 
                 settingsRepo.setLatestAlert(new Date());
 
-                DateTime cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), Arrays.asList(resultJobs.cachedUntil, result.cachedUntil));
+                DateTime cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), Arrays.asList(resultJobs.cachedUntil, result.cachedUntil), settingsRepo.getFrequencyinMinutes());
                 logger.debug("Alarm cachedUntil {}", cachedUntil);
-                    return cachedUntil;
+                return cachedUntil;
             }
             catch (Exception e)
             {
@@ -210,17 +212,19 @@ public class Alarm extends BroadcastReceiver {
             if (_ex != null)
                 Toast.makeText(_context, "Exception: " + _ex.toString(), Toast.LENGTH_LONG).show(); // For example
 
-            Period per = new Period(new DateTime(), result, PeriodType.time());
-            String msg = String.format("Next refresh in %dh %dm", per.getHours(), per.getMinutes());
-            Toast.makeText(_context, msg, Toast.LENGTH_LONG).show();
+            if (result != null) {
+                Period per = new Period(new DateTime(), result, PeriodType.time());
+                String msg = String.format("Next refresh in %dh %dm", per.getHours(), per.getMinutes());
+                Toast.makeText(_context, msg, Toast.LENGTH_LONG).show();
 
-
-            try {
-                _alarm.SetAlarm(_context, result);
-            } catch (SQLException e) {
-                logger.error("onPostExecute SetAlarm", e.toString());
-                e.printStackTrace();
+                try {
+                    _alarm.SetAlarm(_context, result);
+                } catch (SQLException e) {
+                    logger.error("onPostExecute SetAlarm", e.toString());
+                    e.printStackTrace();
+                }
             }
+
             _context.sendBroadcast(new Intent(RefreshIntent));
 
             _wl.release();
@@ -234,23 +238,28 @@ public class Alarm extends BroadcastReceiver {
         task.execute();
     }
 
-    public void DoWork(Context context) {
-
-    }
-
     public void StartAlarm(Context context) throws SQLException {
         logger.debug("StartAlarm");
 
-        AlarmManager am=(AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, Alarm.class);
-        intent.putExtra(ONE_TIME, Boolean.FALSE);
-        intent.setAction(OneTimeIntent);
+        DatabaseHelper localdb = new MyDatabaseHelper(context);
+        SettingsRepo settingsRepo = new SettingsRepo();
+        settingsRepo._localdb = localdb;
 
-        onReceive(context, intent);
+        Date nextAlarm = settingsRepo.getNextAlert();
+        // the method is invoked when main activity is created. if the alarm was not invoked and refreshing is not suspended by user
+        // we manually invoke refresh
+        if ( (nextAlarm==null || nextAlarm.before(new Date())) && settingsRepo.getFrequencyinMinutes()!=0) {
+            logger.info("Alert due in {}, manually executing onReceive", nextAlarm);
+            Intent intent = new Intent(context, Alarm.class);
+            intent.putExtra(ONE_TIME, Boolean.FALSE);
+            intent.setAction(OneTimeIntent);
+
+            onReceive(context, intent);
+        }
     }
 
     public void SetAlarm(Context context, DateTime when) throws SQLException {
-        logger.debug("SetAlarm {}", when.toString());
+        logger.debug("SetAlarm {}", when);
 
         DatabaseHelper localdb = new MyDatabaseHelper(context);
         SettingsRepo settingsRepo = new SettingsRepo();

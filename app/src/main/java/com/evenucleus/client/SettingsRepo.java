@@ -41,6 +41,11 @@ public class SettingsRepo implements ISettingsRepo {
         _localdb.getSettingDao().createOrUpdate(s);
     }
 
+    public void clearNextAlert() throws SQLException {
+        logger.debug("clearNextAlert");
+        _localdb.getSettingDao().deleteById("next_alert");
+    }
+
     @Override
     public Date getLatestAlert() throws SQLException {
         logger.debug("getLatestAlert");
@@ -117,6 +122,26 @@ public class SettingsRepo implements ISettingsRepo {
         s.Key = "financials_only_suggested";
         s.BooleanValue = value;
         _localdb.getSettingDao().createOrUpdate(s);
+    }
+
+    @Override
+    public int getFrequencyinMinutes() throws SQLException {
+        logger.debug("getFrequencyinMinutes");
+
+        Setting s = _localdb.getSettingDao().queryForId("frequency_in_minutes");
+        if (s == null)
+            return 60;
+        return s.IntegerValue;
+    }
+
+    @Override
+    public void setFrequencyinMinutes(int value) throws SQLException {
+        logger.debug("setFrequencyinMinutes {}", value);
+        Setting s = new Setting();
+        s.Key = "frequency_in_minutes";
+        s.IntegerValue = value;
+        _localdb.getSettingDao().createOrUpdate(s);
+
     }
 
 

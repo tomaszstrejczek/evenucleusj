@@ -19,9 +19,11 @@ import com.evenucleus.client.EveApiCaller;
 import com.evenucleus.client.IEveApiCaller;
 import com.evenucleus.client.IKeyInfoRepo;
 import com.evenucleus.client.IPilotRepo;
+import com.evenucleus.client.ISettingsRepo;
 import com.evenucleus.client.KeyInfoRepo;
 import com.evenucleus.client.Pilot;
 import com.evenucleus.client.PilotRepo;
+import com.evenucleus.client.SettingsRepo;
 import com.evenucleus.client.UserException;
 
 import org.androidannotations.annotations.AfterViews;
@@ -51,6 +53,9 @@ public class AddKey extends MyActivityBase {
 
     @Bean(KeyInfoRepo.class)
     IKeyInfoRepo keyInfoRepo;
+
+    @Bean(SettingsRepo.class)
+    ISettingsRepo _settingsRepo;
 
     @ViewById
     EditText KeyEdit;
@@ -97,6 +102,8 @@ public class AddKey extends MyActivityBase {
             hideProgress(dlg);
             if (!result)
                 displayError("Invalid key");
+
+            _settingsRepo.clearNextAlert();
 
             // all done - may return to parent activity
             OnCancelButton();

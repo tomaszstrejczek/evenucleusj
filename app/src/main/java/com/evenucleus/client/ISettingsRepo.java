@@ -8,6 +8,7 @@ import java.util.Date;
 public interface ISettingsRepo {
     public Date getNextAlert() throws SQLException;
     public void setNextAlert(Date value) throws SQLException;
+    public void clearNextAlert() throws SQLException;
 
     public Date getLatestAlert() throws SQLException;
     public void setLatestAlert(Date value) throws SQLException;
@@ -20,4 +21,7 @@ public interface ISettingsRepo {
 
     public boolean getOnlySuggested() throws SQLException;
     public void setOnlySuggested(boolean value) throws SQLException;
+
+    public int getFrequencyinMinutes() throws SQLException;
+    public void setFrequencyinMinutes(int value) throws SQLException;
 }

@@ -41,6 +41,9 @@ public class PilotService implements IPilotService {
     @Bean(TypeNameDict.class)
     public ITypeNameDict _typeNameDict;
 
+    @Bean(SettingsRepo.class)
+    public ISettingsRepo _settingsRepo;
+
     @Override
     public Result Get() throws SQLException, UserException, ApiException {
         logger.debug("Get");
@@ -125,7 +128,7 @@ public class PilotService implements IPilotService {
             }
         }
 
-        r.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils);
+        r.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils, _settingsRepo.getFrequencyinMinutes());
         logger.debug("PilotService cachedUntil {}", r.cachedUntil);
 
         return r;

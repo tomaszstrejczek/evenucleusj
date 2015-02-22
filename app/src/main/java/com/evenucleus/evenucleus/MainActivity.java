@@ -120,7 +120,7 @@ public class MainActivity extends MyActivityBase {
     @Receiver(actions = Alarm.RefreshIntent)
     void OnRefresh(Context context) {
         // Put here YOUR code.
-        Toast.makeText(context, "Refresh", Toast.LENGTH_LONG).show(); // For example
+        //Toast.makeText(context, "Refresh", Toast.LENGTH_LONG).show(); // For example
         RefreshList();
     }
 

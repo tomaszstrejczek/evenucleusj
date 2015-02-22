@@ -67,18 +67,22 @@ public class PilotItemView extends LinearLayout {
         if (!pilot.TrainingActive)
         {
             currentTrainingDuration.setText("Not training");
-            currentTrainingDuration.setTextColor(Color.rgb(255, 127, 39));
+            currentTrainingDuration.setTextAppearance(getContext(), R.style.PilotWarning);
+            //currentTrainingDuration.setTextColor(getResources().getColor(R.color.orange));
         }
         else
         {
             if (!end.isAfter(now))
             {
                 currentTrainingDuration.setText("finished");
-                currentTrainingDuration.setTextColor(Color.RED);
+                currentTrainingDuration.setTextAppearance(getContext(), R.style.PilotWarning);
+                //currentTrainingDuration.setTextColor(getResources().getColor(R.color.orange));
             }
             else
             {
-                currentTrainingDuration.setTextColor(Color.parseColor("#10bcc9"));
+                //currentTrainingDuration.setTextColor(getResources().getColor(R.color.skylight));
+                currentTrainingDuration.setTextAppearance(getContext(), R.style.PilotText);
+
                 if (per.getDays() > 0)
                     currentTrainingDuration.setText(String.format("%dd %dh %dm", per.getDays(), per.getHours(), per.getMinutes()));
                 else

@@ -23,7 +23,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:ignore="NewApi" />
 
-    <TextView android:text="Next synchronization" android:layout_width="wrap_content"
+    <TextView android:text="Next synchronization:" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         tools:ignore="NewApi" />
@@ -33,5 +33,28 @@
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         tools:ignore="NewApi" />
+
+    <TextView android:text="Frequency:" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:ignore="NewApi" />
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" android:stretchColumns="0,1,2,3,4,5"
+        android:layout_marginTop="10dip"
+        >
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <TextView android:text="1h"  style="@style/FrequencyBox" android:id="@+id/freq1h"/>
+            <TextView android:text="2h"  style="@style/FrequencyBox" android:id="@+id/freq2h"/>
+            <TextView android:text="4h"  style="@style/FrequencyBox" android:id="@+id/freq4h"/>
+            <TextView android:text="12h"  style="@style/FrequencyBoxSelected" android:id="@+id/freq12h"/>
+            <TextView android:text="24h"  style="@style/FrequencyBox" android:id="@+id/freq24h"/>
+            <TextView android:text="Never"  style="@style/FrequencyBox" android:id="@+id/freqnever"/>
+
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

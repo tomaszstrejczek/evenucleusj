@@ -41,6 +41,8 @@ public class JobService implements IJobService {
     @Bean(TypeNameDict.class)
     public ITypeNameDict _typeNameDict;
 
+    @Bean(SettingsRepo.class)
+    public ISettingsRepo _settingsRepo;
 
     @Override
     public Result Get() throws SQLException, ApiException {
@@ -90,7 +92,7 @@ public class JobService implements IJobService {
             result.jobs.add(job);
         }
 
-        result.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils);
+        result.cachedUntil = new NextRefreshCalculator().Calculate(new DateTime(), cachedUntils, _settingsRepo.getFrequencyinMinutes());
         logger.debug("JobService cachedUntil {}", result.cachedUntil);
 
         return result;
