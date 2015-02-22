@@ -53,12 +53,12 @@ public class JournalRepoT extends TestBase {
         ));
 
         // Second call for the first pilot - new fromID is expected
-        EasyMock.expect(eveApi.getJournalEntries(1, "vcode", 2, 1, 100)).andReturn(Arrays.<JournalEntry>asList(
+        EasyMock.expect(eveApi.getJournalEntries(1, "vcode", 2, 1, 0)).andReturn(Arrays.<JournalEntry>asList(
                 new JournalEntry(){{refID=101; amount = 300;PilotId=1;}}
         ));
 
         // second call for the second pilot
-        EasyMock.expect(eveApi.getJournalEntries(1, "vcode", 4, 3, 200)).andReturn(Arrays.<JournalEntry>asList(
+        EasyMock.expect(eveApi.getJournalEntries(1, "vcode", 4, 3, 0)).andReturn(Arrays.<JournalEntry>asList(
                 new JournalEntry(){{refID=201; amount = 401;PilotId=3;}}
         ));
 
@@ -119,12 +119,12 @@ public class JournalRepoT extends TestBase {
         ));
 
         // Second call for the first pilot - new fromID is expected
-        EasyMock.expect(eveApi.getJournalEntriesCorpo(1, "vcode", 1, 100)).andReturn(Arrays.<JournalEntry>asList(
+        EasyMock.expect(eveApi.getJournalEntriesCorpo(1, "vcode", 1, 0)).andReturn(Arrays.<JournalEntry>asList(
                 new JournalEntry(){{refID=101; amount = 300;CorporationId=1;}}
         ));
 
         // second call for the second pilot
-        EasyMock.expect(eveApi.getJournalEntriesCorpo(1, "vcode", 3, 200)).andReturn(Arrays.<JournalEntry>asList(
+        EasyMock.expect(eveApi.getJournalEntriesCorpo(1, "vcode", 3, 0)).andReturn(Arrays.<JournalEntry>asList(
                 new JournalEntry(){{refID=201; amount = 401;CorporationId=3;}}
         ));
 

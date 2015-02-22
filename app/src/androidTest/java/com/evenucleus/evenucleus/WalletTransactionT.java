@@ -72,7 +72,7 @@ public class WalletTransactionT extends TestBase {
         ));
 
         // Second call for the first pilot - new fromID is expected
-        EasyMock.expect(eveApi.getWalletTransactions(1, "vcode", 2, 1, 100)).andReturn(Arrays.<WalletTransaction>asList(
+        EasyMock.expect(eveApi.getWalletTransactions(1, "vcode", 2, 1, 0)).andReturn(Arrays.<WalletTransaction>asList(
                 new WalletTransaction() {{
                     transactionID = 101;
                     price = 300;
@@ -81,7 +81,7 @@ public class WalletTransactionT extends TestBase {
         ));
 
         // second call for the second pilot
-        EasyMock.expect(eveApi.getWalletTransactions(1, "vcode", 4, 3, 200)).andReturn(Arrays.<WalletTransaction>asList(
+        EasyMock.expect(eveApi.getWalletTransactions(1, "vcode", 4, 3, 0)).andReturn(Arrays.<WalletTransaction>asList(
                 new WalletTransaction() {{
                     transactionID = 201;
                     price = 401;
@@ -151,12 +151,12 @@ public class WalletTransactionT extends TestBase {
         ));
 
         // Second call for the first pilot - new fromID is expected
-        EasyMock.expect(eveApi.getWalletTransactionsCorpo(1, "vcode", 1, 100)).andReturn(Arrays.<WalletTransaction>asList(
+        EasyMock.expect(eveApi.getWalletTransactionsCorpo(1, "vcode", 1, 0)).andReturn(Arrays.<WalletTransaction>asList(
                 new WalletTransaction(){{transactionID=101; price = 300;CorporationId=1;}}
         ));
 
         // second call for the second pilot
-        EasyMock.expect(eveApi.getWalletTransactionsCorpo(1, "vcode", 3, 200)).andReturn(Arrays.<WalletTransaction>asList(
+        EasyMock.expect(eveApi.getWalletTransactionsCorpo(1, "vcode", 3, 0)).andReturn(Arrays.<WalletTransaction>asList(
                 new WalletTransaction(){{transactionID=201; price = 401;CorporationId=3;}}
         ));
 
