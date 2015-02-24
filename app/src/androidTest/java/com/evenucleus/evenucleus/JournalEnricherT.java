@@ -57,19 +57,14 @@ public class JournalEnricherT extends TestBase {
         return entries;
     }
 
-    public void test_MicioGatto() throws ApiException {
+    private void compare(int code, String vcode) throws ApiException {
         JournalEnricher enricher = new JournalEnricher();
-        int code = 3483492;
-        String vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
         List<JournalEntry> jes = getJes(code, vcode);
-
-        //for(int i = jes.size()-1; i >= 133; --i) jes.remove(i);
 
         List<WalletTransaction> wts = getWts(code, vcode);
 
         double srcsum = 0;
         for(JournalEntry j:jes) srcsum += j.amount;
-
 
         List<EnrichedJournalEntry> result = enricher.Enrich(jes, wts);
 
@@ -79,21 +74,22 @@ public class JournalEnricherT extends TestBase {
         Assert.assertTrue(Math.abs(srcsum - destsum) < 10000.0);
     }
 
+    public void test_MicioGatto() throws ApiException {
+        int code = 3483492;
+        String vcode = "ZwML01eU6aQUVIEC7gedCEaySiNxRTJxgWo2qoVnxd5duN4tt4CWgMuYMSVNWIUG";
+        compare(code, vcode);
+    }
+
+    public void test_MicioGattoCorpo() throws ApiException {
+        int code = 3692329;
+        String vcode = "aPQOKWEr0r9bp7yVNVgtx9O9xSPDOgTEXY9FhM93ArndOcE3ZTTV1xGnTDHDoeii";
+        compare(code, vcode);
+    }
+
     public void test_tomek2() throws ApiException {
-        JournalEnricher enricher = new JournalEnricher();
         int code = 3996593;
         String vcode = "D3bKyktDGxpgR32WjxDPr72jty6URzn6yTK6FzPGA7r0CgKIc6eKwE6PhUYscxNv";
-        List<JournalEntry> jes = getJes(code, vcode);
-        List<WalletTransaction> wts = getWts(code, vcode);
-
-        List<EnrichedJournalEntry> result = enricher.Enrich(jes, wts);
-
-        double srcsum = 0;
-        for(JournalEntry j:jes) srcsum += j.amount;
-        double destsum = 0;
-        for(EnrichedJournalEntry j:result) destsum += j.Amount;
-
-        Assert.assertTrue(Math.abs(srcsum - destsum) < 10000.0);
+        compare(code, vcode);
     }
 
 }

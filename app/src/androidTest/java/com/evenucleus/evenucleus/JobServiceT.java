@@ -15,6 +15,7 @@ import com.evenucleus.client.Pilot;
 import com.evenucleus.client.PilotRepo;
 import com.evenucleus.client.PilotRepo_;
 import com.evenucleus.client.PilotService;
+import com.evenucleus.client.SettingsRepo;
 import com.evenucleus.client.SkillRepo;
 import com.evenucleus.client.TypeNameDict;
 import com.evenucleus.client.UserData;
@@ -37,10 +38,14 @@ public class JobServiceT extends TestBase {
         KeyInfoRepo keyInfoRepo = new KeyInfoRepo();
         keyInfoRepo._localdb = _localdb;
 
+        SettingsRepo settingsRepo = new SettingsRepo();
+        settingsRepo._localdb = _localdb;
+
         PilotService service = new PilotService();
         service._typeNameDict = typeNameDict;
         service._eveApiCaller = new EveApiCaller();
         service._keyInfoRepo = keyInfoRepo;
+        service._settingsRepo = settingsRepo;
 
         PilotRepo pilotRepo = new PilotRepo();
         pilotRepo._localdb = _localdb;
@@ -62,6 +67,7 @@ public class JobServiceT extends TestBase {
         jobService._corporationRepo = corpoRepo;
         jobService._eveApiCaller = new EveApiCaller();
         jobService._typeNameDict = typeNameDict;
+        jobService._settingsRepo = settingsRepo;
 
         SkillRepo skillRepo = new SkillRepo();
         skillRepo._pendingNotificationRepo = pendingNotificationRepo;
