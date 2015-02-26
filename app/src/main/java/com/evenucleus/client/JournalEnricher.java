@@ -82,6 +82,13 @@ public class JournalEnricher implements IJournalEnricher {
         }
     }
 
+    class DateComparatorDesc extends DateComparator {
+        @Override
+        public int compare(JournalEntry o1, JournalEntry o2) {
+            return - super.compare(o1,o2);
+        }
+    }
+
     class DateComparatorWT implements Comparator<WalletTransaction> {
         @Override
         public int compare(WalletTransaction o1, WalletTransaction o2) {
@@ -181,6 +188,7 @@ public class JournalEnricher implements IJournalEnricher {
         }
         wts = wts1;
 
+        HandlePositiveMarketEscrow(jes, matching);
         GroupMarketEscrow(jes, matching);
 
         // spread broker fee and transaction tax into transactions
@@ -255,30 +263,89 @@ public class JournalEnricher implements IJournalEnricher {
         return result;
     }
 
+    private void HandlePositiveMarketEscrow(List<JournalEntry> jes, Map<JournalEntry, WalletTransaction> matching) {
+        // select escrow
+        List<JournalEntry> escrow = new ArrayList<JournalEntry>();
+        for(JournalEntry je: jes) if (je.RefTypeName.equals("Market Escrow") && je.amount > 0.0 && !matching.containsKey(je)) escrow.add(je);
+        if (escrow.size()==0)
+            return;
+
+        Collections.sort(escrow, new DateComparatorDesc());
+
+        Set<Long> matched = new HashSet<Long>();
+        for(JournalEntry je: jes) {
+            if (je.RefTypeName.equals("Market Escrow") && je.amount < 0.0 && !matching.containsKey(je)) {
+                for(int i = escrow.size()-1; i >= 0; --i) {
+                    JournalEntry candidate = escrow.get(i);
+                    if (Math.abs(candidate.amount + je.amount) < 0.01) {
+                            escrow.remove(i);
+                            matched.add(candidate.refID);
+                            matched.add(je.refID);
+                        }
+                    }
+                }
+
+            }
+
+        for(int i = jes.size()-1; i >= 0; --i)
+            if (matched.contains(jes.get(i).refID))
+                jes.remove(i);
+    }
+
     private void GroupMarketEscrow(List<JournalEntry> jes, Map<JournalEntry, WalletTransaction> matching) {
         // select escrow
         List<JournalEntry> escrow = new ArrayList<JournalEntry>();
         for(JournalEntry je: jes) if (je.RefTypeName.equals("Market Escrow") && je.amount < 0.0 && !matching.containsKey(je)) escrow.add(je);
+        if (escrow.size()==0)
+            return;
 
-        Set<Long> matched = new HashSet<Long>();
+        Collections.sort(escrow, new DateComparatorDesc());
+
+        double escsum = 0;
+        for(JournalEntry je:escrow) escsum += Math.abs(je.amount);
+
+        double diffsum = 0;
+        for(Map.Entry<JournalEntry, WalletTransaction> je: matching.entrySet()) {
+            if (je.getKey().amount < 0) {
+                double diff = Math.abs(je.getValue().price * je.getValue().quantity) - Math.abs(je.getKey().amount);
+                diffsum += diff;
+            }
+        }
+
+
+        List<JournalEntry> matched = new ArrayList<JournalEntry>();
 
         for(Map.Entry<JournalEntry, WalletTransaction> je: matching.entrySet()) {
+            if (escrow.size()==0)
+                break;
+
+            if (je.getKey().amount >= 0)
+                continue;
+
             for(int i = escrow.size()-1; i >= 0; --i) {
                 JournalEntry candidate = escrow.get(i);
-                // same sign
-                if (je.getKey().amount < 0) {
-                    if (Math.abs(je.getKey().amount) + Math.abs(candidate.amount) <= Math.abs(je.getValue().price * je.getValue().quantity)) {
-                        je.getKey().amount += candidate.amount;
+                double diffje = Math.abs(je.getValue().price * je.getValue().quantity) - Math.abs(je.getKey().amount);
+                double diff = Math.min(diffje, Math.abs(candidate.amount));
+                if (diff > 0.0) {
+                    je.getKey().amount -= diff;
+                    candidate.amount += diff;
+                    if (candidate.amount > -0.01)
+                    {
                         escrow.remove(i);
-                        matched.add(candidate.refID);
+                        matched.add(candidate);
                     }
                 }
             }
         }
 
-        for(int i = jes.size()-1; i >= 0; --i)
-            if (matched.contains(jes.get(i).refID))
-                jes.remove(i);
+        for(int i = escrow.size()-1; i >= 0; --i) {
+            if (Math.abs(escrow.get(i).amount) < 110.0) {
+                matched.add(escrow.get(i));
+                escrow.remove(i);
+            }
+        }
+
+        jes.removeAll(matched);
     }
 
 }
